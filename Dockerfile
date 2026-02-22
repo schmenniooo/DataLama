@@ -1,6 +1,6 @@
 
 # Build stage
-FROM python:3.14 as build
+FROM python:3.13-slim as build
 
 # Installing uv
 COPY --from=ghcr.io/astral-sh/uv:0.8.21 /uv /uvx /bin/
@@ -13,7 +13,7 @@ COPY . .
 RUN uv sync --frozen --no-dev
 
 # Run stage
-FROM python:3.14 as runtime
+FROM python:3.13-slim as runtime
 WORKDIR /app
 COPY --from=build --chown=appuser:appgroup /app .
 
