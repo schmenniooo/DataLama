@@ -1,6 +1,7 @@
-def main():
-    print("Hello from datalama!")
 
+from src.server.server import Server
+
+app = Server().build().run()
 
 if __name__ == "__main__":
-    main()
+    print("Hello from datalama!")
