@@ -5,7 +5,7 @@ from src.api.api import router
 class Server:
 
     def __init__(self):
-        app = FastAPI()
+        self.app = FastAPI()
 
     def build(self):
         # Registering routes
