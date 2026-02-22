@@ -1,6 +1,6 @@
 
 # Build stage
-FROM python:3.13-slim as build
+FROM python:3.13-slim AS build
 
 # Installing uv
 COPY --from=ghcr.io/astral-sh/uv:0.8.21 /uv /uvx /bin/
@@ -13,12 +13,16 @@ COPY . .
 RUN uv sync --frozen --no-dev
 
 # Run stage
-FROM python:3.13-slim as runtime
+FROM python:3.13-slim AS runtime
+
+# Installing uv
+COPY --from=ghcr.io/astral-sh/uv:0.8.21 /uv /uvx /bin/
 WORKDIR /app
-COPY --from=build --chown=appuser:appgroup /app .
+
+# Using build stage
+COPY --from=build /app .
 
 ARG PORT=3000
 ENV PORT=${PORT}
 
-# Starting uvicorn server
-ENTRYPOINT ["uv", "run", "uvicorn", "src.main:app", "--reload", "--port", ${PORT}]
+ENTRYPOINT uv run uvicorn src.main:app --host 0.0.0.0 --port $PORT
