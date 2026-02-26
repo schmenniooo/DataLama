@@ -6,7 +6,7 @@ on:
     branches: [ "main" ]
 
 permissions:
-  contents: write
+  contents: read
 
 jobs:
     build:
@@ -14,13 +14,11 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - name: Setup Python
-              uses: actions/setup-python@v4
-              with:
-                python-version: '3.13'
                 
             - name: Install uv
               uses: astral-sh/setup-uv@v7
+              with:
+                python-version: '3.13'
 
             - name: Install dependencies
               run: uv sync --no-dev
@@ -30,17 +28,14 @@ jobs:
 
     test:
         name: test-python-package
-        needs: build
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
-            - name: Setup Python
-              uses: actions/setup-python@v4
-              with:
-                python-version: '3.13'
                 
             - name: Install uv
               uses: astral-sh/setup-uv@v7
+              with:
+                python-version: '3.13'
 
             - name: Install dependencies
               run: uv sync
