@@ -1,3 +1,4 @@
+"""Entry point for the DataLama application."""
 
 from src.server.server import Server
 
