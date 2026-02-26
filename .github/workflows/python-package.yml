@@ -9,8 +9,7 @@ permissions:
   contents: read
 
 jobs:
-    validate:
-        name: validate-python-package
+    linting:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
@@ -30,7 +29,6 @@ jobs:
               run: uv run pylint ./tests
 
     build:
-        name: build-python-package
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
@@ -47,7 +45,6 @@ jobs:
               run: uv build
 
     test:
-        name: test-python-package
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
