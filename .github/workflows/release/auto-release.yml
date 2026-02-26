@@ -25,14 +25,14 @@ jobs:
                 VERSION=$(python -c "import tomllib; data=tomllib.load(open('pyproject.toml','rb')); print(data['project']['version'])")
                 echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-            - name: Download artifacts
+            - name: Download Helm Chart artifact
               uses: dawidd6/action-download-artifact@v3
               with:
-                workflow: build-push-action.yml
+                workflow: test-build-push-action.yml
                 name: helm-chart
                 path: helm-chart
 
-            - name: Download artifacts
+            - name: Download Docker Image artifact
               uses: dawidd6/action-download-artifact@v3
               with:
                 workflow: build-push-action.yml
