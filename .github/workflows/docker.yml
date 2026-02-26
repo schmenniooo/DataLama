@@ -26,7 +26,7 @@ jobs:
             - uses: actions/upload-artifact@v4
               with:
                 name: docker-image
-                path: docker/image.tar.gz
+                path: image.tar.gz
 
     push:
         needs: build
@@ -36,7 +36,7 @@ jobs:
             - uses: actions/download-artifact@v4
               with:
                 name: docker-image
-                path: docker/image.tar.gz
+                path: .
 
             - name: Load image
               run: docker load < image.tar.gz
