@@ -47,4 +47,3 @@ jobs:
                 artifacts: |
                     helm-chart/datalama-chart-*.tgz
                     docker-image/image.tar.gz
-                
