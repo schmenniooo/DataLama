@@ -23,3 +23,35 @@ jobs:
             
             - name: Testing Helm Chart
               run: helm template datalama ./helm/datalama
+
+    build:
+        name: build-helm-chart
+        runs-on: ubuntu-latest
+        needs: test
+        steps:
+            - uses: actions/checkout@v4
+            - name: Setup Helm
+              uses: azure/setup-helm@v3
+
+            - name: Build Helm Chart
+              run: helm package ./helm/datalama --destination ./helm/packages
+
+            - uses: actions/upload-artifact@v4
+              with:
+                name: helm-chart
+    
+    push:
+        name: push-helm-chart
+        runs-on: ubuntu-latest
+        needs: build
+        if: github.ref == 'refs/heads/main'
+        steps:
+            - uses: actions/download-artifact@v4
+              with:
+                name: helm-chart
+
+            - name: Push Helm Chart to GitHub Packages
+              run: |
+                helm repo add datalama https://$GITHUB_REPOSITORY_OWNER.github.io/${{ github.repository }}
+                helm repo update
+                helm push ./datalama-chart*.tgz oci://ghcr.io/${{ github.repository }}
