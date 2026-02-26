@@ -22,7 +22,6 @@ WORKDIR /app
 # Using build stage
 COPY --from=build /app .
 
-ARG PORT=3000
-ENV PORT=${PORT}
+EXPOSE 3000
 
-ENTRYPOINT uv run uvicorn src.main:app --host 0.0.0.0 --port $PORT
+ENTRYPOINT ["uv", "run", "uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "3000"]
