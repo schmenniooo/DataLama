@@ -18,6 +18,18 @@ jobs:
         steps:
             - uses: actions/checkout@v4
 
+            - name: Download artifacts
+              uses: actions/download-artifact@v3
+              with:
+                name: helm-chart
+                path: helm-chart
+
+            - name: Download artifacts
+              uses: actions/download-artifact@v3
+              with:
+                name: docker-image
+                path: docker-image
+
             - name: Create GitHub Release
               uses: ncipollo/release-action@v1
               with:
