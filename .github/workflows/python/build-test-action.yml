@@ -9,6 +9,26 @@ permissions:
   contents: read
 
 jobs:
+    validate:
+        name: validate-python-package
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+                
+            - name: Install uv
+              uses: astral-sh/setup-uv@v7
+              with:
+                python-version: '3.13'
+
+            - name: Install dependencies
+              run: uv sync
+
+            - name: Lint package
+              run: uv run pylint ./src
+
+            - name: Lint tests
+              run: uv run pylint ./tests
+
     build:
         name: build-python-package
         runs-on: ubuntu-latest
