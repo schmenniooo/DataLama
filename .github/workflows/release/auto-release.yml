@@ -1,0 +1,49 @@
+name: create-release
+
+on:
+    workflow_run: 
+        workflows:                                                                                                                                                                   
+            - "build-push-docker-image"                                                                                                                               
+            - "test-push-helm-chart"
+        branches: ["main"]
+        types: [completed]
+
+permissions:
+    contents: write
+    packages: read
+
+jobs: 
+    create-release:
+        name: Create GitHub Release
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - name: Get version                                                                                                                                                              
+              id: version   
+              run: |                                                                                                                                                                         
+                VERSION=$(python -c "import tomllib; data=tomllib.load(open('pyproject.toml','rb')); print(data['project']['version'])")
+                echo "version=$VERSION" >> $GITHUB_OUTPUT
+
+            - name: Download Helm Chart artifact
+              uses: dawidd6/action-download-artifact@v3
+              with:
+                workflow: test-build-push-action.yml
+                name: helm-chart
+                path: helm-chart
+
+            - name: Download Docker Image artifact
+              uses: dawidd6/action-download-artifact@v3
+              with:
+                workflow: build-push-action.yml
+                name: docker-image
+                path: docker-image
+
+            - name: Create GitHub Release
+              uses: ncipollo/release-action@v1
+              with:
+                tag: v${{ steps.version.outputs.version }}
+                name: Release v${{ steps.version.outputs.version }}
+                artifacts: |
+                    helm-chart/datalama-chart-*.tgz
+                    docker-image/image.tar.gz
