@@ -26,14 +26,16 @@ jobs:
                 echo "version=$VERSION" >> $GITHUB_OUTPUT
 
             - name: Download artifacts
-              uses: dawidd6/action-download-artifact
+              uses: dawidd6/action-download-artifact@v3
               with:
+                workflow: build-push-action.yml
                 name: helm-chart
                 path: helm-chart
 
             - name: Download artifacts
-              uses: dawidd6/action-download-artifact
+              uses: dawidd6/action-download-artifact@v3
               with:
+                workflow: build-push-action.yml
                 name: docker-image
                 path: docker-image
 
