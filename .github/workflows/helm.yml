@@ -1,4 +1,4 @@
-name: test-push-helm-chart
+name: helm-chart
 
 on:
   pull_request:

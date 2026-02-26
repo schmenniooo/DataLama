@@ -1,4 +1,4 @@
-name: build-test-python-package
+name: python-package
 
 on:
   pull_request:
