@@ -33,6 +33,7 @@ jobs:
         name: push-docker-image
         needs: build
         runs-on: ubuntu-latest
+        if: github.ref == 'refs/heads/main'
         steps:
             - uses: actions/download-artifact@v4
               with:
