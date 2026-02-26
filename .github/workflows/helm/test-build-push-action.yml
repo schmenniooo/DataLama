@@ -39,6 +39,7 @@ jobs:
             - uses: actions/upload-artifact@v4
               with:
                 name: helm-chart
+                path: ./helm/packages/datalama-chart*.tgz
     
     push:
         name: push-helm-chart
@@ -50,8 +51,8 @@ jobs:
               with:
                 name: helm-chart
 
+            - name: Log in to GHCR
+              run: helm registry login ghcr.io --username ${{ github.actor }} --password ${{ secrets.GITHUB_TOKEN }}
+
             - name: Push Helm Chart to GitHub Packages
-              run: |
-                helm repo add datalama https://$GITHUB_REPOSITORY_OWNER.github.io/${{ github.repository }}
-                helm repo update
-                helm push ./datalama-chart*.tgz oci://ghcr.io/${{ github.repository }}
+              run: helm push *.tgz oci://ghcr.io/${{ github.repository_owner }}
