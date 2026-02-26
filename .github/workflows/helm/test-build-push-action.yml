@@ -1,0 +1,58 @@
+name: test-push-helm-chart
+
+on:
+  pull_request:
+  push:
+    branches: [ "main" ]
+
+permissions:
+  contents: write
+  packages: write
+
+jobs:
+    test:
+        name: test-helm-chart
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+            - name: Setup Helm
+              uses: azure/setup-helm@v3
+
+            - name: Linting Helm Chart
+              run: helm lint ./helm/datalama
+            
+            - name: Testing Helm Chart
+              run: helm template datalama ./helm/datalama
+
+    build:
+        name: build-helm-chart
+        runs-on: ubuntu-latest
+        needs: test
+        steps:
+            - uses: actions/checkout@v4
+            - name: Setup Helm
+              uses: azure/setup-helm@v3
+
+            - name: Build Helm Chart
+              run: helm package ./helm/datalama --destination ./helm/packages
+
+            - uses: actions/upload-artifact@v4
+              with:
+                name: helm-chart
+                path: ./helm/packages/datalama-chart*.tgz
+    
+    push:
+        name: push-helm-chart
+        runs-on: ubuntu-latest
+        needs: build
+        if: github.ref == 'refs/heads/main'
+        steps:
+            - uses: actions/download-artifact@v4
+              with:
+                name: helm-chart
+
+            - name: Log in to GHCR
+              run: helm registry login ghcr.io --username ${{ github.actor }} --password ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Push Helm Chart to GitHub Packages
+              run: helm push *.tgz oci://ghcr.io/${{ github.repository_owner }}
