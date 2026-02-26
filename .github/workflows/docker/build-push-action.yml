@@ -1,0 +1,16 @@
+name: build-push-docker-image
+
+on:
+  pull_request:
+  push:
+    branches: [ "main" ]
+    
+permissions:
+  contents: write
+
+jobs:
+    build:
+
+    push:
+
+        
