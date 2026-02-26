@@ -1,4 +1,4 @@
-name: create-release
+name: release
 
 on:
     workflow_run: 
@@ -13,8 +13,7 @@ permissions:
     packages: read
 
 jobs: 
-    create-release:
-        name: Create GitHub Release
+    create-gh-release:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v4
