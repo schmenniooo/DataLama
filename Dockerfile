@@ -23,6 +23,10 @@ WORKDIR /app
 COPY --from=build /app .
 
 # Setting environment variables
+
+ARG DEBUG="False"
+ENV DEBUG=${DEBUG}
+
 ARG HOST="0.0.0.0"
 ENV HOST=${HOST}
 

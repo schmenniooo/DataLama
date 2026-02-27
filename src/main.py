@@ -5,6 +5,8 @@ import uvicorn
 import os
 
 def main():
+    debug=os.getenv("DEBUG_MODE", "false")
+
     # Building app
     app = Server(
         api_key_field_name=os.getenv("API_KEY_FIELD_NAME"), 
@@ -14,6 +16,7 @@ def main():
     # Starting server
     uvicorn.run(
         app, 
+        debug=debug,
         host=os.getenv("HOST", "0.0.0.0"), 
         port=int(os.getenv("PORT", 3000))
     )
