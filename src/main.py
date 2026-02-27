@@ -2,7 +2,10 @@
 
 from src.server.server import Server
 
-app = Server().use_authenticaton().build().run()
+def main():
+    app = Server().use_authenticaton().build().run()
+    return app
 
 if __name__ == "__main__":
     print("Hello from datalama!")
+    main()
