@@ -2,7 +2,7 @@
 
 from fastapi import FastAPI
 from src.api.api import router
-from src.middleware.authentication import register_auth_middleware
+from src.middleware.authentication import AuthInterceptor
 
 
 class Server:
@@ -10,9 +10,10 @@ class Server:
 
     def __init__(self):
         self.app = FastAPI()
+        self.auth_interceptor = AuthInterceptor(api_key_field_name="", api_key="")
 
     def use_authenticaton(self):
-        auth_middleware = register_auth_middleware()
+        auth_middleware = self.auth_interceptor.register_auth_middleware()
         self.app.add_middleware(auth_middleware)
         return self
 
