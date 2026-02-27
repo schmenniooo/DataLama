@@ -2,6 +2,7 @@
 
 from fastapi import FastAPI
 from src.api.api import router
+from src.middleware.authentication import register_auth_middleware
 
 
 class Server:
@@ -9,6 +10,10 @@ class Server:
 
     def __init__(self):
         self.app = FastAPI()
+
+    def use_authenticaton(self):
+        auth_middleware = register_auth_middleware()
+        self.app.add_middleware(auth_middleware)
 
     def build(self):
         """Register routes and return the server instance."""
