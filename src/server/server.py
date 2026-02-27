@@ -3,6 +3,7 @@
 from fastapi import FastAPI
 from src.api.api import router
 from src.middleware.authentication import AuthInterceptor
+import uvicorn
 
 
 class Server:
@@ -23,6 +24,12 @@ class Server:
         self.app.include_router(router)
         return self
 
-    def run(self):
-        """Return the configured FastAPI application."""
-        return self.app
+    def run(self, debug: bool, host: str, port: int):
+        """Starts uvicorn server"""
+        uvicorn.run(
+            self.app,
+            debug=debug,
+            reload=debug,
+            host=host,
+            port=port
+        )
