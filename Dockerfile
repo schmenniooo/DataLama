@@ -22,6 +22,18 @@ WORKDIR /app
 # Using build stage
 COPY --from=build /app .
 
-EXPOSE 3000
+# Setting environment variables
 
-ENTRYPOINT ["uv", "run", "uvicorn", "src.main:app", "--host", "0.0.0.0", "--port", "3000"]
+ARG DEBUG="False"
+ENV DEBUG=${DEBUG}
+
+ARG HOST="0.0.0.0"
+ENV HOST=${HOST}
+
+ARG PORT=3000
+ENV PORT=${PORT}
+
+EXPOSE ${PORT}
+
+# Running the application
+ENTRYPOINT ["uv", "run", "python", "-m", "src.main"]
