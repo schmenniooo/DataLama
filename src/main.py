@@ -1,11 +1,15 @@
 """Entry point for the DataLama application."""
 
 from src.server.server import Server
+from dotenv import load_dotenv
 import uvicorn
 import os
 
 def main():
+    # Handling debug mode with .env file
     debug=os.getenv("DEBUG_MODE", "false")
+    if debug == "false":
+        load_dotenv("../") # Project root
 
     # Building app
     app = Server(
