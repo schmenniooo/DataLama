@@ -32,4 +32,4 @@ ENV PORT=${PORT}
 EXPOSE ${PORT}
 
 # Running the application
-ENTRYPOINT ["uv", "run", "python", "src/main.py"]
+ENTRYPOINT ["uv", "run", "python", "-m", "src.main"]
