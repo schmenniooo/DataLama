@@ -5,7 +5,13 @@ import uvicorn
 import os
 
 def main():
-    app = Server().use_authenticaton().build().run()
+    # Building app
+    app = Server(
+        api_key_field_name=os.getenv("API_KEY_FIELD_NAME"), 
+        api_key=os.getenv("API_KEY")
+    ).use_authenticaton().build().run()
+
+    # Starting server
     uvicorn.run(
         app, 
         host=os.getenv("HOST", "0.0.0.0"), 
