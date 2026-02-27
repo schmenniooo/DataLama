@@ -9,5 +9,10 @@ class AuthInterceptor:
         self.api_key_field_name = api_key_field_name 
         self.api_key = api_key
 
-    def register_auth_middleware(request: Request, call_next):
-        pass
+    def register_auth_middleware(self, request: Request):
+        token = request.body[self.api_key_field_name]
+
+        if token != self.api_key:
+            return
+        
+        return
