@@ -1,1 +1,1 @@
-"""Authentication Handling"""
+"""API Token based Authentication Handling"""
