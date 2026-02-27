@@ -1,9 +1,10 @@
 """Server module for building and running the FastAPI application."""
 
+import uvicorn
 from fastapi import FastAPI
+
 from src.api.api import router
 from src.middleware.authentication import AuthInterceptor
-import uvicorn
 
 
 class Server:
@@ -11,7 +12,10 @@ class Server:
 
     def __init__(self, api_key_field_name: str, api_key: str):
         self.app = FastAPI()
-        self.auth_interceptor = AuthInterceptor(api_key_field_name=api_key_field_name, api_key=api_key)
+        self.auth_interceptor = AuthInterceptor(
+            api_key_field_name=api_key_field_name,
+            api_key=api_key
+        )
 
     def use_authenticaton(self):
         """Registers authenticaton interceptor module"""
@@ -28,7 +32,6 @@ class Server:
         """Starts uvicorn server"""
         uvicorn.run(
             self.app,
-            debug=debug,
             reload=debug,
             host=host,
             port=port
