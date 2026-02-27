@@ -1,5 +1,6 @@
 """Server module for building and running the FastAPI application."""
 
+import os
 from fastapi import FastAPI
 from src.api.api import router
 from src.middleware.authentication import AuthInterceptor
@@ -10,7 +11,10 @@ class Server:
 
     def __init__(self):
         self.app = FastAPI()
-        self.auth_interceptor = AuthInterceptor(api_key_field_name="", api_key="")
+
+        api_key_field_name = os.getenv("API_KEY_FIELD_NAME", "")
+        api_key = os.getenv("API_KEY", "")
+        self.auth_interceptor = AuthInterceptor(api_key_field_name=api_key_field_name, api_key=api_key)
 
     def use_authenticaton(self):
         auth_middleware = self.auth_interceptor.register_auth_middleware()
