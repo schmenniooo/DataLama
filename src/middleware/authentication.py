@@ -18,6 +18,11 @@ class AuthInterceptor:
 
         class _Middleware(BaseHTTPMiddleware):
             async def dispatch(self, request: Request, call_next):
+                # Validating env keys
+                if not api_key_field_name or not api_key:
+                    return JSONResponse({"detail": "Unauthorized"}, status_code=401)
+
+                # Extracting response token
                 token = request.headers.get(api_key_field_name)
                 if token != api_key:
                     return JSONResponse({"detail": "Unauthorized"}, status_code=401)
