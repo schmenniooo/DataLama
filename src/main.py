@@ -6,10 +6,8 @@ import uvicorn
 import os
 
 def main():
-    # Handling debug mode with .env file
-    debug=os.getenv("DEBUG_MODE", "false")
-    if debug == "false":
-        load_dotenv("../") # Project root
+    load_dotenv()  # No-op if .env doesn't exist (e.g. in Docker)
+    debug = os.getenv("DEBUG", "false").lower() == "true"
 
     # Building app
     app = Server(
@@ -19,9 +17,10 @@ def main():
 
     # Starting server
     uvicorn.run(
-        app, 
+        app,
         debug=debug,
-        host=os.getenv("HOST", "0.0.0.0"), 
+        reload=debug,
+        host=os.getenv("HOST", "0.0.0.0"),
         port=int(os.getenv("PORT", 3000))
     )
 
