@@ -14,6 +14,7 @@ class Server:
     def use_authenticaton(self):
         auth_middleware = register_auth_middleware()
         self.app.add_middleware(auth_middleware)
+        return self
 
     def build(self):
         """Register routes and return the server instance."""
