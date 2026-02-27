@@ -14,11 +14,14 @@ def main():
     host = os.getenv("HOST", "0.0.0.0")
     port = int(os.getenv("PORT", 3000))
 
-    # Building app
-    Server(
+    # Creating the app server
+    server = Server(
         api_key_field_name=api_key_field_name, 
         api_key=api_key
-    ).use_authenticaton().build().run(
+    )
+
+    # Running the app server
+    server.use_authenticaton().build().run(
         debug=debug,
         host=host,
         port=port
