@@ -6,7 +6,7 @@ import uvicorn
 import os
 
 def main():
-    load_dotenv()  # No-op if .env doesn't exist (e.g. in Docker)
+    load_dotenv()  # No issue if .env doesn't exist (e.g. in Docker)
     debug = os.getenv("DEBUG", "false").lower() == "true"
 
     # Building app

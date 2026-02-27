@@ -13,6 +13,7 @@ class AuthInterceptor:
         self.api_key = api_key
 
     def register_auth_interceptor(self):
+        """Returns inner base middleware class"""
         api_key_field_name = self.api_key_field_name
         api_key = self.api_key
 

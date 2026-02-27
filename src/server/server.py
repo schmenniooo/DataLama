@@ -13,6 +13,7 @@ class Server:
         self.auth_interceptor = AuthInterceptor(api_key_field_name=api_key_field_name, api_key=api_key)
 
     def use_authenticaton(self):
+        """Registers authenticaton interceptor module"""
         auth_middleware = self.auth_interceptor.register_auth_interceptor()
         self.app.add_middleware(auth_middleware)
         return self
