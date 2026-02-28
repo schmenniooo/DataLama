@@ -17,37 +17,32 @@ from src.model.config import Config
 class Server:
     """Builds and configures the FastAPI application."""
 
-    def __init__(self, config: Config):
+    def __init__(self, config: Config = ""):
         self.app = FastAPI()
         self.config = config
 
-        self._configure_authenticaton(
-            api_key_field_name=config.api_key_field_name, 
-            api_key=config.api_key
-        )
-        ollama_service = self._configure_ollama_service(
-            ollama_base_url=config.ollama_base_url, 
-            ollama_model=config.ollama_model
-        )
+        self._configure_authenticaton()
+        ollama_service = self._create_ollama_service()
         self._configure_analysis_router(ollama_service=ollama_service)
 
-    def _configure_authenticaton(self, api_key_field_name: str, api_key: str):
+    def _configure_authenticaton(self):
         """Registers authenticaton interceptor module"""
         auth_middleware = AuthInterceptor(
-            api_key_field_name=api_key_field_name,
-            api_key=api_key
+            api_key_field_name=self.config.api_key_field_name,
+            api_key=self.config.api_key
         ).register_auth_interceptor()
         self.app.add_middleware(auth_middleware)
         return self
 
-    def _configure_ollama_service(self, ollama_base_url: str, ollama_model: str):
+    def _create_ollama_service(self):
+        """Returns new ollama service class"""
         return OllamaService(
-            ollama_base_url=ollama_base_url, 
-            ollama_model=ollama_model
+            ollama_base_url=self.config.ollama_base_url, 
+            ollama_model=self.config.ollama_model
         )
 
     def _configure_analysis_router(self, ollama_service: OllamaService):
-        """Register routes and return the server instance."""
+        """Creates new AnalysisRouter class and injects it to FastAPI"""
         analysis_router = AnalysisRouter(ollama_service=ollama_service)
         self.app.include_router(analysis_router)
 
