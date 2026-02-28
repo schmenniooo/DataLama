@@ -24,19 +24,20 @@ class AnalysisRouter:
 
     async def _forecasting(self):
         """Perform time series forecasting."""
-
+        pass
 
     async def _summary(self):
         """Generate a summary of the data."""
-
+        pass
 
     async def _anomaly_detection(self):
         """Detect anomalies in the data."""
-
+        pass
 
     async def _pattern_recognition(self):
         """Recognize patterns in the data."""
-
+        pass
 
     async def _comparison(self):
         """Compare datasets."""
+        pass
