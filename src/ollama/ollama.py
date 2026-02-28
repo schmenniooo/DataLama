@@ -17,7 +17,7 @@ class OllamaService:
         self.ollama_model = ollama_model
         self.ollama_client = ollama.Client(host=ollama_base_url)
         
-    def make_analyse_request(self, analysis_type: str, data: str):
+    def make_analyse_request(self, analysis_type: str, data: str) -> bool:
         """Makes a request to ollama with system and user messages"""
         # Getting system prompt by given analysis type
         system_prompt = analyses_types.get(analysis_type)

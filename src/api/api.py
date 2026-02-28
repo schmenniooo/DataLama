@@ -10,7 +10,7 @@ class AnalysisRouter:
         self.ollama_service = ollama_service
         self._register_routes()
 
-    def _register_routes(self):
+    def _register_routes(self) -> None:
         self.router.add_api_route("/ping", self._ping, methods=["GET"])
         self.router.add_api_route("/forecasting", self._forecasting, methods=["POST"])
         self.router.add_api_route("/summary", self._summary, methods=["POST"])
