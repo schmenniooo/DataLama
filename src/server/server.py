@@ -10,7 +10,6 @@ from src.model.config import Config
 
 # TODO: Add logging
 # TODO: Add typing
-# TOOD: Comments
 # TODO: Tests
 
 class Server:
