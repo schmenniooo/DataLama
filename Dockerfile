@@ -23,15 +23,11 @@ WORKDIR /app
 COPY --from=build /app .
 
 # Setting environment variables
-
-ARG DEBUG="False"
-ENV DEBUG=${DEBUG}
-
-ARG HOST="0.0.0.0"
-ENV HOST=${HOST}
-
-ARG PORT=3000
-ENV PORT=${PORT}
+ENV OLLAMA_BASE_URL="http://localhost:11434"
+ENV OLLAMA_MODEL="llama3.2"
+ENV DEBUG="false"
+ENV HOST="0.0.0.0"
+ENV PORT=3000
 
 EXPOSE ${PORT}
 
