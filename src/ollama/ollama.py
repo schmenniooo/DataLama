@@ -9,9 +9,9 @@ analyses_types: dict[str, str] = {
 
 class OllamaService:
     
-    def __init__(self):
-        self.base_url = ""
-        self.model = ""
+    def __init__(self, ollama_base_url: str, ollama_model: str):
+        self.base_url = ollama_base_url
+        self.model = ollama_model
 
     def connect():
         pass

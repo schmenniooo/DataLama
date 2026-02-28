@@ -17,15 +17,15 @@ class Server:
             api_key_field_name=api_key_field_name,
             api_key=api_key
         )
-        self.ollama_service = OllamaService()
-    
-    def setup_ai_model(self):
-        return self
 
     def use_authenticaton(self):
         """Registers authenticaton interceptor module"""
         auth_middleware = self.auth_interceptor.register_auth_interceptor()
         self.app.add_middleware(auth_middleware)
+        return self
+
+    def setup_ai_model(self, ollama_base_url: str, ollama_model: str):
+        ollama_service = OllamaService()
         return self
 
     def build(self):
