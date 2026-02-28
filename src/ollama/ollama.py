@@ -1,6 +1,9 @@
 """Ollama communication module to chat with chosen model"""
 
+import logging
 import ollama
+
+logger = logging.getLogger("logger")
 
 analyses_types: dict[str, str] = {
     "forecasting" : "",
@@ -19,21 +22,21 @@ class OllamaService:
         
     def make_analyse_request(self, analysis_type: str, data: str) -> bool:
         """Makes a request to ollama with system and user messages"""
-        # Getting system prompt by given analysis type
         system_prompt = analyses_types.get(analysis_type)
         if system_prompt is None:
             raise ValueError(f"Unknown analysis type: '{analysis_type}'")
 
-        # Making chat request
+        logger.info("Sending '%s' analysis request to Ollama", analysis_type)
         try:
             self.ollama_client.chat(
                 model=self.ollama_model,
                 messages=[
-                    {"role": "system", "content": system_prompt}, # Configuring model
-                    {"role": "user", "content": data}, # Analysing actual data
+                    {"role": "system", "content": system_prompt},
+                    {"role": "user", "content": data},
                 ],
             )
-        except ollama.ResponseError:
+        except ollama.ResponseError as e:
+            logger.error("Ollama request failed: %s", e)
             return False
 
         return True
