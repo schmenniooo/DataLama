@@ -15,7 +15,7 @@ from src.model.config import Config
 class Server:
     """Builds and configures the FastAPI application."""
 
-    def __init__(self, config: Config = ""):
+    def __init__(self, config: Config):
         self.app = FastAPI()
         self.config = config
 
