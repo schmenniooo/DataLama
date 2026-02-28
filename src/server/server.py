@@ -3,7 +3,6 @@
 import uvicorn
 from fastapi import FastAPI
 
-from src.api.api import router
 from src.middleware.authentication import AuthInterceptor
 from src.ollama.ollama import OllamaService
 from src.api.api import AnalysisRouter
@@ -44,7 +43,7 @@ class Server:
     def _configure_analysis_router(self, ollama_service: OllamaService):
         """Creates new AnalysisRouter class and injects it to FastAPI"""
         analysis_router = AnalysisRouter(ollama_service=ollama_service)
-        self.app.include_router(analysis_router)
+        self.app.include_router(analysis_router.router)
 
     def Run(self):
         """Starts uvicorn server"""
