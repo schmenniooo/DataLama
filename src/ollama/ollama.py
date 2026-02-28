@@ -12,11 +12,25 @@ analyses_types: dict[str, str] = {
 class OllamaService:
     
     def __init__(self, ollama_base_url: str, ollama_model: str):
-        self.base_url = ollama_base_url
-        self.model = ollama_model
+        self.ollama_model = ollama_model
+        self.ollama_client = ollama.Client(host=ollama_base_url)
+        
+    def make_analyse_request(self, analysis_type: str, data: str):
+        # Getting system prompt by given analysis type
+        system_prompt = analyses_types.get(analysis_type)
+        if system_prompt is None:
+            raise ValueError(f"Unknown analysis type: '{analysis_type}'")
 
-    def connect():
-        pass
+        # Making chat request
+        try:
+            self.ollama_client.chat(
+                model=self.ollama_model,
+                messages=[
+                    {"role": "system", "content": system_prompt}, # Configuring model
+                    {"role": "user", "content": data}, # Analysing actual data
+                ],
+            )
+        except ollama.ResponseError:
+            return False
 
-    def disconnect():
-        pass
+        return True
