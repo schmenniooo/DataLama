@@ -5,6 +5,7 @@ from fastapi import FastAPI
 
 from src.api.api import router
 from src.middleware.authentication import AuthInterceptor
+from src.ollama.ollama import OllamaService
 
 
 class Server:
@@ -16,6 +17,10 @@ class Server:
             api_key_field_name=api_key_field_name,
             api_key=api_key
         )
+        self.ollama_service = OllamaService()
+    
+    def setup_ai_model(self):
+        return self
 
     def use_authenticaton(self):
         """Registers authenticaton interceptor module"""
