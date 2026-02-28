@@ -21,20 +21,7 @@ def main():
     ollama_base_url = os.getenv("OLLAMA_BASE_URL", "")
     ollama_model = os.getenv("OLLAMA_MODEL", "")
 
-    # Creating the app server
-    server = Server()
-
-    # Running the app server
-    server.use_authenticaton(
-        api_key_field_name=api_key_field_name,
-        api_key=api_key).setup_ai_model(
-        ollama_base_url=ollama_base_url, 
-        ollama_model=ollama_model
-    ).build().run(
-        debug=debug,
-        host=host,
-        port=port
-    )
+    
 
 if __name__ == "__main__":
     print("Hello from datalama!")
