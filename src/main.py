@@ -22,13 +22,12 @@ def main():
     ollama_model = os.getenv("OLLAMA_MODEL", "")
 
     # Creating the app server
-    server = Server(
-        api_key_field_name=api_key_field_name,
-        api_key=api_key
-    )
+    server = Server()
 
     # Running the app server
-    server.use_authenticaton().setup_ai_model(
+    server.use_authenticaton(
+        api_key_field_name=api_key_field_name,
+        api_key=api_key).setup_ai_model(
         ollama_base_url=ollama_base_url, 
         ollama_model=ollama_model
     ).build().run(

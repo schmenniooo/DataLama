@@ -11,16 +11,15 @@ from src.ollama.ollama import OllamaService
 class Server:
     """Builds and configures the FastAPI application."""
 
-    def __init__(self, api_key_field_name: str, api_key: str):
+    def __init__(self):
         self.app = FastAPI()
-        self.auth_interceptor = AuthInterceptor(
+
+    def use_authenticaton(self, api_key_field_name: str, api_key: str):
+        """Registers authenticaton interceptor module"""
+        auth_middleware = AuthInterceptor(
             api_key_field_name=api_key_field_name,
             api_key=api_key
-        )
-
-    def use_authenticaton(self):
-        """Registers authenticaton interceptor module"""
-        auth_middleware = self.auth_interceptor.register_auth_interceptor()
+        ).register_auth_interceptor()
         self.app.add_middleware(auth_middleware)
         return self
 
