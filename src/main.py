@@ -24,7 +24,7 @@ def main():
         ollama_base_url = os.getenv("OLLAMA_BASE_URL", ""),
         ollama_model = os.getenv("OLLAMA_MODEL", "")
     )
-    
+
     # Creating and running server
     server = Server(config=config)
     server.Run()

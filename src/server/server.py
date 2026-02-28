@@ -1,18 +1,19 @@
 """Server module for building and running the FastAPI application."""
 
 import logging
+
 import uvicorn
 from fastapi import FastAPI
 
+from src.api.api import AnalysisRouter
+from src.middleware.authentication import AuthInterceptor
+from src.model.config import Config
+from src.ollama.ollama import OllamaService
+
 logger = logging.getLogger("logger")
 
-from src.middleware.authentication import AuthInterceptor
-from src.ollama.ollama import OllamaService
-from src.api.api import AnalysisRouter
-from src.model.config import Config
 
-
-class Server:
+class Server:  # pylint: disable=too-few-public-methods
     """Builds and configures the FastAPI application."""
 
     def __init__(self, config: Config):
@@ -35,7 +36,8 @@ class Server:
 
     def _create_ollama_service(self) -> OllamaService:
         """Returns new ollama service class"""
-        logger.info("Creating Ollama service (model: %s, url: %s)", self.config.ollama_model, self.config.ollama_base_url)
+        logger.info("Creating Ollama service (model: %s, url: %s)",
+                    self.config.ollama_model, self.config.ollama_base_url)
         return OllamaService(
             ollama_base_url=self.config.ollama_base_url,
             ollama_model=self.config.ollama_model

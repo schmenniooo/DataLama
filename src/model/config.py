@@ -1,9 +1,12 @@
-# Stores global microservice configuration
+"""Stores global microservice configuration."""
 
-from dataclasses import dataclass                                       
-                  
-@dataclass 
-class Config: 
+from dataclasses import dataclass
+
+
+@dataclass
+class Config:
+    """Holds all configuration values for the microservice."""
+
     api_key_field_name: str
     api_key: str
     ollama_base_url: str
