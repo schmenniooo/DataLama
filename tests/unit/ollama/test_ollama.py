@@ -3,8 +3,8 @@
 
 from unittest.mock import MagicMock, patch
 
-import ollama
 import pytest
+import ollama
 
 from src.ollama.ollama import OllamaService
 
@@ -52,7 +52,9 @@ def test_ollama_response_error_returns_false(service):
     assert result is False
 
 
-@pytest.mark.parametrize("analysis_type", ["forecasting", "summary", "anomaly", "pattern", "comparison"])
+@pytest.mark.parametrize("analysis_type", [
+    "forecasting", "summary", "anomaly", "pattern", "comparison"
+])
 def test_all_registered_types_are_accepted(service, analysis_type):
     """All entries in analyses_types are valid and do not raise."""
     service.ollama_client.chat.return_value = MagicMock()
