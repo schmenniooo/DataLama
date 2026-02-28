@@ -24,7 +24,10 @@ class Server:
         return self
 
     def setup_ai_model(self, ollama_base_url: str, ollama_model: str):
-        ollama_service = OllamaService()
+        ollama_service = OllamaService(
+            ollama_base_url=ollama_base_url, 
+            ollama_model=ollama_model
+        )
         return self
 
     def build(self):
