@@ -1,37 +1,42 @@
 """API route definitions for the DataLama application."""
 
 from fastapi import APIRouter
+from src.ollama.ollama import OllamaService
 
-router = APIRouter()
+class AnalysisRouter:
+    
+    def __init__(self, ollama_service: OllamaService):
+        self.router = APIRouter()
+        self.ollama_service = ollama_service
 
+    def register_routes(self):
+        self.router.add_api_route("/ping", self._ping, methods=["GET"])
+        self.router.add_api_route("/forecasting", self._forecasting, methods=["POST"])
+        self.router.add_api_route("/summary", self._summary, methods=["POST"])
+        self.router.add_api_route("/anomaly", self._anomaly_detection, methods=["POST"])
+        self.router.add_api_route("/pattern", self._pattern_recognition, methods=["POST"])
+        self.router.add_api_route("/comparison", self._comparison, methods=["POST"])
 
-@router.get("/health")
-async def ping():
-    """Check the health of the service."""
-    # TODO: Return actual result from model connection or else
-    return {"result": "healthy"}
+    async def _ping(self):
+        """Check the health of the service."""
+        # TODO: Return actual result from model connection or else
+        return {"result": "healthy"}
 
-
-@router.post("/forecasting")
-async def forecasting():
-    """Perform time series forecasting."""
-
-
-@router.post("/summary")
-async def summary():
-    """Generate a summary of the data."""
-
-
-@router.post("/anomalyDetection")
-async def anomaly_detection():
-    """Detect anomalies in the data."""
-
-
-@router.post("/patternRecognition")
-async def pattern_recognition():
-    """Recognize patterns in the data."""
+    async def _forecasting(self):
+        """Perform time series forecasting."""
 
 
-@router.post("/comparison")
-async def comparison():
-    """Compare datasets."""
+    async def _summary(self):
+        """Generate a summary of the data."""
+
+
+    async def _anomaly_detection(self):
+        """Detect anomalies in the data."""
+
+
+    async def _pattern_recognition(self):
+        """Recognize patterns in the data."""
+
+
+    async def _comparison(self):
+        """Compare datasets."""
