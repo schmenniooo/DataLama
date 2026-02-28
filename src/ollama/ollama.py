@@ -1,4 +1,6 @@
 
+import ollama
+
 analyses_types: dict[str, str] = {
     "forecasting" : "",
     "summary" : "",
