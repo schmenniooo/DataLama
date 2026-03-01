@@ -2,11 +2,9 @@
 replicaCount: 1
 
 image:
-  repository: nginx
+  repository: ghcr.io/schmenniooo/datalama
   pullPolicy: IfNotPresent
-  tag: ""
-
-imagePullSecrets: []
+  tag: "latest"
 
 serviceAccount:
   create: true
