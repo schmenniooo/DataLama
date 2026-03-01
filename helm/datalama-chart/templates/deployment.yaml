@@ -5,9 +5,7 @@ metadata:
   labels:
     {{- include "datalama-deployment-chart.labels" . | nindent 4 }}
 spec:
-  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
-  {{- end }}
   selector:
     matchLabels:
       {{- include "datalama-deployment-chart.selectorLabels" . | nindent 6 }}
