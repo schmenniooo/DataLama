@@ -1,0 +1,9 @@
+apiVersion: v2
+name: datalama-chart
+description: A Helm chart for deploying the Datalama application
+
+type: application
+
+version: 1.0.0
+
+appVersion: "1.0.0"

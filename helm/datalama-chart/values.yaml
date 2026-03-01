@@ -1,0 +1,70 @@
+
+namespace: datalama-microservice-namespace
+
+replicaCount: 1
+
+# Image on GH: https://github.com/schmenniooo/DataLama/pkgs/container/datalama
+image:
+  repository: ghcr.io/schmenniooo/datalama
+  pullPolicy: IfNotPresent
+  tag: "latest"
+
+# Environment variables for the datalama microservice container
+environmentVariables:
+  - name: "API_KEY_FIELD_NAME"
+    value: "X-API-Key"
+  - name: "API_KEY"
+    value: "your_api_key_here"
+  - name: "OLLAMA_BASE_URL"
+    value: "http://localhost:11434"
+  - name: "OLLAMA_MODEL"
+    value: "llama3.2"
+  - name: "DEBUG"
+    value: "false"
+  - name: "HOST"
+    value: "0.0.0.0"
+  - name: "PORT"
+    value: "3000"
+
+podAnnotations: {}
+podLabels: {}
+
+resources:                                                                           
+  requests:                                                                          
+    cpu: "100m"                                                                      
+    memory: "64Mi"
+  limits:
+    cpu: "500m"
+    memory: "128Mi"
+
+serviceAccount:
+  create: true
+  automount: true
+  name: "datalama-user-service-account"
+
+# Running the container as non-root user for security
+podSecurityContext:                                                                  
+  runAsNonRoot: true                                                                 
+  runAsUser: 1000
+  runAsGroup: 1000
+
+# Security context for the container to further restrict permissions
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+
+service:
+  type: ClusterIP
+  port: 3000
+
+livenessProbe:
+  httpGet:
+    path: /ping
+    port: 3000
+readinessProbe:
+  httpGet:
+    path: /ping
+    port: 3000
