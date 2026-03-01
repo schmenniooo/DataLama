@@ -1,4 +1,6 @@
 
+namspace: datalama-microservice-namespace
+
 replicaCount: 1
 
 image:
