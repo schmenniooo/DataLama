@@ -3,6 +3,7 @@ namspace: datalama-microservice-namespace
 
 replicaCount: 1
 
+# Image on GH: https://github.com/schmenniooo/DataLama/pkgs/container/datalama
 image:
   repository: ghcr.io/schmenniooo/datalama
   pullPolicy: IfNotPresent
@@ -10,9 +11,9 @@ image:
 
 # Environment variables for the datalama microservice container
 environmentVariables:
-  - name: "UHUB_API_KEY_FIELD_NAME"
+  - name: "API_KEY_FIELD_NAME"
     value: "X-API-Key"
-  - name: "UHUB_API_KEY"
+  - name: "API_KEY"
     value: "your_api_key_here"
   - name: "OLLAMA_BASE_URL"
     value: "http://localhost:11434"
