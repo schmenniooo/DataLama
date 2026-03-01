@@ -8,6 +8,23 @@ image:
   pullPolicy: IfNotPresent
   tag: "latest"
 
+# Environment variables for the datalama microservice container
+environmentVariables:
+  - name: "UHUB_API_KEY_FIELD_NAME"
+    value: "X-API-Key"
+  - name: "UHUB_API_KEY"
+    value: "your_api_key_here"
+  - name: "OLLAMA_BASE_URL"
+    value: "http://localhost:11434"
+  - name: "OLLAMA_MODEL"
+    value: "llama3.2"
+  - name: "DEBUG"
+    value: "false"
+  - name: "HOST"
+    value: "0.0.0.0"
+  - name: "PORT"
+    value: "3000"
+
 podAnnotations: {}
 podLabels: {}
 
