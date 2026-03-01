@@ -8,13 +8,21 @@ image:
   pullPolicy: IfNotPresent
   tag: "latest"
 
+podAnnotations: {}
+podLabels: {}
+
+resources:                                                                           
+  requests:                                                                          
+    cpu: "100m"                                                                      
+    memory: "64Mi"
+  limits:
+    cpu: "500m"
+    memory: "128Mi"
+
 serviceAccount:
   create: true
   automount: true
   name: "datalama-user-service-account"
-
-podAnnotations: {}
-podLabels: {}
 
 # Running the container as non-root user for security
 podSecurityContext:                                                                  
@@ -33,7 +41,7 @@ securityContext:
 service:
   type: ClusterIP
   port: 3000
-  
+
 httpRoute:
   enabled: false
   annotations: {}
@@ -63,14 +71,6 @@ httpRoute:
   #     headers:
   #     - name: version
   #       value: v2
-
-resources:                                                                           
-  requests:                                                                          
-    cpu: "100m"                                                                      
-    memory: "64Mi"
-  limits:
-    cpu: "500m"
-    memory: "128Mi"
 
 livenessProbe:
   httpGet:
