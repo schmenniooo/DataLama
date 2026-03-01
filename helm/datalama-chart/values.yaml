@@ -11,8 +11,7 @@ imagePullSecrets: []
 serviceAccount:
   create: true
   automount: true
-  annotations: {}
-  name: ""
+  name: "datalama-user-service-account"
 
 podAnnotations: {}
 podLabels: {}
