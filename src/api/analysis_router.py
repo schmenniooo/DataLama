@@ -24,7 +24,11 @@ class AnalysisRouter:  # pylint: disable=too-few-public-methods
 
     async def _health(self) -> dict:
         """Check the health of the service."""
-        return {"result": "healthy"}
+        healthy = self.ollama_service.health_check()
+        if healthy:
+            return {"result": "healthy"}
+        else:
+            return {"result": "unhealthy"}
 
     async def _forecasting(self) -> None:
         """Perform time series forecasting."""
