@@ -8,6 +8,10 @@ from src.ollama.ollama_service import OllamaService
 class BaseRequest(BaseModel):
     data: str
 
+class BaseResponse(BaseModel):
+    message: str
+    updated_data: str
+
 class AnalysisRouter:  # pylint: disable=too-few-public-methods
     """Registers and handles all analysis API routes."""
 
