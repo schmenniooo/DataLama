@@ -1,9 +1,12 @@
 """API route definitions for the DataLama application."""
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Request
+from pydantic import BaseModel
 
 from src.ollama.ollama_service import OllamaService
 
+class BaseRequest(BaseModel):
+    data: str
 
 class AnalysisRouter:  # pylint: disable=too-few-public-methods
     """Registers and handles all analysis API routes."""
@@ -30,8 +33,12 @@ class AnalysisRouter:  # pylint: disable=too-few-public-methods
         else:
             return {"result": "unhealthy"}
 
-    async def _forecasting(self) -> None:
+    async def _forecasting(self, request: BaseRequest) -> None:
         """Perform time series forecasting."""
+        self.ollama_service.make_analyse_request(
+            analysis_type="forecasting",
+            data=request.data,
+        )
 
     async def _summary(self) -> None:
         """Generate a summary of the data."""
