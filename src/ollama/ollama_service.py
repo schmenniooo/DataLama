@@ -3,6 +3,7 @@
 import logging
 
 import ollama
+from ollama import ChatResponse
 
 logger = logging.getLogger("logger")
 
@@ -35,7 +36,7 @@ class OllamaService:  # pylint: disable=too-few-public-methods
         # If operation does not fail -> ollama is up and running
         return True
 
-    def make_analyse_request(self, analysis_type: str, data: str) -> bool:
+    def make_analyse_request(self, analysis_type: str, data: str) -> str:
         """Makes a request to ollama with system and user messages"""
         system_prompt = analyses_types.get(analysis_type)
         if system_prompt is None:
@@ -43,7 +44,7 @@ class OllamaService:  # pylint: disable=too-few-public-methods
 
         logger.info("Sending '%s' analysis request to Ollama", analysis_type)
         try:
-            self.ollama_client.chat(
+            response: ChatResponse = self.ollama_client.chat(
                 model=self.ollama_model,
                 messages=[
                     {"role": "system", "content": system_prompt},
@@ -52,6 +53,6 @@ class OllamaService:  # pylint: disable=too-few-public-methods
             )
         except ollama.ResponseError as e:
             logger.error("Ollama request failed: %s", e)
-            return False
+            return ""
 
-        return True
+        return response.message.content
