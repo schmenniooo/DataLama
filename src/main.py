@@ -6,7 +6,7 @@ import logging
 from dotenv import load_dotenv
 
 from src.server.server import Server
-from src.model.config import Config
+from model.config.config import Config
 
 logger = logging.getLogger("logger")
 
