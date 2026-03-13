@@ -43,7 +43,7 @@ class AnalysisRouter:  # pylint: disable=too-few-public-methods
             analysis_type="forecasting",
             data=request.data,
         )
-        return BaseResponse(message=response, updated_data=request.data) # TODO: Data updated by LLM
+        return BaseResponse(message="Forecasted Data", updated_data=response)
 
     async def _summary(self) -> None:
         """Generate a summary of the data."""

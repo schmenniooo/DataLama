@@ -11,7 +11,10 @@ base_role = ("You are a professional data analyst for analysing csv, json and ym
              "First check which file format was chosen")
 
 analyses_types: dict[str, str] = {
-    "forecasting": f"{base_role}. Provide for a forecasting for the following data. Analyse the format and continue the data in this format",
+    "forecasting": f"{base_role}. "
+                   f"Provide for a forecasting for the following data. "
+                   f"Analyse the format and continue the data in this format. "
+                   f"Only return the existing data with forecasted data without a additional message",
     "summary": f"{base_role}.",
     "anomaly": f"{base_role}.",
     "pattern": f"{base_role}.",
