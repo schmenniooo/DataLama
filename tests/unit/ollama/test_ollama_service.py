@@ -6,7 +6,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 import ollama
 
-from src.ollama.ollama import OllamaService
+from src.ollama.ollama_service import OllamaService
 
 
 @pytest.fixture
