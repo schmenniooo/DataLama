@@ -31,6 +31,7 @@ class OllamaService:  # pylint: disable=too-few-public-methods
         except ollama.ResponseError as e:
             logger.error("Ollama request failed: %s", e)
             return False
+        # If operation does not fail -> ollama is up and running
         return True
 
     def make_analyse_request(self, analysis_type: str, data: str) -> bool:
