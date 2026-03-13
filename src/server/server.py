@@ -21,12 +21,12 @@ class Server:  # pylint: disable=too-few-public-methods
         self.config = config
 
         logger.info("Configuring server")
-        self._configure_authenticaton()
+        self._configure_authentication()
         ollama_service = self._create_ollama_service()
         self._configure_analysis_router(ollama_service=ollama_service)
 
-    def _configure_authenticaton(self) -> None:
-        """Registers authenticaton interceptor module"""
+    def _configure_authentication(self) -> None:
+        """Registers authentication interceptor module"""
         logger.info("Registering authentication middleware")
         auth_middleware = AuthInterceptor(
             api_key_field_name=self.config.api_key_field_name,
@@ -49,7 +49,7 @@ class Server:  # pylint: disable=too-few-public-methods
         analysis_router = AnalysisRouter(ollama_service=ollama_service)
         self.app.include_router(analysis_router.router)
 
-    def Run(self) -> None:
+    def run(self) -> None:
         """Starts uvicorn server"""
         logger.info("Starting server on %s:%s", self.config.host, self.config.port)
         uvicorn.run(

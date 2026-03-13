@@ -20,14 +20,14 @@ def main():
         api_key = os.getenv("API_KEY"),
         debug = os.getenv("DEBUG", "false").lower() == "true",
         host = os.getenv("HOST", "0.0.0.0"),
-        port = os.getenv("PORT", "3000"),
+        port = int(os.getenv("PORT", "3000")),
         ollama_base_url = os.getenv("OLLAMA_BASE_URL", ""),
         ollama_model = os.getenv("OLLAMA_MODEL", "")
     )
 
     # Creating and running server
     server = Server(config=config)
-    server.Run()
+    server.run()
 
 if __name__ == "__main__":
     print("Hello from datalama!")
