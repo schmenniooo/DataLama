@@ -12,7 +12,7 @@ from src.ollama.ollama_service import OllamaService
 @pytest.fixture
 def service():
     """OllamaService with a mocked ollama client."""
-    with patch("src.ollama.ollama.ollama.Client") as mock_client_class:
+    with patch("src.ollama.ollama_service.ollama.Client") as mock_client_class:
         instance = OllamaService(ollama_base_url="http://localhost:11434", ollama_model="llama3.2")
         instance.ollama_client = mock_client_class.return_value
         yield instance
