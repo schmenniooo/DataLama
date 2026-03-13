@@ -22,6 +22,15 @@ class OllamaService:  # pylint: disable=too-few-public-methods
         self.ollama_model = ollama_model
         self.ollama_client = ollama.Client(host=ollama_base_url)
 
+    def health_check(self) -> bool:
+        """Check the health of the service."""
+        try:
+            self.ollama_client.list()
+        except ollama.ResponseError as e:
+            logger.error("Ollama request failed: %s", e)
+            return False
+        return True
+
     def make_analyse_request(self, analysis_type: str, data: str) -> bool:
         """Makes a request to ollama with system and user messages"""
         system_prompt = analyses_types.get(analysis_type)
