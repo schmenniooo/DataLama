@@ -6,12 +6,14 @@ import ollama
 
 logger = logging.getLogger("logger")
 
+base_role = "You are a professional data analyst for analysing csv, json and yml files."
+
 analyses_types: dict[str, str] = {
-    "forecasting": "",
-    "summary": "",
-    "anomaly": "",
-    "pattern": "",
-    "comparison": "",
+    "forecasting": f"{base_role}",
+    "summary": f"{base_role}",
+    "anomaly": f"{base_role}",
+    "pattern": f"{base_role}",
+    "comparison": f"{base_role}",
 }
 
 
