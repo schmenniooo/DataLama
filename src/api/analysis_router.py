@@ -37,12 +37,13 @@ class AnalysisRouter:  # pylint: disable=too-few-public-methods
         else:
             return {"result": "unhealthy"}
 
-    async def _forecasting(self, request: BaseRequest) -> None:
+    async def _forecasting(self, request: BaseRequest) -> BaseResponse:
         """Perform time series forecasting."""
-        self.ollama_service.make_analyse_request(
+        response = self.ollama_service.make_analyse_request(
             analysis_type="forecasting",
             data=request.data,
         )
+        return BaseResponse(message=response, updated_data=request.data) # TODO: Data updated by LLM
 
     async def _summary(self) -> None:
         """Generate a summary of the data."""
