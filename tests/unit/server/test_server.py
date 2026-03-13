@@ -5,7 +5,7 @@ import pytest
 from fastapi.testclient import TestClient
 
 from src.server.server import Server
-from src.model.config import Config
+from model.config.config import Config
 
 
 @pytest.fixture
