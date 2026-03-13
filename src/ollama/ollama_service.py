@@ -11,11 +11,11 @@ base_role = ("You are a professional data analyst for analysing csv, json and ym
              "First check which file format was chosen")
 
 analyses_types: dict[str, str] = {
-    "forecasting": f"{base_role} .",
-    "summary": f"{base_role} .",
-    "anomaly": f"{base_role} .",
-    "pattern": f"{base_role} .",
-    "comparison": f"{base_role} .",
+    "forecasting": f"{base_role}. Provide for a forecasting for the following data. Analyse the format and continue the data in this format",
+    "summary": f"{base_role}.",
+    "anomaly": f"{base_role}.",
+    "pattern": f"{base_role}.",
+    "comparison": f"{base_role}.",
 }
 
 
