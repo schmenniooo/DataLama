@@ -15,7 +15,7 @@ analyses_types: dict[str, str] = {
     "forecasting": f"{base_role}. "
                    f"Provide for a forecasting for the following data. "
                    f"Analyse the format and continue the data in this format. "
-                   f"The key ---NEW---DATASET seperates different data sets."
+                   f"The key ---NEW---DATASET--- seperates different data sets."
                    f"Only return the existing data with forecasted data without a additional message",
     "summary": f"{base_role}.",
     "anomaly": f"{base_role}.",
