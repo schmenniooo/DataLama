@@ -14,8 +14,8 @@ dependencies = [
     "uvicorn>=0.34.0",
 ]
 
-[tool.uv]
-env = { PYTHONDONTWRITEBYTECODE = "1" }
+[tool.uv]                                                                  
+  compile-bytecode = false
 
 [tool.pytest.ini_options]
 pythonpath = ["."]
