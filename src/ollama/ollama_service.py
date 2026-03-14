@@ -15,6 +15,7 @@ analyses_types: dict[str, str] = {
     "forecasting": f"{base_role}. "
                    f"Provide for a forecasting for the following data. "
                    f"Analyse the format and continue the data in this format. "
+                   f"The key ---NEW---DATASET seperates different data sets."
                    f"Only return the existing data with forecasted data without a additional message",
     "summary": f"{base_role}.",
     "anomaly": f"{base_role}.",
@@ -40,7 +41,7 @@ class OllamaService:  # pylint: disable=too-few-public-methods
         # If operation does not fail -> ollama is up and running
         return True
 
-    def make_analyse_request(self, analysis_type: str, data: str) -> str:
+    async def make_analyse_request(self, analysis_type: str, data: str) -> str:
         """Makes a request to ollama with system and user messages"""
         system_prompt = analyses_types.get(analysis_type)
         if system_prompt is None:
