@@ -2,6 +2,7 @@
 
 import logging
 
+from fastapi import HTTPException
 import ollama
 from ollama import ChatResponse
 
@@ -56,6 +57,6 @@ class OllamaService:  # pylint: disable=too-few-public-methods
             )
         except ollama.ResponseError as e:
             logger.error("Ollama request failed: %s", e)
-            return ""
+            raise HTTPException(502)
 
         return response.message.content
