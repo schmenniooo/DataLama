@@ -13,7 +13,7 @@ def validate_request(request: BaseRequest) -> str:
     if message != "":
         return message
 
-    message = _validate_format(format=request.format)
+    message = _validate_data_format(format=request.format)
     if message != "":
         return message
 
@@ -35,7 +35,7 @@ def _validate_data_to_analyse(data_sets: list[str]) -> str:
     return ""
 
 
-def _validate_format(format: str) -> str:
+def _validate_data_format(format: str) -> str:
     if format.lower() not in SUPPORTED_FORMATS:
         return f"Unsupported format '{format}'. Must be one of: {', '.join(sorted(SUPPORTED_FORMATS))}"
 
