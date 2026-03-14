@@ -57,6 +57,6 @@ class OllamaService:  # pylint: disable=too-few-public-methods
             )
         except ollama.ResponseError as e:
             logger.error("Ollama request failed: %s", e)
-            raise HTTPException(502)
+            raise ollama.ResponseError(error=e.error, status_code=502)
 
         return response.message.content

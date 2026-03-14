@@ -1,6 +1,7 @@
 """API route definitions for the DataLama application."""
 
 from fastapi import APIRouter, HTTPException, Request
+import ollama
 from pydantic import BaseModel
 
 from src.ollama.ollama_service import OllamaService
@@ -8,7 +9,7 @@ from src.ollama.ollama_service import OllamaService
 class BaseRequest(BaseModel):
     data: str # Data to analyse as string for flexibility
     format: str # CSV, JSON or YAML
-    daterange: int[str] # Max 2 dates
+    daterange: list[str] # Max 2 dates
 
 class BaseResponse(BaseModel):
     message: str
@@ -33,7 +34,7 @@ class AnalysisRouter:  # pylint: disable=too-few-public-methods
 
     async def _health(self) -> dict:
         """Check the health of the service."""
-        healthy = self.ollama_service.health_check()
+        healthy = await self.ollama_service.health_check()
         if healthy:
             return {"result": "healthy"}
         else:
@@ -42,12 +43,13 @@ class AnalysisRouter:  # pylint: disable=too-few-public-methods
     async def _forecasting(self, request: BaseRequest) -> BaseResponse:
         """Perform time series forecasting."""
         try:
-            response = self.ollama_service.make_analyse_request(
+            response = await self.ollama_service.make_analyse_request(
                 analysis_type="forecasting",
                 data=request.data,
             )
-        except HTTPException as e:
+        except ollama.ResponseError as e:
             raise HTTPException(status_code=502, detail=f"Ollama request failed: {e.detail}")
+        
         return BaseResponse(message="Forecasted Data", updated_data=response)
 
     async def _summary(self) -> None:
