@@ -2,19 +2,10 @@
 
 from fastapi import APIRouter, HTTPException, Request
 import ollama
-from pydantic import BaseModel
 
 from src.ollama.ollama_service import OllamaService
 from src.validation.validation import validate_data_to_analyse
-
-class BaseRequest(BaseModel):
-    data_sets: list[str] # List of data sets
-    format: str # CSV, JSON or YAML
-    daterange: list[str] # Max 2 dates as range
-
-class BaseResponse(BaseModel):
-    message: str
-    updated_data: list[str] # List of updated datasets
+from src.model.api.api_model import BaseRequest, BaseResponse
 
 class AnalysisRouter:  # pylint: disable=too-few-public-methods
     """Registers and handles all analysis API routes."""
