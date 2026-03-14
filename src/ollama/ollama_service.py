@@ -7,16 +7,17 @@ from ollama import ChatResponse
 
 logger = logging.getLogger("logger")
 
-BASE_ROLE = ("You are a professional data analyst for analysing csv, json and yml files. "
-             "First check which file format was chosen")
+BASE_ROLE = "You are a professional data analyst for analysing csv, json and yml files."
 
 DATA_SEPERATOR = f"The key ---NEW---DATASET--- seperates different data sets."
 
 analyses_types: dict[str, str] = {
     "forecasting": "{BASE_ROLE}. "
                    f"Provide for a forecasting for the following data. "
+                   "This the format of the data: %s"
                    f"Analyse the format and continue the data in this format. "
                    "{DATA_SEPERATOR}"
+                   "This the time range: %s"
                    f"Only return the existing data with forecasted data without a additional message",
     "summary": f"{BASE_ROLE}.",
     "anomaly": f"{BASE_ROLE}.",
@@ -42,13 +43,18 @@ class OllamaService:  # pylint: disable=too-few-public-methods
         # If operation does not fail -> ollama is up and running
         return True
 
-    async def make_analyse_request(self, analysis_type: str, data: str) -> str:
+    async def make_analyse_request(self, analysis_type: str, data: str, format: str, daterange: list[str]) -> str:
         """Makes a request to ollama with system and user messages"""
         system_prompt = analyses_types.get(analysis_type)
         if system_prompt is None:
             raise ValueError(f"Unknown analysis type: '{analysis_type}'")
+        
+        # Adding format and time range to prompt
+        system_prompt = system_prompt.format(format, daterange)
 
         logger.info("Sending '%s' analysis request to Ollama", analysis_type)
+
+        # Processing LLM call through Ollama
         try:
             response: ChatResponse = await self.ollama_client.chat(
                 model=self.ollama_model,

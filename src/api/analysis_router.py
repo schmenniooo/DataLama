@@ -40,7 +40,7 @@ class AnalysisRouter:  # pylint: disable=too-few-public-methods
         if not message == "":
             raise HTTPException(status_code=400, detail=f"Invalid request: {message}")
 
-        # Processing LLM call with separated data sets
+        # Processing LLM-module call
         try:
             response = await self.ollama_service.make_analyse_request(
                 analysis_type="forecasting",
