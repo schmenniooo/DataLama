@@ -2,7 +2,6 @@
 
 import logging
 
-from fastapi import HTTPException
 import ollama
 from ollama import ChatResponse
 
@@ -14,10 +13,10 @@ BASE_ROLE = ("You are a professional data analyst for analysing csv, json and ym
 DATA_SEPERATOR = f"The key ---NEW---DATASET--- seperates different data sets."
 
 analyses_types: dict[str, str] = {
-    "forecasting": f"{BASE_ROLE}. "
+    "forecasting": "{BASE_ROLE}. "
                    f"Provide for a forecasting for the following data. "
                    f"Analyse the format and continue the data in this format. "
-                   f"{DATA_SEPERATOR}"
+                   "{DATA_SEPERATOR}"
                    f"Only return the existing data with forecasted data without a additional message",
     "summary": f"{BASE_ROLE}.",
     "anomaly": f"{BASE_ROLE}.",
