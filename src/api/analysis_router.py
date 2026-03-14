@@ -45,7 +45,7 @@ class AnalysisRouter:  # pylint: disable=too-few-public-methods
         try:
             response = await self.ollama_service.make_analyse_request(
                 analysis_type="forecasting",
-                data=request.data,
+                data=request.data_sets,
             )
         except ollama.ResponseError as e:
             raise HTTPException(status_code=502, detail=f"Ollama request failed: {e.error}")
