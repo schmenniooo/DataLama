@@ -5,6 +5,7 @@ import ollama
 from pydantic import BaseModel
 
 from src.ollama.ollama_service import OllamaService
+from src.validation.validation import validate_data_to_analyse
 
 class BaseRequest(BaseModel):
     data_sets: list[str] # List of data sets
@@ -42,6 +43,12 @@ class AnalysisRouter:  # pylint: disable=too-few-public-methods
 
     async def _forecasting(self, request: BaseRequest) -> BaseResponse:
         """Perform time series forecasting."""
+
+        # Validating input data
+        message = validate_data_to_analyse(data_sets=request.data_sets)
+        if not message == "":
+            raise HTTPException(status_code=400, detail=f"Invalid request: {message}")
+
         try:
             response = await self.ollama_service.make_analyse_request(
                 analysis_type="forecasting",
