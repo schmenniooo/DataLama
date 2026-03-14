@@ -27,7 +27,7 @@ class OllamaService:  # pylint: disable=too-few-public-methods
 
     def __init__(self, ollama_base_url: str, ollama_model: str):
         self.ollama_model = ollama_model
-        self.ollama_client = ollama.Client(host=ollama_base_url)
+        self.ollama_client = ollama.AsyncClient(host=ollama_base_url)
 
     def health_check(self) -> bool:
         """Check the health of the service."""
