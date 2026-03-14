@@ -11,11 +11,13 @@ logger = logging.getLogger("logger")
 base_role = ("You are a professional data analyst for analysing csv, json and yml files. "
              "First check which file format was chosen")
 
+data_seperator = f"The key ---NEW---DATASET--- seperates different data sets."
+
 analyses_types: dict[str, str] = {
     "forecasting": f"{base_role}. "
                    f"Provide for a forecasting for the following data. "
                    f"Analyse the format and continue the data in this format. "
-                   f"The key ---NEW---DATASET--- seperates different data sets."
+                   f"{data_seperator}"
                    f"Only return the existing data with forecasted data without a additional message",
     "summary": f"{base_role}.",
     "anomaly": f"{base_role}.",
