@@ -1,6 +1,6 @@
 """API route definitions for the DataLama application."""
 
-from fastapi import APIRouter, Request
+from fastapi import APIRouter, HTTPException, Request
 from pydantic import BaseModel
 
 from src.ollama.ollama_service import OllamaService
@@ -41,10 +41,13 @@ class AnalysisRouter:  # pylint: disable=too-few-public-methods
 
     async def _forecasting(self, request: BaseRequest) -> BaseResponse:
         """Perform time series forecasting."""
-        response = self.ollama_service.make_analyse_request(
-            analysis_type="forecasting",
-            data=request.data,
-        )
+        try:
+            response = self.ollama_service.make_analyse_request(
+                analysis_type="forecasting",
+                data=request.data,
+            )
+        except HTTPException as e:
+            raise HTTPException(status_code=502, detail=f"Ollama request failed: {e.detail}")
         return BaseResponse(message="Forecasted Data", updated_data=response)
 
     async def _summary(self) -> None:
