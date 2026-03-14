@@ -36,7 +36,7 @@ class OllamaService:  # pylint: disable=too-few-public-methods
     async def health_check(self) -> bool:
         """Check the health of the service."""
         try:
-            self.ollama_client.list()
+            await self.ollama_client.list()
         except ollama.ResponseError as e:
             logger.error("Ollama request failed: %s", e)
             return False
@@ -51,7 +51,7 @@ class OllamaService:  # pylint: disable=too-few-public-methods
 
         logger.info("Sending '%s' analysis request to Ollama", analysis_type)
         try:
-            response: ChatResponse = self.ollama_client.chat(
+            response: ChatResponse = await self.ollama_client.chat(
                 model=self.ollama_model,
                 messages=[
                     {"role": "system", "content": system_prompt},

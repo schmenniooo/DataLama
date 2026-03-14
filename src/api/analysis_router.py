@@ -12,7 +12,7 @@ class BaseRequest(BaseModel):
     daterange: list[str] # Max 2 dates as range
 
 class BaseResponse(BaseModel):
-    message: str # Comment from model
+    message: str
     updated_data: list[str] # List of updated datasets
 
 class AnalysisRouter:  # pylint: disable=too-few-public-methods
