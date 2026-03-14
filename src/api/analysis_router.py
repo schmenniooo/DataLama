@@ -7,9 +7,9 @@ from pydantic import BaseModel
 from src.ollama.ollama_service import OllamaService
 
 class BaseRequest(BaseModel):
-    data: str # Data to analyse as string for flexibility
+    data_sets: list[str] # List of data sets
     format: str # CSV, JSON or YAML
-    daterange: list[str] # Max 2 dates
+    daterange: list[str] # Max 2 dates as range
 
 class BaseResponse(BaseModel):
     message: str
