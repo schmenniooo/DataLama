@@ -4,7 +4,7 @@ from fastapi import APIRouter, HTTPException, Request
 import ollama
 
 from src.ollama.ollama_service import OllamaService
-from src.validation.validation import validate_data_to_analyse
+from src.validation.validation import validate_request
 from src.model.api.api_model import BaseRequest, BaseResponse
 
 class AnalysisRouter:  # pylint: disable=too-few-public-methods
@@ -36,7 +36,7 @@ class AnalysisRouter:  # pylint: disable=too-few-public-methods
         """Perform time series forecasting."""
 
         # Validating input data
-        message = validate_data_to_analyse(data_sets=request.data_sets)
+        message = validate_request(request=request)
         if not message == "":
             raise HTTPException(status_code=400, detail=f"Invalid request: {message}")
 
