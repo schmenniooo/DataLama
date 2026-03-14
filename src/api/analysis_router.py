@@ -51,7 +51,7 @@ class AnalysisRouter:  # pylint: disable=too-few-public-methods
         except ValueError as e:
             raise HTTPException(status_code=400, detail=f"Invalid request: {e}")
         
-        return BaseResponse(message="Forecasted Data", updated_data=response)
+        return BaseResponse(message="Forecasted Data", updated_data=response.split("\n---NEW---DATASET---\n"))
 
     async def _summary(self) -> None:
         """Generate a summary of the data."""
