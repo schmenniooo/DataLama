@@ -48,7 +48,9 @@ class AnalysisRouter:  # pylint: disable=too-few-public-methods
                 data=request.data,
             )
         except ollama.ResponseError as e:
-            raise HTTPException(status_code=502, detail=f"Ollama request failed: {e.detail}")
+            raise HTTPException(status_code=502, detail=f"Ollama request failed: {e.error}")
+        except ValueError as e:
+            raise HTTPException(status_code=400, detail=f"Ollama request failed: {e}")
         
         return BaseResponse(message="Forecasted Data", updated_data=response)
 
