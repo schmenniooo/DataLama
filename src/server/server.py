@@ -21,8 +21,15 @@ class Server:  # pylint: disable=too-few-public-methods
         self.config = config
 
         logger.info("Configuring server")
-        self._configure_authentication()
+
+        # Skipping authentication in debug mode
+        if not config.debug:
+            self._configure_authentication()
+
+        # Connecting to ollama
         ollama_service = self._create_ollama_service()
+
+        # Configuring api routes
         self._configure_analysis_router(ollama_service=ollama_service)
 
     def _configure_authentication(self) -> None:
