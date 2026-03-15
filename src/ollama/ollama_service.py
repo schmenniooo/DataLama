@@ -12,12 +12,12 @@ BASE_ROLE = "You are a professional data analyst for analysing csv, json and yml
 DATA_SEPERATOR = f"The key ---NEW---DATASET--- seperates different data sets."
 
 analyses_types: dict[str, str] = {
-    "forecasting": "{BASE_ROLE}. "
+    "forecasting": f"{BASE_ROLE}. "
                    f"Provide for a forecasting for the following data. "
-                   "This the format of the data: %s"
+                   f"This the format of the data: {{}}. "
                    f"Analyse the format and continue the data in this format. "
-                   "{DATA_SEPERATOR}"
-                   "This the time range: %s"
+                   f"{DATA_SEPERATOR} "
+                   f"This the time range: {{}}. "
                    f"Only return the existing data with forecasted data without a additional message",
     "summary": f"{BASE_ROLE}.",
     "anomaly": f"{BASE_ROLE}.",
