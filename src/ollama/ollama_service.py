@@ -43,14 +43,14 @@ class OllamaService:  # pylint: disable=too-few-public-methods
         # If operation does not fail -> ollama is up and running
         return True
 
-    async def make_analyse_request(self, analysis_type: str, data: str, format: str, daterange: list[str]) -> str:
+    async def make_analyse_request(self, analysis_type: str, data: str, data_format: str, daterange: list[str]) -> str:
         """Makes a request to ollama with system and user messages"""
         system_prompt = analyses_types.get(analysis_type)
         if system_prompt is None:
             raise ValueError(f"Unknown analysis type: '{analysis_type}'")
         
         # Adding format and time range to prompt
-        system_prompt = system_prompt.format(format, daterange)
+        system_prompt = system_prompt.format(data_format, daterange)
 
         logger.info("Sending '%s' analysis request to Ollama", analysis_type)
 

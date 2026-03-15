@@ -42,7 +42,7 @@ async def test_unknown_analysis_type_raises_value_error(service):
         await service.make_analyse_request(
             analysis_type="unknown",
             data="some data",
-            format="csv",
+            data_format="csv",
             daterange=["2024-01-01", "2024-12-31"],
         )
 
@@ -57,7 +57,7 @@ async def test_make_analyse_request_returns_llm_content(service):
     result = await service.make_analyse_request(
         analysis_type="forecasting",
         data="date,value\n2024-01-01,40",
-        format="csv",
+        data_format="csv",
         daterange=["2024-01-01", "2024-12-31"],
     )
 
@@ -74,7 +74,7 @@ async def test_chat_called_with_correct_messages(service):
     await service.make_analyse_request(
         analysis_type="forecasting",
         data="col1,col2\n1,2",
-        format="csv",
+        data_format="csv",
         daterange=["2024-01-01", "2024-12-31"],
     )
 
@@ -94,7 +94,7 @@ async def test_response_error_is_reraised(service):
         await service.make_analyse_request(
             analysis_type="summary",
             data="some data",
-            format="json",
+            data_format="json",
             daterange=["2024-01-01", "2024-12-31"],
         )
 
@@ -112,7 +112,7 @@ async def test_all_registered_types_are_accepted(service, analysis_type):
     result = await service.make_analyse_request(
         analysis_type=analysis_type,
         data="data",
-        format="csv",
+        data_format="csv",
         daterange=["2024-01-01", "2024-12-31"],
     )
 

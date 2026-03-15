@@ -47,7 +47,7 @@ class AnalysisRouter:  # pylint: disable=too-few-public-methods
             response = await self.ollama_service.make_analyse_request(
                 analysis_type="forecasting",
                 data=self.DATASET_SEPERATOR.join(request.data_sets),
-                format=request.format,
+                data_format=request.format,
                 daterange=request.daterange
             )
         except ollama.ResponseError as e:
