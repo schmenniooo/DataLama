@@ -10,6 +10,8 @@ from src.model.api.api_model import BaseRequest, BaseResponse
 class AnalysisRouter:  # pylint: disable=too-few-public-methods
     """Registers and handles all analysis API routes."""
 
+    DATASET_SEPERATOR = "\n---NEW---DATASET---\n"
+
     def __init__(self, ollama_service: OllamaService):
         self.router = APIRouter()
         self.ollama_service = ollama_service
@@ -44,14 +46,14 @@ class AnalysisRouter:  # pylint: disable=too-few-public-methods
         try:
             response = await self.ollama_service.make_analyse_request(
                 analysis_type="forecasting",
-                data="\n---NEW---DATASET---\n".join(request.data_sets),
+                data=self.DATASET_SEPERATOR.join(request.data_sets),
             )
         except ollama.ResponseError as e:
             raise HTTPException(status_code=502, detail=f"Ollama request failed: {e.error}")
         except ValueError as e:
             raise HTTPException(status_code=400, detail=f"Invalid request: {e}")
         
-        return BaseResponse(message="Forecasted Data", updated_data=response.split("\n---NEW---DATASET---\n"))
+        return BaseResponse(message="Forecasted Data", updated_data=response.split(self.DATASET_SEPERATOR))
 
     async def _summary(self) -> None:
         """Generate a summary of the data."""
