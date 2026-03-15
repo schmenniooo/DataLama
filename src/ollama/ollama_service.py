@@ -37,7 +37,7 @@ class OllamaService:  # pylint: disable=too-few-public-methods
         """Check the health of the service."""
         try:
             await self.ollama_client.list()
-        except ollama.ResponseError as e:
+        except (ollama.ResponseError, ConnectionError) as e:
             logger.error("Ollama request failed: %s", e)
             return False
         # If operation does not fail -> ollama is up and running
@@ -66,5 +66,8 @@ class OllamaService:  # pylint: disable=too-few-public-methods
         except ollama.ResponseError as e:
             logger.error("Ollama request failed: %s", e)
             raise ollama.ResponseError(error=e.error, status_code=502)
+        except ConnectionError as e:
+            logger.error("Could not connect to Ollama: %s", e)
+            raise ollama.ResponseError(error=str(e), status_code=502)
 
         return response.message.content
