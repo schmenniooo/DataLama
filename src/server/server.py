@@ -7,7 +7,7 @@ from fastapi import FastAPI
 
 from src.api.analysis_router import AnalysisRouter
 from src.middleware.authentication import AuthInterceptor
-from model.config.config import Config
+from src.model.config.config import Config
 from src.ollama.ollama_service import OllamaService
 
 logger = logging.getLogger("logger")

@@ -1,7 +1,7 @@
 """Tests for the OllamaService class."""
 # pylint: disable=redefined-outer-name
 
-from unittest.mock import MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 import ollama
@@ -11,52 +11,109 @@ from src.ollama.ollama_service import OllamaService
 
 @pytest.fixture
 def service():
-    """OllamaService with a mocked ollama client."""
-    with patch("src.ollama.ollama_service.ollama.Client") as mock_client_class:
+    """OllamaService with a mocked async ollama client."""
+    with patch("src.ollama.ollama_service.ollama.AsyncClient"):
         instance = OllamaService(ollama_base_url="http://localhost:11434", ollama_model="llama3.2")
-        instance.ollama_client = mock_client_class.return_value
+        instance.ollama_client = MagicMock()
+        instance.ollama_client.chat = AsyncMock()
+        instance.ollama_client.list = AsyncMock()
         yield instance
 
 
-def test_valid_analysis_type_returns_true(service):
-    """A known analysis type with a successful chat call returns True."""
-    service.ollama_client.chat.return_value = MagicMock()
-    result = service.make_analyse_request(analysis_type="summary", data="some data")
+@pytest.mark.asyncio
+async def test_health_check_returns_true_when_ollama_is_up(service):
+    """health_check returns True when list() succeeds."""
+    result = await service.health_check()
     assert result is True
 
 
-def test_unknown_analysis_type_raises(service):
-    """An unregistered analysis type raises a ValueError."""
-    with pytest.raises(ValueError, match="Unknown analysis type"):
-        service.make_analyse_request(analysis_type="unknown", data="some data")
-
-
-def test_chat_called_with_correct_messages(service):
-    """The chat call receives the system prompt and user data as separate messages."""
-    service.ollama_client.chat.return_value = MagicMock()
-    service.make_analyse_request(analysis_type="summary", data="col1,col2\n1,2")
-
-    service.ollama_client.chat.assert_called_once_with(
-        model="llama3.2",
-        messages=[
-            {"role": "system", "content": ""},
-            {"role": "user", "content": "col1,col2\n1,2"},
-        ],
-    )
-
-
-def test_ollama_response_error_returns_false(service):
-    """A ResponseError from ollama is caught and returns False."""
-    service.ollama_client.chat.side_effect = ollama.ResponseError("model not found")
-    result = service.make_analyse_request(analysis_type="summary", data="some data")
+@pytest.mark.asyncio
+async def test_health_check_returns_false_on_response_error(service):
+    """health_check returns False when ollama raises ResponseError."""
+    service.ollama_client.list.side_effect = ollama.ResponseError("connection refused")
+    result = await service.health_check()
     assert result is False
 
 
+@pytest.mark.asyncio
+async def test_unknown_analysis_type_raises_value_error(service):
+    """An unregistered analysis type raises a ValueError."""
+    with pytest.raises(ValueError, match="Unknown analysis type"):
+        await service.make_analyse_request(
+            analysis_type="unknown",
+            data="some data",
+            format="csv",
+            daterange=["2024-01-01", "2024-12-31"],
+        )
+
+
+@pytest.mark.asyncio
+async def test_make_analyse_request_returns_llm_content(service):
+    """make_analyse_request returns the content string from the LLM response."""
+    mock_response = MagicMock()
+    mock_response.message.content = "forecasted,data\n2024-02-01,42"
+    service.ollama_client.chat.return_value = mock_response
+
+    result = await service.make_analyse_request(
+        analysis_type="forecasting",
+        data="date,value\n2024-01-01,40",
+        format="csv",
+        daterange=["2024-01-01", "2024-12-31"],
+    )
+
+    assert result == "forecasted,data\n2024-02-01,42"
+
+
+@pytest.mark.asyncio
+async def test_chat_called_with_correct_messages(service):
+    """The chat call receives the system prompt and user data as separate messages."""
+    mock_response = MagicMock()
+    mock_response.message.content = "result"
+    service.ollama_client.chat.return_value = mock_response
+
+    await service.make_analyse_request(
+        analysis_type="forecasting",
+        data="col1,col2\n1,2",
+        format="csv",
+        daterange=["2024-01-01", "2024-12-31"],
+    )
+
+    call_args = service.ollama_client.chat.call_args
+    messages = call_args.kwargs["messages"]
+    assert messages[0]["role"] == "system"
+    assert messages[1]["role"] == "user"
+    assert messages[1]["content"] == "col1,col2\n1,2"
+
+
+@pytest.mark.asyncio
+async def test_response_error_is_reraised(service):
+    """A ResponseError from ollama is caught, logged, and re-raised."""
+    service.ollama_client.chat.side_effect = ollama.ResponseError("model not found")
+
+    with pytest.raises(ollama.ResponseError):
+        await service.make_analyse_request(
+            analysis_type="summary",
+            data="some data",
+            format="json",
+            daterange=["2024-01-01", "2024-12-31"],
+        )
+
+
+@pytest.mark.asyncio
 @pytest.mark.parametrize("analysis_type", [
     "forecasting", "summary", "anomaly", "pattern", "comparison"
 ])
-def test_all_registered_types_are_accepted(service, analysis_type):
+async def test_all_registered_types_are_accepted(service, analysis_type):
     """All entries in analyses_types are valid and do not raise."""
-    service.ollama_client.chat.return_value = MagicMock()
-    result = service.make_analyse_request(analysis_type=analysis_type, data="data")
-    assert result is True
+    mock_response = MagicMock()
+    mock_response.message.content = "result"
+    service.ollama_client.chat.return_value = mock_response
+
+    result = await service.make_analyse_request(
+        analysis_type=analysis_type,
+        data="data",
+        format="csv",
+        daterange=["2024-01-01", "2024-12-31"],
+    )
+
+    assert isinstance(result, str)
