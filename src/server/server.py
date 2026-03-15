@@ -61,7 +61,6 @@ class Server:  # pylint: disable=too-few-public-methods
         logger.info("Starting server on %s:%s", self.config.host, self.config.port)
         uvicorn.run(
             self.app,
-            reload=self.config.debug,
             host=self.config.host,
             port=self.config.port
         )
