@@ -1,11 +1,12 @@
 """API route definitions for the DataLama application."""
 
-from fastapi import APIRouter, HTTPException, Request
 import ollama
+from fastapi import APIRouter, HTTPException
 
+from src.model.api.api_model import BaseRequest, BaseResponse
 from src.ollama.ollama_service import OllamaService
 from src.validation.validation import validate_request
-from src.model.api.api_model import BaseRequest, BaseResponse
+
 
 class AnalysisRouter:  # pylint: disable=too-few-public-methods
     """Registers and handles all analysis API routes."""
