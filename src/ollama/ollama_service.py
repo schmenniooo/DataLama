@@ -9,49 +9,51 @@ logger = logging.getLogger("logger")
 
 BASE_ROLE = "You are a professional data analyst for analysing csv, json and yml files."
 
+DATA_FORMAT = f"This the format of the data: {{}}. "
+
 DATA_SEPERATOR = f"Separate each dataset with exactly: ---NEW---DATASET---"
 
 analyses_types: dict[str, str] = {
     "forecasting":
-        f"{BASE_ROLE}. "
-        f"Provide for a forecasting for the following data. "
-        f"This the format of the data: {{}}. "
-        f"Analyse the format and continue the data in this format. "
-        f"{DATA_SEPERATOR} "
+        f"{BASE_ROLE}"
+        f"Provide for a forecasting for the following data."
+        f"{DATA_FORMAT}"
+        f"Analyse the format and continue the data in this format."
+        f"{DATA_SEPERATOR}"
         f"This the time range: {{}}. "
         f"Return ONLY the raw data in the original format with calculated forecasting. No explanations, no headers, no markdown.",
 
     "summary":
-        f"{BASE_ROLE}."
-        f"Provide a summary for the following data. "
-        f"This the format of the data: {{}}. "
-        f"{DATA_SEPERATOR} "
-        f"This the time range: {{}}. "
-        f"Only return a human text comment. ",
+        f"{BASE_ROLE}"
+        f"Provide a summary for the following data."
+        f"{DATA_FORMAT}"
+        f"{DATA_SEPERATOR}"
+        f"This the time range: {{}}."
+        f"Only return a human text comment.",
 
     "anomaly":
-        f"{BASE_ROLE}."
-        f"Provide a anomaly detection for the following data. "
-        f"This the format of the data: {{}}. "
-        f"{DATA_SEPERATOR} "
-        f"This the time range: {{}}. "
-        f"Only return a human text comment. ",
+        f"{BASE_ROLE}"
+        f"Provide a anomaly detection for the following data."
+        f"{DATA_FORMAT}"
+        f"{DATA_SEPERATOR}"
+        f"This the time range: {{}}."
+        f"Only return a human text comment.",
 
     "pattern":
-        f"{BASE_ROLE}."
-        f"Detect patterns in the following data sets. "
-        f"This the format of the data: {{}}. "
-        f"{DATA_SEPERATOR} "
-        f"This the time range: {{}}. "
-        f"Only return a human text comment. ",
+        f"{BASE_ROLE}"
+        f"Detect patterns in the following data sets."
+        f"{DATA_FORMAT}"
+        f"{DATA_SEPERATOR}"
+        f"This the time range: {{}}."
+        f"Only return a human text comment.",
 
     "comparison":
-        f"{BASE_ROLE}."
+        f"{BASE_ROLE}"
         f"Compare the following data sets"
-        f"This the format of the data: {{}}. "
-        f"{DATA_SEPERATOR} "
-        f"This the time range: {{}}. "
-        f"Only return a human text comment. ",
+        f"{DATA_FORMAT}"
+        f"{DATA_SEPERATOR}"
+        f"This the time range: {{}}."
+        f"Only return a human text comment.",
 }
 
 
