@@ -9,15 +9,15 @@ logger = logging.getLogger("logger")
 
 BASE_ROLE = "You are a professional data analyst for analysing csv, json and yml files."
 
-DATA_FORMAT = f"This the format of the data: {{}}."
+TASK_SPECIFICATION = f"{{}}"
 
-TASK_SPECIFICATION = f""
+OUTPUT_SPECIFICATION = f"{{}}"
 
 DATA_SEPERATOR = f"Separate each dataset with exactly: ---NEW---DATASET---."
 
 DATA_TIME_RANGE = f"This the time range: {{}}."
 
-OUTPUT_SPECIFICATION = f""
+DATA_FORMAT = f"This the format of the data: {{}}."
 
 BASE_PROMPT = (
         f"{BASE_ROLE} "
