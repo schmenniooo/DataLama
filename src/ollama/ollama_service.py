@@ -19,7 +19,7 @@ analyses_types: dict[str, str] = {
         f"Analyse the format and continue the data in this format. "
         f"{DATA_SEPERATOR} "
         f"This the time range: {{}}. "
-        f"Only return the existing data with forecasted data without a additional message",
+        f"Return ONLY the raw data in the original format with calculated forecasting. No explanations, no headers, no markdown.",
 
     "summary":
         f"{BASE_ROLE}."
