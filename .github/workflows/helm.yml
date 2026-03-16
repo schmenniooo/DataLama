@@ -26,7 +26,7 @@ jobs:
               run: helm dependency update ./helm/datalama-chart
             
             - name: Testing Helm Chart
-              run: helm template datalama ./helm/datalama-chart --values ./helm/datalama-chart/values.yaml --debug
+              run: helm template datalama ./helm/datalama-chart --values ./helm/datalama-chart/values.yaml
 
     build:
         runs-on: ubuntu-latest
