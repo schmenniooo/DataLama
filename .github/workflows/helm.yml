@@ -19,6 +19,9 @@ jobs:
 
             - name: Linting Helm Chart
               run: helm lint ./helm/datalama-chart
+
+            - name: Update dependencies
+              run: helm dependency update ./helm/datalama-chart
             
             - name: Testing Helm Chart
               run: helm template datalama ./helm/datalama-chart --values ./helm/datalama-chart/values.yaml
