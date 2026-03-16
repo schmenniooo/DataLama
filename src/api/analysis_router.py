@@ -37,95 +37,27 @@ class AnalysisRouter:  # pylint: disable=too-few-public-methods
 
     async def _forecasting(self, request: BaseRequest) -> BaseResponse:
         """Perform time series forecasting."""
-
-        # Validating input data
-        message = validate_request(request=request)
-        if not message == "":
-            raise HTTPException(status_code=400, detail=f"Invalid request: {message}")
-
-        # Processing LLM-module call
-        try:
-            response = await self.ollama_service.make_analyse_request(
-                analysis_type="forecasting",
-                data=self.DATASET_SEPERATOR.join(request.data_sets),
-                data_format=request.format,
-                daterange=request.daterange
-            )
-        except ollama.ResponseError as e:
-            raise HTTPException(status_code=502, detail=f"Ollama request failed: {e.error}")
-        except ValueError as e:
-            raise HTTPException(status_code=400, detail=f"Invalid request: {e}")
-        
-        return BaseResponse(message="Forecasted Data", updated_data=response.split(self.DATASET_SEPERATOR))
+        return await self._do_analyze_request(request=request, analysis_type="forecasting")
 
     async def _summary(self, request: BaseRequest) -> BaseResponse:
         """Generate a summary of the data."""
         # Validating input data
-        message = validate_request(request=request)
-        if not message == "":
-            raise HTTPException(status_code=400, detail=f"Invalid request: {message}")
-
-        # Processing LLM-module call
-        try:
-            response = await self.ollama_service.make_analyse_request(
-                analysis_type="summary",
-                data=self.DATASET_SEPERATOR.join(request.data_sets),
-                data_format=request.format,
-                daterange=request.daterange
-            )
-        except ollama.ResponseError as e:
-            raise HTTPException(status_code=502, detail=f"Ollama request failed: {e.error}")
-        except ValueError as e:
-            raise HTTPException(status_code=400, detail=f"Invalid request: {e}")
-
-        return BaseResponse(message=response, updated_data=request.data_sets)
+        return await self._do_analyze_request(request=request, analysis_type="summary")
 
     async def _anomaly_detection(self, request: BaseRequest) -> BaseResponse:
         """Detect anomalies in the data."""
-        # Validating input data
-        message = validate_request(request=request)
-        if not message == "":
-            raise HTTPException(status_code=400, detail=f"Invalid request: {message}")
-
-        # Processing LLM-module call
-        try:
-            response = await self.ollama_service.make_analyse_request(
-                analysis_type="anomaly",
-                data=self.DATASET_SEPERATOR.join(request.data_sets),
-                data_format=request.format,
-                daterange=request.daterange
-            )
-        except ollama.ResponseError as e:
-            raise HTTPException(status_code=502, detail=f"Ollama request failed: {e.error}")
-        except ValueError as e:
-            raise HTTPException(status_code=400, detail=f"Invalid request: {e}")
-
-        return BaseResponse(message=response, updated_data=request.data_sets)
+        return await self._do_analyze_request(request=request, analysis_type="anomaly")
 
     async def _pattern_recognition(self, request: BaseRequest) -> BaseResponse:
         """Recognize patterns in the data."""
-        # Validating input data
-        message = validate_request(request=request)
-        if not message == "":
-            raise HTTPException(status_code=400, detail=f"Invalid request: {message}")
-
-        # Processing LLM-module call
-        try:
-            response = await self.ollama_service.make_analyse_request(
-                analysis_type="pattern",
-                data=self.DATASET_SEPERATOR.join(request.data_sets),
-                data_format=request.format,
-                daterange=request.daterange
-            )
-        except ollama.ResponseError as e:
-            raise HTTPException(status_code=502, detail=f"Ollama request failed: {e.error}")
-        except ValueError as e:
-            raise HTTPException(status_code=400, detail=f"Invalid request: {e}")
-
-        return BaseResponse(message=response, updated_data=request.data_sets)
+        return await self._do_analyze_request(request=request, analysis_type="pattern")
 
     async def _comparison(self, request: BaseRequest) -> BaseResponse:
         """Compare datasets."""
+        return await self._do_analyze_request(request=request, analysis_type="comparison")
+
+    async def _do_analyze_request(self, request: BaseRequest, analysis_type: str) -> BaseResponse:
+        """Base analyse request for ollama."""
         # Validating input data
         message = validate_request(request=request)
         if not message == "":
@@ -134,7 +66,7 @@ class AnalysisRouter:  # pylint: disable=too-few-public-methods
         # Processing LLM-module call
         try:
             response = await self.ollama_service.make_analyse_request(
-                analysis_type="comparison",
+                analysis_type=analysis_type,
                 data=self.DATASET_SEPERATOR.join(request.data_sets),
                 data_format=request.format,
                 daterange=request.daterange
