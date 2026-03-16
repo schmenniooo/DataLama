@@ -31,7 +31,12 @@ analyses_types: dict[str, str] = {
                 f"{DATA_SEPERATOR} "
                 f"This the time range: {{}}. "
                 f"Only return a human text comment. ",
-    "pattern": f"{BASE_ROLE}.",
+    "pattern":  f"{BASE_ROLE}."
+                f"Detect patterns in the following data sets. "
+                f"This the format of the data: {{}}. "
+                f"{DATA_SEPERATOR} "
+                f"This the time range: {{}}. "
+                f"Only return a human text comment. ",
     "comparison": f"{BASE_ROLE}.",
 }
 

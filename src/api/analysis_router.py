@@ -102,8 +102,27 @@ class AnalysisRouter:  # pylint: disable=too-few-public-methods
 
         return BaseResponse(message=response, updated_data=request.data_sets)
 
-    async def _pattern_recognition(self) -> None:
+    async def _pattern_recognition(self, request: BaseRequest) -> BaseResponse:
         """Recognize patterns in the data."""
+        # Validating input data
+        message = validate_request(request=request)
+        if not message == "":
+            raise HTTPException(status_code=400, detail=f"Invalid request: {message}")
+
+        # Processing LLM-module call
+        try:
+            response = await self.ollama_service.make_analyse_request(
+                analysis_type="pattern",
+                data=self.DATASET_SEPERATOR.join(request.data_sets),
+                data_format=request.format,
+                daterange=request.daterange
+            )
+        except ollama.ResponseError as e:
+            raise HTTPException(status_code=502, detail=f"Ollama request failed: {e.error}")
+        except ValueError as e:
+            raise HTTPException(status_code=400, detail=f"Invalid request: {e}")
+
+        return BaseResponse(message=response, updated_data=request.data_sets)
 
     async def _comparison(self) -> None:
         """Compare datasets."""
