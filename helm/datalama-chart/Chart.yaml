@@ -1,6 +1,7 @@
 apiVersion: v2
 name: datalama-chart
 description: A Helm chart for deploying the Datalama application
+icon: https://raw.githubusercontent.com/schmenniooo/DataLama/main/logo.png
 
 type: application
 
