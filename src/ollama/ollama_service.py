@@ -9,7 +9,7 @@ logger = logging.getLogger("logger")
 
 BASE_ROLE = "You are a professional data analyst for analysing csv, json and yml files."
 
-DATA_SEPERATOR = f"The key ---NEW---DATASET--- seperates different data sets."
+DATA_SEPERATOR = f"Separate each dataset with exactly: ---NEW---DATASET---"
 
 analyses_types: dict[str, str] = {
     "forecasting":
