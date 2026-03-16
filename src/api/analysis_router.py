@@ -1,7 +1,7 @@
 """API route definitions for the DataLama application."""
 
-import ollama
 from fastapi import APIRouter, HTTPException
+import ollama
 
 from src.model.api.api_model import BaseRequest, BaseResponse
 from src.ollama.ollama_service import OllamaService
@@ -32,8 +32,7 @@ class AnalysisRouter:  # pylint: disable=too-few-public-methods
         healthy = await self.ollama_service.health_check()
         if healthy:
             return {"result": "healthy"}
-        else:
-            return {"result": "unhealthy"}
+        return {"result": "unhealthy"}
 
     async def _forecasting(self, request: BaseRequest) -> BaseResponse:
         """Perform time series forecasting."""
@@ -72,8 +71,8 @@ class AnalysisRouter:  # pylint: disable=too-few-public-methods
                 daterange=request.daterange
             )
         except ollama.ResponseError as e:
-            raise HTTPException(status_code=502, detail=f"Ollama request failed: {e.error}")
+            raise HTTPException(status_code=502, detail=f"Ollama request failed: {e.error}") from e
         except ValueError as e:
-            raise HTTPException(status_code=400, detail=f"Invalid request: {e}")
+            raise HTTPException(status_code=400, detail=f"Invalid request: {e}") from e
 
         return BaseResponse(message=response)

@@ -9,11 +9,12 @@ DATE_FORMAT = "%Y-%m-%d"
 
 
 def validate_request(request: BaseRequest) -> str:
+    """Validates the incoming analysis request."""
     message = _validate_data_to_analyse(data_sets=request.data_sets)
     if message != "":
         return message
 
-    message = _validate_data_format(format=request.format)
+    message = _validate_data_format(data_format=request.format)
     if message != "":
         return message
 
@@ -35,9 +36,12 @@ def _validate_data_to_analyse(data_sets: list[str]) -> str:
     return ""
 
 
-def _validate_data_format(format: str) -> str:
-    if format.lower() not in SUPPORTED_FORMATS:
-        return f"Unsupported format '{format}'. Must be one of: {', '.join(sorted(SUPPORTED_FORMATS))}"
+def _validate_data_format(data_format: str) -> str:
+    if data_format.lower() not in SUPPORTED_FORMATS:
+        return (
+            f"Unsupported format '{data_format}'. "
+            f"Must be one of: {', '.join(sorted(SUPPORTED_FORMATS))}"
+        )
 
     return ""
 
@@ -57,4 +61,3 @@ def _validate_daterange(daterange: list[str]) -> str:
         return "daterange start date must be before end date"
 
     return ""
-

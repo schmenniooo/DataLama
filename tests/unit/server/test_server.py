@@ -7,26 +7,13 @@ import pytest
 from fastapi.testclient import TestClient
 
 from src.server.server import Server
-from src.model.config.config import Config
+from tests.conftest import create_test_config
 
 
 @pytest.fixture
-def config():
-    """Test configuration."""
-    return Config(
-        api_key_field_name="X-API-Key",
-        api_key="secret",
-        ollama_base_url="http://localhost:11434",
-        ollama_model="llama3.2",
-        debug=False,
-        host="0.0.0.0",
-        port=3000,
-    )
-
-
-@pytest.fixture
-def client(config):
+def client():
     """TestClient for a configured Server with mocked OllamaService."""
+    config = create_test_config(api_key="secret")
     with patch("src.server.server.OllamaService") as mock_service_class:
         mock_service = mock_service_class.return_value
         mock_service.health_check = AsyncMock(return_value=True)

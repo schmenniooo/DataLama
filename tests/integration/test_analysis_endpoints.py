@@ -1,7 +1,7 @@
 """Integration tests for all analysis endpoints."""
 
-import ollama
 import pytest
+import ollama
 
 from tests.integration.conftest import HEADERS, SEPARATOR, VALID_PAYLOAD
 
@@ -90,10 +90,14 @@ def test_multiple_datasets_are_joined_with_separator(client, endpoint):
     ({"daterange": ["01-01-2024", "12-31-2024"]}, "invalid date format"),
     ({"daterange": ["2024-12-31", "2024-01-01"]}, "inverted daterange"),
 ])
-def test_validation_returns_400(client, endpoint, payload_override, description):
-    """Invalid payload ({description}) is rejected with 400."""
+def test_validation_returns_400(client, endpoint, payload_override, description):  # pylint: disable=unused-argument
+    """Invalid payload is rejected with 400."""
     test_client, _ = client
-    response = test_client.post(f"/{endpoint}", json={**VALID_PAYLOAD, **payload_override}, headers=HEADERS)
+    response = test_client.post(
+        f"/{endpoint}",
+        json={**VALID_PAYLOAD, **payload_override},
+        headers=HEADERS,
+    )
     assert response.status_code == 400
 
 

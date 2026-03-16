@@ -23,34 +23,37 @@ BASE_PROMPT = (
 
 analyses_types: dict[str, str] = {
     "forecasting":
-        f"{BASE_PROMPT.format(
-            f"Provide for a forecasting for the following data and continue the data in this format. ", 
-            f"Return ONLY the raw data in the original format with calculated forecasting. No explanations, no headers, no markdown. " 
-        )}",
+        BASE_PROMPT.format(
+            "Provide for a forecasting for the following data "
+            "and continue the data in this format. ",
+            "Return ONLY the raw data in the original format "
+            "with calculated forecasting. "
+            "No explanations, no headers, no markdown. "
+        ),
 
     "summary":
-        f"{BASE_PROMPT.format(
+        BASE_PROMPT.format(
             "Provide a summary for the following data. ",
             "Only return a human text comment. "
-        )}",
+        ),
 
     "anomaly":
-        f"{BASE_PROMPT.format(
+        BASE_PROMPT.format(
             "Provide a anomaly detection for the following data. ",
             "Only return a human text comment. "
-        )}",
+        ),
 
     "pattern":
-        f"{BASE_PROMPT.format(
+        BASE_PROMPT.format(
             "Detect patterns in the following data sets. ",
             "Only return a human text comment. "
-        )}",
+        ),
 
     "comparison":
-        f"{BASE_PROMPT.format(
+        BASE_PROMPT.format(
             "Compare the following data sets. ",
             "Only return a human text comment. "
-        )}",
+        ),
 }
 
 
@@ -71,14 +74,22 @@ class OllamaService:  # pylint: disable=too-few-public-methods
         # If operation does not fail -> ollama is up and running
         return True
 
-    async def make_analyse_request(self, analysis_type: str, data: str, data_format: str, daterange: list[str]) -> str:
+    async def make_analyse_request(
+        self,
+        analysis_type: str,
+        data: str,
+        data_format: str,
+        daterange: list[str]
+    ) -> str:
         """Makes a request to ollama with system and user messages"""
         system_prompt = analyses_types.get(analysis_type)
         if system_prompt is None:
             raise ValueError(f"Unknown analysis type: '{analysis_type}'")
-        
+
         # Adding format and time range to prompt
-        system_prompt = system_prompt.format(data_format,  f"{daterange[0]} to {daterange[1]}")
+        system_prompt = system_prompt.format(
+            data_format, f"{daterange[0]} to {daterange[1]}"
+        )
 
         logger.info("Sending '%s' analysis request to Ollama", analysis_type)
 
