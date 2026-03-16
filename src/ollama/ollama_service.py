@@ -83,7 +83,7 @@ class OllamaService:  # pylint: disable=too-few-public-methods
             raise ValueError(f"Unknown analysis type: '{analysis_type}'")
         
         # Adding format and time range to prompt
-        system_prompt = system_prompt.format(data_format, daterange)
+        system_prompt = system_prompt.format(data_format,  f"{daterange[0]} to {daterange[1]}")
 
         logger.info("Sending '%s' analysis request to Ollama", analysis_type)
 
