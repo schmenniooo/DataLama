@@ -36,6 +36,11 @@ The service is configured via environment variables:
 
 The chart is published to GHCR and can be used to deploy DataLama to a Kubernetes cluster. It requires an Ollama instance reachable from within the cluster.
 
+The chart includes:
+- **Traefik** as a reverse proxy with an optional authenticated dashboard
+- **Redis** for rate limiting — `REDIS_HOST`, `REDIS_PORT`, and `REDIS_PASSWORD` are automatically injected into all pods
+- **HPA** for autoscaling based on CPU and memory utilization
+
 ### Installation
 
 ```bash
@@ -68,15 +73,25 @@ helm install datalama oci://ghcr.io/schmenniooo/helm/datalama-chart \
 
 ### Values
 
-| Key                         | Default                        | Description                |
-| --------------------------- | ------------------------------ | -------------------------- |
-| `replicaCount`              | `1`                            | Number of pod replicas     |
-| `image.repository`          | `ghcr.io/schmenniooo/datalama` | Container image repository |
-| `image.tag`                 | `latest`                       | Container image tag        |
-| `image.pullPolicy`          | `IfNotPresent`                 | Image pull policy          |
-| `service.type`              | `ClusterIP`                    | Kubernetes service type    |
-| `service.port`              | `3000`                         | Service port               |
-| `resources.requests.cpu`    | `100m`                         | CPU request                |
-| `resources.requests.memory` | `64Mi`                         | Memory request             |
-| `resources.limits.cpu`      | `500m`                         | CPU limit                  |
-| `resources.limits.memory`   | `128Mi`                        | Memory limit               |
+| Key                                        | Default                        | Description                                              |
+| ------------------------------------------ | ------------------------------ | -------------------------------------------------------- |
+| `replicaCount`                             | `1`                            | Number of pod replicas (ignored when autoscaling enabled) |
+| `service.type`                             | `ClusterIP`                    | Kubernetes service type                                  |
+| `service.port`                             | `3000`                         | Service port                                             |
+| `resources.requests.cpu`                   | `100m`                         | CPU request                                              |
+| `resources.requests.memory`                | `64Mi`                         | Memory request                                           |
+| `resources.limits.cpu`                     | `500m`                         | CPU limit                                                |
+| `resources.limits.memory`                  | `128Mi`                        | Memory limit                                             |
+| `autoscaling.enabled`                      | `true`                         | Enable Horizontal Pod Autoscaler                         |
+| `autoscaling.minReplicas`                  | `1`                            | Minimum number of replicas                               |
+| `autoscaling.maxReplicas`                  | `10`                           | Maximum number of replicas                               |
+| `autoscaling.targetCPUUtilizationPercentage` | `75`                         | Target CPU utilization for scaling                       |
+| `autoscaling.targetMemoryUtilizationPercentage` | `75`                      | Target memory utilization for scaling                    |
+| `dashboard.enabled`                        | `true`                         | Enable Traefik dashboard                                 |
+| `dashboard.host`                           | `dashboard.docker.localhost`   | Hostname for the dashboard IngressRoute                  |
+| `dashboard.auth.username`                  | `admin`                        | Dashboard BasicAuth username                             |
+| `dashboard.auth.password`                  | `changeme`                     | Dashboard BasicAuth password                             |
+| `dashboard.tls.enabled`                    | `false`                        | Enable TLS for the dashboard                             |
+| `dashboard.tls.secretName`                 | `""`                           | Name of the k8s Secret containing `tls.crt` and `tls.key` |
+| `redis.auth.enabled`                       | `true`                         | Enable Redis authentication                              |
+| `redis.auth.password`                      | `changeme`                     | Redis password (also sets `REDIS_PASSWORD` in pods)      |

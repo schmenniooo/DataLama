@@ -1,0 +1,23 @@
+{{- if .Values.dashboard.enabled }}
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ include "datalama-deployment-chart.fullname" . }}-dashboard
+  labels:
+    {{- include "datalama-deployment-chart.labels" . | nindent 4 }}
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`{{ .Values.dashboard.host }}`)
+      kind: Rule
+      middlewares:
+        - name: {{ include "datalama-deployment-chart.fullname" . }}-dashboard-auth
+      services:
+        - name: api@internal
+          kind: TraefikService
+{{- if .Values.dashboard.tls.enabled }}
+  tls:
+    secretName: {{ .Values.dashboard.tls.secretName }}
+{{- end }}
+{{- end }}

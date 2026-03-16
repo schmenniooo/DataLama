@@ -1,9 +1,18 @@
 apiVersion: v2
 name: datalama-chart
 description: A Helm chart for deploying the Datalama application
+icon: https://raw.githubusercontent.com/schmenniooo/DataLama/main/logo.png
 
 type: application
 
 version: 1.0.0
 
 appVersion: "1.0.0"
+
+dependencies:
+  - name: traefik
+    version: "39.0.4"
+    repository: https://traefik.github.io/charts
+  - name: redis
+    version: "20.11.3"
+    repository: https://charts.bitnami.com/bitnami

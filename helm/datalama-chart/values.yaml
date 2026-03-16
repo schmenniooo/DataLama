@@ -1,13 +1,5 @@
 
-namespace: datalama-microservice-namespace
-
-replicaCount: 1
-
-# Image on GH: https://github.com/schmenniooo/DataLama/pkgs/container/datalama
-image:
-  repository: ghcr.io/schmenniooo/datalama
-  pullPolicy: IfNotPresent
-  tag: "latest"
+# Container Configuration
 
 # Environment variables for the datalama microservice container
 environmentVariables:
@@ -26,8 +18,21 @@ environmentVariables:
   - name: "PORT"
     value: "3000"
 
-podAnnotations: {}
-podLabels: {}
+# Horizontal Pod Autoscaler configuration based on CPU and Memory usage
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 75
+  targetMemoryUtilizationPercentage: 75
+
+# Pod Configuration
+
+replicaCount: 1
+
+podLabels:
+  name: datalama-service
 
 resources:                                                                           
   requests:                                                                          
@@ -36,6 +41,8 @@ resources:
   limits:
     cpu: "500m"
     memory: "128Mi"
+
+# Security Configuration
 
 serviceAccount:
   create: true
@@ -62,9 +69,47 @@ service:
 
 livenessProbe:
   httpGet:
-    path: /ping
+    path: /health
     port: 3000
 readinessProbe:
   httpGet:
-    path: /ping
+    path: /health
     port: 3000
+
+# Redis Configuration
+redis:
+  auth:
+    enabled: true
+    password: "changeme"              # Override before deploying
+
+# Traefik Reverse Proxy Configuration
+
+# Dashboard Configuration (Secret, Middleware, IngressRoute are templated in templates/traefik-dashboard-*.yaml)
+dashboard:
+  enabled: true
+  host: "dashboard.docker.localhost"  # Override for real deployments
+  auth:
+    username: admin
+    password: "changeme"              # Override before deploying
+  tls:
+    enabled: false
+    secretName: ""                    # Name of a k8s Secret containing tls.crt and tls.key
+
+traefik:
+  # Enables the dashboard in Secure Mode
+  api:
+    dashboard: true
+    insecure: false
+
+  # Enable Observability
+  logs:
+    general:
+      level: INFO
+    # This enables access logs, outputting them to Traefik's standard output by default.
+    access:
+      enabled: true
+
+  # Enables Prometheus for Metrics
+  metrics:
+    prometheus:
+      enabled: true

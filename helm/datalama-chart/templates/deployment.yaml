@@ -5,16 +5,14 @@ metadata:
   labels:
     {{- include "datalama-deployment-chart.labels" . | nindent 4 }}
 spec:
+  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "datalama-deployment-chart.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       labels:
         {{- include "datalama-deployment-chart.labels" . | nindent 8 }}
         {{- with .Values.podLabels }}
@@ -36,12 +34,23 @@ spec:
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          {{- with .Values.environmentVariables }}
+          image: "ghcr.io/schmenniooo/datalama:{{ .Chart.AppVersion }}"
+          imagePullPolicy: IfNotPresent
           env:
+            {{- with .Values.environmentVariables }}
             {{- toYaml . | nindent 12 }}
-          {{- end }}
+            {{- end }}
+            - name: REDIS_HOST
+              value: "{{ .Release.Name }}-redis-master"
+            - name: REDIS_PORT
+              value: "6379"
+            {{- if .Values.redis.auth.enabled }}
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "{{ .Release.Name }}-redis"
+                  key: redis-password
+            {{- end }}
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
