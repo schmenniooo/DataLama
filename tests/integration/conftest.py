@@ -7,9 +7,8 @@ import pytest
 from fastapi.testclient import TestClient
 
 from src.server.server import Server
-from tests.conftest import DEFAULT_API_KEY, create_test_config
 
-API_KEY = DEFAULT_API_KEY
+API_KEY = "test-secret"
 HEADERS = {"X-API-Key": API_KEY}
 
 VALID_PAYLOAD = {
@@ -22,14 +21,13 @@ SEPARATOR = "\n---NEW---DATASET---\n"
 
 
 @pytest.fixture
-def client():
+def client(test_config):
     """TestClient with mocked OllamaService."""
-    config = create_test_config()
     with patch("src.server.server.OllamaService") as mock_service_class:
         mock_service = mock_service_class.return_value
         mock_service.health_check = AsyncMock(return_value=True)
         mock_service.make_analyse_request = AsyncMock(
             return_value="LLM analysis result"
         )
-        server = Server(config=config)
+        server = Server(config=test_config)
         yield TestClient(server.app), mock_service
