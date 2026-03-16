@@ -26,6 +26,7 @@ environmentVariables:
   - name: "PORT"
     value: "3000"
 
+# TODO: Check if practical
 podAnnotations: {}
 podLabels: {}
 
@@ -62,9 +63,9 @@ service:
 
 livenessProbe:
   httpGet:
-    path: /ping
+    path: /health
     port: 3000
 readinessProbe:
   httpGet:
-    path: /ping
+    path: /health
     port: 3000
