@@ -36,8 +36,8 @@ spec:
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: "ghcr.io/schmenniooo/datalama:{{ .Chart.AppVersion }}"
+          imagePullPolicy: IfNotPresent
           {{- with .Values.environmentVariables }}
           env:
             {{- toYaml . | nindent 12 }}

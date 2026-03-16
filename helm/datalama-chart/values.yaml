@@ -1,13 +1,7 @@
 
 namespace: datalama-microservice-namespace
 
-# Container Config
-
-# Image on GH: https://github.com/schmenniooo/DataLama/pkgs/container/datalama
-image:
-  repository: ghcr.io/schmenniooo/datalama
-  pullPolicy: IfNotPresent
-  tag: "latest"
+# Container Configuration
 
 # Environment variables for the datalama microservice container
 environmentVariables:
