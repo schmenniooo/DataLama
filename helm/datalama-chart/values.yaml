@@ -78,6 +78,12 @@ readinessProbe:
     path: /health
     port: 3000
 
+# Redis Configuration
+redis:
+  auth:
+    enabled: true
+    password: "changeme"              # Override before deploying
+
 # Traefik Reverse Proxy Configuration
 
 # Dashboard Configuration (Secret, Middleware, IngressRoute are templated in templates/traefik-dashboard-*.yaml)
