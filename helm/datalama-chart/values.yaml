@@ -29,6 +29,8 @@ autoscaling:
 
 # Pod Configuration
 
+replicaCount: 1
+
 podLabels:
   name: datalama-service
 
