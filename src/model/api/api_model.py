@@ -9,4 +9,3 @@ class BaseRequest(BaseModel):
 
 class BaseResponse(BaseModel):
     message: str
-    updated_data: list[str] # List of updated datasets
