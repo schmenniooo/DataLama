@@ -16,4 +16,8 @@ spec:
       services:
         - name: api@internal
           kind: TraefikService
+{{- if .Values.dashboard.tls.enabled }}
+  tls:
+    secretName: {{ .Values.dashboard.tls.secretName }}
+{{- end }}
 {{- end }}

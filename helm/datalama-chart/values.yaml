@@ -88,6 +88,9 @@ dashboard:
   auth:
     username: admin
     password: "changeme"              # Override before deploying
+  tls:
+    enabled: false
+    secretName: ""                    # Name of a k8s Secret containing tls.crt and tls.key
 
 traefik:
   # Enables the dashboard in Secure Mode
