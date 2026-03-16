@@ -31,6 +31,9 @@ jobs:
             - name: Setup Helm
               uses: azure/setup-helm@v3
 
+            - name: Update dependencies
+              run: helm dependency update ./helm/datalama-chart
+
             - name: Build Helm Chart
               run: helm package ./helm/datalama-chart --destination ./helm/packages
 
