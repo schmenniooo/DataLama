@@ -25,7 +25,12 @@ analyses_types: dict[str, str] = {
                 f"{DATA_SEPERATOR} "
                 f"This the time range: {{}}. "
                 f"Only return a human text comment. ",
-    "anomaly": f"{BASE_ROLE}.",
+    "anomaly":  f"{BASE_ROLE}."
+                f"Provide a anomaly detection for the following data. "
+                f"This the format of the data: {{}}. "
+                f"{DATA_SEPERATOR} "
+                f"This the time range: {{}}. "
+                f"Only return a human text comment. ",
     "pattern": f"{BASE_ROLE}.",
     "comparison": f"{BASE_ROLE}.",
 }
