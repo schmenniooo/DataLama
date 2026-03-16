@@ -8,8 +8,8 @@ Runs Python with FastAPI and uses Ollama to analyse the given data through a cho
 ## API Endpoints
 
 | Method | Path           | Description                    |
-| ------ | -------------- | ------------------------------ |
-| GET    | `/ping`        | Health check                   |
+| ------ |----------------| ------------------------------ |
+| GET    | `/health`      | Health check                   |
 | POST   | `/forecasting` | Time series forecasting        |
 | POST   | `/summary`     | Generate a summary of the data |
 | POST   | `/anomaly`     | Detect anomalies in the data   |
@@ -22,15 +22,15 @@ All endpoints except `/ping` require an API key passed via the header configured
 
 The service is configured via environment variables:
 
-| Variable             | Default                  | Description                          |
-| -------------------- | ------------------------ | ------------------------------------ |
-| `OLLAMA_BASE_URL`    | `http://localhost:11434` | Base URL of the Ollama instance      |
-| `OLLAMA_MODEL`       | `llama3.2`               | Ollama model to use for analysis     |
-| `API_KEY`            | `api-key`                | API key for authenticating requests  |
-| `API_KEY_FIELD_NAME` | `X-API-Key`              | Header name used to pass the API key |
-| `HOST`               | `0.0.0.0`                | Host the server binds to             |
-| `PORT`               | `3000`                   | Port the server listens on           |
-| `DEBUG`              | `false`                  | Enable debug/reload mode             |
+| Variable             | Default                  | Description                                 |
+| -------------------- | ------------------------ |---------------------------------------------|
+| `OLLAMA_BASE_URL`    | `http://localhost:11434` | Base URL of the Ollama instance             |
+| `OLLAMA_MODEL`       | `llama3.2`               | Ollama model to use for analysis            |
+| `API_KEY`            | `api-key`                | API key for authenticating requests         |
+| `API_KEY_FIELD_NAME` | `X-API-Key`              | Header name used to pass the API key        |
+| `HOST`               | `0.0.0.0`                | Host the server binds to                    |
+| `PORT`               | `3000`                   | Port the server listens on                  |
+| `DEBUG`              | `false`                  | Enable debug mode (no Authentication needed |
 
 ## Helm Chart
 

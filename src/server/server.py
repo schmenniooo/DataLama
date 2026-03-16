@@ -5,10 +5,10 @@ import logging
 import uvicorn
 from fastapi import FastAPI
 
-from src.api.api import AnalysisRouter
+from src.api.analysis_router import AnalysisRouter
 from src.middleware.authentication import AuthInterceptor
-from src.model.config import Config
-from src.ollama.ollama import OllamaService
+from src.model.config.config import Config
+from src.ollama.ollama_service import OllamaService
 
 logger = logging.getLogger("logger")
 
@@ -21,12 +21,19 @@ class Server:  # pylint: disable=too-few-public-methods
         self.config = config
 
         logger.info("Configuring server")
-        self._configure_authenticaton()
+
+        # Skipping authentication in debug mode
+        if not config.debug:
+            self._configure_authentication()
+
+        # Connecting to ollama
         ollama_service = self._create_ollama_service()
+
+        # Configuring api routes
         self._configure_analysis_router(ollama_service=ollama_service)
 
-    def _configure_authenticaton(self) -> None:
-        """Registers authenticaton interceptor module"""
+    def _configure_authentication(self) -> None:
+        """Registers authentication interceptor module"""
         logger.info("Registering authentication middleware")
         auth_middleware = AuthInterceptor(
             api_key_field_name=self.config.api_key_field_name,
@@ -49,12 +56,11 @@ class Server:  # pylint: disable=too-few-public-methods
         analysis_router = AnalysisRouter(ollama_service=ollama_service)
         self.app.include_router(analysis_router.router)
 
-    def Run(self) -> None:
+    def run(self) -> None:
         """Starts uvicorn server"""
         logger.info("Starting server on %s:%s", self.config.host, self.config.port)
         uvicorn.run(
             self.app,
-            reload=self.config.debug,
             host=self.config.host,
             port=self.config.port
         )
