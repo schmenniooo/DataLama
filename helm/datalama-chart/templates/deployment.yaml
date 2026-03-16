@@ -5,16 +5,14 @@ metadata:
   labels:
     {{- include "datalama-deployment-chart.labels" . | nindent 4 }}
 spec:
+  {{- if not .Values.autoscaling.enabled }}
   replicas: {{ .Values.replicaCount }}
+  {{- end }}
   selector:
     matchLabels:
       {{- include "datalama-deployment-chart.selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       labels:
         {{- include "datalama-deployment-chart.labels" . | nindent 8 }}
         {{- with .Values.podLabels }}
@@ -46,11 +44,13 @@ spec:
               value: "{{ .Release.Name }}-redis-master"
             - name: REDIS_PORT
               value: "6379"
+            {{- if .Values.redis.auth.enabled }}
             - name: REDIS_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: "{{ .Release.Name }}-redis"
                   key: redis-password
+            {{- end }}
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}

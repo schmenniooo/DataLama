@@ -1,6 +1,4 @@
 
-namespace: datalama-microservice-namespace
-
 # Container Configuration
 
 # Environment variables for the datalama microservice container
@@ -30,8 +28,6 @@ autoscaling:
   targetMemoryUtilizationPercentage: 75
 
 # Pod Configuration
-
-replicaCount: 1
 
 podLabels:
   name: datalama-service
