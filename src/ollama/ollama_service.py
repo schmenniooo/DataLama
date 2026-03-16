@@ -9,9 +9,11 @@ logger = logging.getLogger("logger")
 
 BASE_ROLE = "You are a professional data analyst for analysing csv, json and yml files."
 
-DATA_FORMAT = f"This the format of the data: {{}}. "
+DATA_FORMAT = f"This the format of the data: {{}}."
 
-DATA_SEPERATOR = f"Separate each dataset with exactly: ---NEW---DATASET---"
+DATA_SEPERATOR = f"Separate each dataset with exactly: ---NEW---DATASET---."
+
+DATA_TIME_RANGE = f"This the time range: {{}}."
 
 analyses_types: dict[str, str] = {
     "forecasting":
@@ -20,7 +22,7 @@ analyses_types: dict[str, str] = {
         f"{DATA_FORMAT}"
         f"Analyse the format and continue the data in this format."
         f"{DATA_SEPERATOR}"
-        f"This the time range: {{}}. "
+        f"{DATA_TIME_RANGE}"
         f"Return ONLY the raw data in the original format with calculated forecasting. No explanations, no headers, no markdown.",
 
     "summary":
@@ -28,7 +30,7 @@ analyses_types: dict[str, str] = {
         f"Provide a summary for the following data."
         f"{DATA_FORMAT}"
         f"{DATA_SEPERATOR}"
-        f"This the time range: {{}}."
+        f"{DATA_TIME_RANGE}"
         f"Only return a human text comment.",
 
     "anomaly":
@@ -36,7 +38,7 @@ analyses_types: dict[str, str] = {
         f"Provide a anomaly detection for the following data."
         f"{DATA_FORMAT}"
         f"{DATA_SEPERATOR}"
-        f"This the time range: {{}}."
+        f"{DATA_TIME_RANGE}"
         f"Only return a human text comment.",
 
     "pattern":
@@ -44,15 +46,15 @@ analyses_types: dict[str, str] = {
         f"Detect patterns in the following data sets."
         f"{DATA_FORMAT}"
         f"{DATA_SEPERATOR}"
-        f"This the time range: {{}}."
+        f"{DATA_TIME_RANGE}"
         f"Only return a human text comment.",
 
     "comparison":
         f"{BASE_ROLE}"
-        f"Compare the following data sets"
+        f"Compare the following data sets."
         f"{DATA_FORMAT}"
         f"{DATA_SEPERATOR}"
-        f"This the time range: {{}}."
+       f"{DATA_TIME_RANGE}"
         f"Only return a human text comment.",
 }
 
