@@ -17,44 +17,44 @@ DATA_TIME_RANGE = f"This the time range: {{}}."
 
 analyses_types: dict[str, str] = {
     "forecasting":
-        f"{BASE_ROLE}"
-        f"Provide for a forecasting for the following data."
-        f"{DATA_FORMAT}"
-        f"Analyse the format and continue the data in this format."
-        f"{DATA_SEPERATOR}"
-        f"{DATA_TIME_RANGE}"
+        f"{BASE_ROLE} "
+        f"Provide for a forecasting for the following data. "
+        f"{DATA_FORMAT} "
+        f"Analyse the format and continue the data in this format. "
+        f"{DATA_SEPERATOR} "
+        f"{DATA_TIME_RANGE} "
         f"Return ONLY the raw data in the original format with calculated forecasting. No explanations, no headers, no markdown.",
 
     "summary":
-        f"{BASE_ROLE}"
-        f"Provide a summary for the following data."
-        f"{DATA_FORMAT}"
-        f"{DATA_SEPERATOR}"
-        f"{DATA_TIME_RANGE}"
+        f"{BASE_ROLE} "
+        f"Provide a summary for the following data. "
+        f"{DATA_FORMAT} "
+        f"{DATA_SEPERATOR} "
+        f"{DATA_TIME_RANGE} "
         f"Only return a human text comment.",
 
     "anomaly":
-        f"{BASE_ROLE}"
-        f"Provide a anomaly detection for the following data."
-        f"{DATA_FORMAT}"
-        f"{DATA_SEPERATOR}"
-        f"{DATA_TIME_RANGE}"
+        f"{BASE_ROLE} "
+        f"Provide a anomaly detection for the following data. "
+        f"{DATA_FORMAT} "
+        f"{DATA_SEPERATOR} "
+        f"{DATA_TIME_RANGE} "
         f"Only return a human text comment.",
 
     "pattern":
-        f"{BASE_ROLE}"
-        f"Detect patterns in the following data sets."
-        f"{DATA_FORMAT}"
-        f"{DATA_SEPERATOR}"
-        f"{DATA_TIME_RANGE}"
+        f"{BASE_ROLE} "
+        f"Detect patterns in the following data sets. "
+        f"{DATA_FORMAT} "
+        f"{DATA_SEPERATOR} "
+        f"{DATA_TIME_RANGE} "
         f"Only return a human text comment.",
 
     "comparison":
-        f"{BASE_ROLE}"
-        f"Compare the following data sets."
-        f"{DATA_FORMAT}"
-        f"{DATA_SEPERATOR}"
-       f"{DATA_TIME_RANGE}"
+        f"{BASE_ROLE} "
+        f"Compare the following data sets. "
+        f"{DATA_FORMAT} "
+        f"{DATA_SEPERATOR} "
+        f"{DATA_TIME_RANGE} "
         f"Only return a human text comment.",
 }
 
