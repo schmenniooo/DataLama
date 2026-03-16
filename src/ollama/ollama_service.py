@@ -9,20 +9,16 @@ logger = logging.getLogger("logger")
 
 BASE_ROLE = "You are a professional data analyst for analysing csv, json and yml files."
 
-DATA_SEPERATOR = f"Separate each dataset with exactly: ---NEW---DATASET---."
-
-DATA_TIME_RANGE = f"This the time range: {{}}."
-
-DATA_FORMAT = f"This the format of the data: {{}}."
+DATA_SEPERATOR = "Separate each dataset with exactly: ---NEW---DATASET---."
 
 BASE_PROMPT = (
-        f"{BASE_ROLE} "
-        f"{{}}"
-        f"{{}}"
-        f"{DATA_SEPERATOR} "
-        f"{DATA_FORMAT} "
-        f"Analyse the format and continue the data in this format. "
-        f"{DATA_TIME_RANGE} "
+        BASE_ROLE + " "
+        "{}"
+        "{}"
+        + DATA_SEPERATOR + " "
+        "This the format of the data: {{}}. "
+        "Analyse the format and continue the data in this format. "
+        "This the time range: {{}}. "
 )
 
 analyses_types: dict[str, str] = {
