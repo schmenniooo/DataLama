@@ -22,10 +22,9 @@ analyses_types: dict[str, str] = {
     "summary":  f"{BASE_ROLE}."
                 f"Provide a summary for the following data. "
                 f"This the format of the data: {{}}. "
-                f"Analyse the format and continue the data in this format. "
                 f"{DATA_SEPERATOR} "
                 f"This the time range: {{}}. "
-                f"Only return the existing data with forecasted data without a additional message",
+                f"Only return a human text comment. ",
     "anomaly": f"{BASE_ROLE}.",
     "pattern": f"{BASE_ROLE}.",
     "comparison": f"{BASE_ROLE}.",
