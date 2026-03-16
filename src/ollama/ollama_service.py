@@ -11,9 +11,23 @@ BASE_ROLE = "You are a professional data analyst for analysing csv, json and yml
 
 DATA_FORMAT = f"This the format of the data: {{}}."
 
+TASK_SPECIFICATION = f""
+
 DATA_SEPERATOR = f"Separate each dataset with exactly: ---NEW---DATASET---."
 
 DATA_TIME_RANGE = f"This the time range: {{}}."
+
+OUTPUT_SPECIFICATION = f""
+
+BASE_PROMPT = (
+        f"{BASE_ROLE} "
+        f"Provide for a forecasting for the following data. "
+        f"{DATA_FORMAT} "
+        f"Analyse the format and continue the data in this format. "
+        f"{DATA_SEPERATOR} "
+        f"{DATA_TIME_RANGE} "
+        f"Return ONLY the raw data in the original format with calculated forecasting. No explanations, no headers, no markdown."
+)
 
 analyses_types: dict[str, str] = {
     "forecasting":
