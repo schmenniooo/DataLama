@@ -20,6 +20,14 @@ environmentVariables:
   - name: "PORT"
     value: "3000"
 
+# Horizontal Pod Autoscaler configuration based on CPU and Memory usage
+
+autoscaling:
+  enabled: true
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 75
+  targetMemoryUtilizationPercentage: 75
 
 # Pod Configuration
 
@@ -35,7 +43,6 @@ resources:
   limits:
     cpu: "500m"
     memory: "128Mi"
-
 
 # Security Configuration
 
@@ -70,7 +77,6 @@ readinessProbe:
   httpGet:
     path: /health
     port: 3000
-
 
 # Traefik Reverse Proxy Configuration
 
