@@ -31,9 +31,8 @@ environmentVariables:
 
 replicaCount: 1
 
-# TODO: Check if practical
-podAnnotations: {}
-podLabels: {}
+podLabels:
+  name: datalama-service
 
 resources:                                                                           
   requests:                                                                          
