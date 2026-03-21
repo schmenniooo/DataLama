@@ -91,13 +91,14 @@ class AiCommunicationService:  # pylint: disable=too-few-public-methods
             data_format, f"{daterange[0]} to {daterange[1]}"
         )
 
+        # Wrapping system and human prompt
         messages = [SystemMessage(content=system_prompt), HumanMessage(content=data)]
 
         logger.info(f"Sending {analysis_type} analysis request to LLM")
 
         # Processing LLM call through selected provider
         try:
-            response: AIMessage = self.model.invoke(messages=messages)
+            response: AIMessage = self.model.invoke(input=messages)
         except LangChainException as e:
             logger.error("Ollama request failed: %s", e)
             raise LangChainException(e)
