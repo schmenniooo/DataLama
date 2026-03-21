@@ -46,6 +46,7 @@ class Server:  # pylint: disable=too-few-public-methods
         logger.info(f"Creating AI communication service with {self.config.model}")
         return AiCommunicationService(
             model=self.config.model,
+            api_key=self.config.llm_provider_api_token,
         )
 
     def _configure_analysis_router(self, ai_service: AiCommunicationService) -> None:
