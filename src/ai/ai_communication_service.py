@@ -62,8 +62,8 @@ analyses_types: dict[str, str] = {
 class AiCommunicationService:  # pylint: disable=too-few-public-methods
     """Provides for ai communication"""
 
-    def __init__(self, model_key: str):
-        self.model = init_chat_model(model_key)
+    def __init__(self, model: str):
+        self.model = init_chat_model(model)
 
     async def health_check(self) -> bool:
         """Check the health of the service."""

@@ -43,9 +43,9 @@ class Server:  # pylint: disable=too-few-public-methods
 
     def _create_ai_service(self) -> AiCommunicationService:
         """Returns new AI service class"""
-        logger.info(f"Creating AI communication service with {self.config.model_key}")
+        logger.info(f"Creating AI communication service with {self.config.model}")
         return AiCommunicationService(
-            model_key=self.config.model_key,
+            model=self.config.model,
         )
 
     def _configure_analysis_router(self, ai_service: AiCommunicationService) -> None:

@@ -23,7 +23,7 @@ WORKDIR /app
 COPY --from=build /app .
 
 # Setting environment variables
-ENV MODEL_KEY="claude-sonnet-4-6"
+ENV MODEL="claude-sonnet-4-6"
 ENV LLM_PROVIDER_API_TOKEN="anthropic-api-key"
 ENV DEBUG="false"
 ENV HOST="0.0.0.0"

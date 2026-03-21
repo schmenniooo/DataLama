@@ -21,7 +21,7 @@ def main():
         debug = os.getenv("DEBUG", "false").lower() == "true",
         host = os.getenv("HOST", "0.0.0.0"),
         port = int(os.getenv("PORT", "3000")),
-        model_key = os.getenv("MODEL_KEY", ""),
+        model= os.getenv("MODEL_KEY", ""),
         llm_provider_api_token = os.getenv("LLM_PROVIDER_API_TOKEN", "")
     )
 
