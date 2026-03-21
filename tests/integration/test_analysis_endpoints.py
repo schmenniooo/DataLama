@@ -7,7 +7,7 @@ import pytest
 from langchain_core.exceptions import LangChainException
 
 from tests.integration.conftest import (
-    HEADERS, SEPARATOR, VALID_PAYLOAD_CSV, VALID_PAYLOAD_JSON, VALID_PAYLOADS,
+    HEADERS, SEPARATOR, VALID_PAYLOAD_CSV, VALID_PAYLOADS,
 )
 
 ENDPOINTS = ["forecasting", "summary", "anomaly", "pattern", "comparison"]
@@ -27,7 +27,9 @@ def test_without_api_key_returns_401(client, endpoint):
 def test_with_wrong_api_key_returns_401(client, endpoint):
     """Request with wrong API key is rejected."""
     test_client, _ = client
-    response = test_client.post(f"/{endpoint}", json=VALID_PAYLOAD_CSV, headers={"X-API-Key": "wrong"})
+    response = test_client.post(
+        f"/{endpoint}", json=VALID_PAYLOAD_CSV, headers={"X-API-Key": "wrong"}
+    )
     assert response.status_code == 401
 
 
