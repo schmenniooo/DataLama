@@ -1,5 +1,7 @@
 """Integration tests for all analysis endpoints."""
 
+from datetime import datetime
+
 import pytest
 from langchain_core.exceptions import LangChainException
 
@@ -37,13 +39,14 @@ def test_returns_200_with_valid_payload(client, endpoint):
 
 
 @pytest.mark.parametrize("endpoint", ENDPOINTS)
-def test_response_contains_message(client, endpoint):
-    """Response contains a non-empty message string."""
+def test_response_contains_message_and_date(client, endpoint):
+    """Response contains a non-empty message string and a valid ISO date."""
     test_client, _ = client
     response = test_client.post(f"/{endpoint}", json=VALID_PAYLOAD, headers=HEADERS)
     body = response.json()
     assert isinstance(body["message"], str)
     assert len(body["message"]) > 0
+    assert datetime.fromisoformat(body["date"])
 
 
 @pytest.mark.parametrize("endpoint", ENDPOINTS)
