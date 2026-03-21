@@ -63,7 +63,7 @@ class AnalysisRouter:  # pylint: disable=too-few-public-methods
 
         # Processing LLM-module call
         try:
-            response = self.ai_service.make_analyse_request(
+            response = await self.ai_service.make_analyse_request(
                 analysis_type=analysis_type,
                 data=self.DATASET_SEPERATOR.join(request.data_sets),
                 data_format=request.format,

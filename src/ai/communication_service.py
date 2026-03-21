@@ -74,7 +74,7 @@ class AiCommunicationService:  # pylint: disable=too-few-public-methods
         # If operation does not fail -> Connection to LLM Provider is up and running
         return True
 
-    def make_analyse_request(
+    async def make_analyse_request(
         self,
         analysis_type: str,
         data: str,
@@ -98,7 +98,7 @@ class AiCommunicationService:  # pylint: disable=too-few-public-methods
 
         # Processing LLM call through selected provider
         try:
-            response: AIMessage = self.model.invoke(input=messages)
+            response: AIMessage = await self.model.ainvoke(input=messages)
         except LangChainException as e:
             logger.error("Ollama request failed: %s", e)
             raise LangChainException(e)
