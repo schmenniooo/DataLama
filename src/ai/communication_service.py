@@ -62,7 +62,7 @@ class AiCommunicationService:  # pylint: disable=too-few-public-methods
     """Provides for ai communication"""
 
     def __init__(self, model: str):
-        self.model = init_chat_model(model=model, mod)
+        self.model = init_chat_model(model=model)
 
     async def health_check(self) -> bool:
         """Check the health of the service."""
