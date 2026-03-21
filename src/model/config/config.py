@@ -9,8 +9,8 @@ class Config:
 
     api_key_field_name: str
     api_key: str
-    ollama_base_url: str
-    ollama_model: str
+    model_key: str
+    llm_provider_api_token: str
     debug: bool
     host: str
     port: int
