@@ -26,11 +26,11 @@ class Server:  # pylint: disable=too-few-public-methods
         if not config.debug:
             self._configure_authentication()
 
-        # Connecting to ai
-        ollama_service = self._create_ollama_service()
+        # Connecting to AI provider
+        ai_service = self._create_ai_service()
 
         # Configuring api routes
-        self._configure_analysis_router(ollama_service=ollama_service)
+        self._configure_analysis_router(ai_service=ai_service)
 
     def _configure_authentication(self) -> None:
         """Registers authentication interceptor module"""
@@ -41,19 +41,18 @@ class Server:  # pylint: disable=too-few-public-methods
         ).register_auth_interceptor()
         self.app.add_middleware(auth_middleware)
 
-    def _create_ollama_service(self) -> AiCommunicationService:
+    def _create_ai_service(self) -> AiCommunicationService:
         """Returns new AI service class"""
-        logger.info("Creating Ollama service (model: %s, url: %s)",
-                    self.config.ollama_model, self.config.ollama_base_url)
+        logger.info(f"Creating AI communication service with {self.config.model_key}")
         return AiCommunicationService(
             ollama_base_url=self.config.ollama_base_url,
             ollama_model=self.config.ollama_model
         )
 
-    def _configure_analysis_router(self, ollama_service: AiCommunicationService) -> None:
+    def _configure_analysis_router(self, ai_service: AiCommunicationService) -> None:
         """Creates new AnalysisRouter class and injects it to FastAPI"""
         logger.info("Registering analysis routes")
-        analysis_router = AnalysisRouter(ollama_service=ollama_service)
+        analysis_router = AnalysisRouter(ai_service=ai_service)
         self.app.include_router(analysis_router.router)
 
     def run(self) -> None:

@@ -13,9 +13,9 @@ class AnalysisRouter:  # pylint: disable=too-few-public-methods
 
     DATASET_SEPERATOR = "\n---NEW---DATASET---\n"
 
-    def __init__(self, ollama_service: AiCommunicationService):
+    def __init__(self, ai_service: AiCommunicationService):
         self.router = APIRouter()
-        self.ollama_service = ollama_service
+        self.ai_service = ai_service
         self._register_routes()
 
     def _register_routes(self) -> None:
@@ -29,7 +29,7 @@ class AnalysisRouter:  # pylint: disable=too-few-public-methods
 
     async def _health(self) -> dict:
         """Check the health of the service."""
-        healthy = await self.ollama_service.health_check()
+        healthy = await self.ai_service.health_check()
         if healthy:
             return {"result": "healthy"}
         return {"result": "unhealthy"}
@@ -64,7 +64,7 @@ class AnalysisRouter:  # pylint: disable=too-few-public-methods
 
         # Processing LLM-module call
         try:
-            response = await self.ollama_service.make_analyse_request(
+            response = await self.ai_service.make_analyse_request(
                 analysis_type=analysis_type,
                 data=self.DATASET_SEPERATOR.join(request.data_sets),
                 data_format=request.format,
