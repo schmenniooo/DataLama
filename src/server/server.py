@@ -45,8 +45,7 @@ class Server:  # pylint: disable=too-few-public-methods
         """Returns new AI service class"""
         logger.info(f"Creating AI communication service with {self.config.model_key}")
         return AiCommunicationService(
-            ollama_base_url=self.config.ollama_base_url,
-            ollama_model=self.config.ollama_model
+            model_key=self.config.model_key,
         )
 
     def _configure_analysis_router(self, ai_service: AiCommunicationService) -> None:

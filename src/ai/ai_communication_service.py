@@ -3,7 +3,7 @@
 import logging
 
 import ai
-from ai import ChatResponse
+from langchain.chat_models import init_chat_model
 
 logger = logging.getLogger("logger")
 
@@ -60,9 +60,8 @@ analyses_types: dict[str, str] = {
 class AiCommunicationService:  # pylint: disable=too-few-public-methods
     """Provides for ai communication"""
 
-    def __init__(self, ollama_base_url: str, ollama_model: str):
-        self.ollama_model = ollama_model
-        self.ollama_client = ai.AsyncClient(host=ollama_base_url)
+    def __init__(self, model_key: str):
+        self.model = init_chat_model(model_key)
 
     async def health_check(self) -> bool:
         """Check the health of the service."""
@@ -71,7 +70,7 @@ class AiCommunicationService:  # pylint: disable=too-few-public-methods
         except (ai.ResponseError, ConnectionError) as e:
             logger.error("Ollama request failed: %s", e)
             return False
-        # If operation does not fail -> ai is up and running
+        # If operation does not fail -> Connection to LLM Provider is up and running
         return True
 
     async def make_analyse_request(
