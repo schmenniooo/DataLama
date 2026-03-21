@@ -62,12 +62,12 @@ class AiCommunicationService:  # pylint: disable=too-few-public-methods
     """Provides for ai communication"""
 
     def __init__(self, model: str):
-        self.model = init_chat_model(model)
+        self.model = init_chat_model(model=model, mod)
 
     async def health_check(self) -> bool:
         """Check the health of the service."""
         try:
-            self.model.invoke("health_check")
+            self.model.invoke(input="health_check")
         except LangChainException as e:
             logger.error("Health check failed: %s", e)
             return False
