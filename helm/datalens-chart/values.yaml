@@ -1,16 +1,16 @@
 
 # Container Configuration
 
-# Environment variables for the datalama microservice container
+# Environment variables for the datalens microservice container
 environmentVariables:
   - name: "API_KEY_FIELD_NAME"
     value: "X-API-Key"
   - name: "API_KEY"
     value: "your_api_key_here"
-  - name: "OLLAMA_BASE_URL"
-    value: "http://localhost:11434"
-  - name: "OLLAMA_MODEL"
-    value: "llama3.2"
+  - name: "LLM_PROVIDER_API_TOKEN"
+    value: "api-token"
+  - name: "MODEL"
+    value: "claude-sonnet-4-6"
   - name: "DEBUG"
     value: "false"
   - name: "HOST"
@@ -32,7 +32,7 @@ autoscaling:
 replicaCount: 1
 
 podLabels:
-  name: datalama-service
+  name: datalens-service
 
 resources:                                                                           
   requests:                                                                          
@@ -47,7 +47,7 @@ resources:
 serviceAccount:
   create: true
   automount: true
-  name: "datalama-user-service-account"
+  name: "datalens-user-service-account"
 
 # Running the container as non-root user for security
 podSecurityContext:                                                                  

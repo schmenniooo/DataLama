@@ -1,5 +1,5 @@
 [project]
-name = "datalama"
+name = "datalens"
 version = "0.1.0"
 description = "Add your description here"
 readme = "README.md"
@@ -8,7 +8,8 @@ dependencies = [
     "dotenv>=0.9.9",
     "fastapi>=0.115.0",
     "httpx>=0.28.0",
-    "ollama>=0.6.1",
+    "langchain>=1.2.13",
+    "langchain-anthropic>=1.4.0",
     "pylint>=4.0.5",
     "pytest>=9.0.2",
     "uvicorn>=0.34.0",
@@ -25,7 +26,7 @@ asyncio_mode = "auto"
 source-roots = ["."]
 
 [tool.pylint.messages_control]
-  disable = ["fixme"]
+  disable = ["fixme", "logging-fstring-interpolation", "raise-missing-from"]
 
 [dependency-groups]
 dev = [

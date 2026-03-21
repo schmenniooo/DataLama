@@ -1,10 +1,12 @@
-"""API route definitions for the DataLama application."""
+"""API route definitions for the DataLens application."""
 
+import datetime
+import json
+import langchain_core.exceptions
 from fastapi import APIRouter, HTTPException
-import ollama
 
+from src.ai.communication_service import AiCommunicationService
 from src.model.api.api_model import BaseRequest, BaseResponse
-from src.ollama.ollama_service import OllamaService
 from src.validation.validation import validate_request
 
 
@@ -13,9 +15,9 @@ class AnalysisRouter:  # pylint: disable=too-few-public-methods
 
     DATASET_SEPERATOR = "\n---NEW---DATASET---\n"
 
-    def __init__(self, ollama_service: OllamaService):
+    def __init__(self, ai_service: AiCommunicationService):
         self.router = APIRouter()
-        self.ollama_service = ollama_service
+        self.ai_service = ai_service
         self._register_routes()
 
     def _register_routes(self) -> None:
@@ -29,7 +31,7 @@ class AnalysisRouter:  # pylint: disable=too-few-public-methods
 
     async def _health(self) -> dict:
         """Check the health of the service."""
-        healthy = await self.ollama_service.health_check()
+        healthy = await self.ai_service.health_check()
         if healthy:
             return {"result": "healthy"}
         return {"result": "unhealthy"}
@@ -56,23 +58,28 @@ class AnalysisRouter:  # pylint: disable=too-few-public-methods
         return await self._do_analyze_request(request=request, analysis_type="comparison")
 
     async def _do_analyze_request(self, request: BaseRequest, analysis_type: str) -> BaseResponse:
-        """Base analyse request for ollama."""
+        """Base analyse request for ai."""
         # Validating input data
         message = validate_request(request=request)
         if not message == "":
             raise HTTPException(status_code=400, detail=f"Invalid request: {message}")
 
+        # Preparing data and splitting list into string by separator
+        prepared_data = self.DATASET_SEPERATOR.join(
+            ds if isinstance(ds, str) else json.dumps(ds) for ds in request.data_sets
+        )
+
         # Processing LLM-module call
         try:
-            response = await self.ollama_service.make_analyse_request(
+            response = await self.ai_service.make_analyse_request(
                 analysis_type=analysis_type,
-                data=self.DATASET_SEPERATOR.join(request.data_sets),
+                data=prepared_data,
                 data_format=request.format,
                 daterange=request.daterange
             )
-        except ollama.ResponseError as e:
-            raise HTTPException(status_code=502, detail=f"Ollama request failed: {e.error}") from e
+        except langchain_core.exceptions.LangChainException as e:
+            raise HTTPException(status_code=502, detail=f"Ollama request failed: {e}") from e
         except ValueError as e:
             raise HTTPException(status_code=400, detail=f"Invalid request: {e}") from e
 
-        return BaseResponse(message=response)
+        return BaseResponse(message=response, date=datetime.datetime.now().isoformat())

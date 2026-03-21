@@ -1,7 +1,7 @@
-# DataLama
+# DataLens
 
 A microservice that takes data in several formats and returns a forecast or a summary of the data.
-Runs Python with FastAPI and uses Ollama to analyse the given data through a chosen model.
+Runs Python with FastAPI and uses LangChain to analyse the given data through a chosen LLM provider.
 
 ![logo.png](logo.png)
 
@@ -16,25 +16,25 @@ Runs Python with FastAPI and uses Ollama to analyse the given data through a cho
 | POST   | `/pattern`     | Recognize patterns in the data |
 | POST   | `/comparison`  | Compare datasets               |
 
-All endpoints except `/ping` require an API key passed via the header configured in `API_KEY_FIELD_NAME` (default: `X-API-Key`).
+All endpoints except `/health` require an API key passed via the header configured in `API_KEY_FIELD_NAME` (default: `X-API-Key`).
 
 ## Configuration
 
 The service is configured via environment variables:
 
-| Variable             | Default                  | Description                                 |
-| -------------------- | ------------------------ |---------------------------------------------|
-| `OLLAMA_BASE_URL`    | `http://localhost:11434` | Base URL of the Ollama instance             |
-| `OLLAMA_MODEL`       | `llama3.2`               | Ollama model to use for analysis            |
-| `API_KEY`            | `api-key`                | API key for authenticating requests         |
-| `API_KEY_FIELD_NAME` | `X-API-Key`              | Header name used to pass the API key        |
-| `HOST`               | `0.0.0.0`                | Host the server binds to                    |
-| `PORT`               | `3000`                   | Port the server listens on                  |
-| `DEBUG`              | `false`                  | Enable debug mode (no Authentication needed |
+| Variable                 | Default     | Description                                          |
+| ------------------------ | ----------- |------------------------------------------------------|
+| `MODEL`                  | —           | LangChain model identifier (e.g. `anthropic/claude-sonnet-4-5-20250514`) |
+| `LLM_PROVIDER_API_TOKEN` | —           | API token for the LLM provider                       |
+| `API_KEY`                | —           | API key for authenticating requests                  |
+| `API_KEY_FIELD_NAME`     | `X-API-Key` | Header name used to pass the API key                 |
+| `HOST`                   | `0.0.0.0`  | Host the server binds to                             |
+| `PORT`                   | `3000`     | Port the server listens on                           |
+| `DEBUG`                  | `false`    | Enable debug mode (no authentication needed)         |
 
 ## Helm Chart
 
-The chart is published to GHCR and can be used to deploy DataLama to a Kubernetes cluster. It requires an Ollama instance reachable from within the cluster.
+The chart is published to GHCR and can be used to deploy DataLens to a Kubernetes cluster.
 
 The chart includes:
 - **Traefik** as a reverse proxy with an optional authenticated dashboard
@@ -44,7 +44,7 @@ The chart includes:
 ### Installation
 
 ```bash
-helm install datalama oci://ghcr.io/schmenniooo/helm/datalama-chart
+helm install datalens oci://ghcr.io/schmenniooo/helm/datalens-chart
 ```
 
 ### Configuration
@@ -53,10 +53,10 @@ All environment variables can be set via `environmentVariables` in your `values.
 
 ```yaml
 environmentVariables:
-  - name: OLLAMA_BASE_URL
-    value: "http://ollama.default.svc.cluster.local:11434"
-  - name: OLLAMA_MODEL
-    value: "llama3.2"
+  - name: MODEL
+    value: "anthropic/claude-sonnet-4-5-20250514"
+  - name: LLM_PROVIDER_API_TOKEN
+    value: "your-llm-provider-token"
   - name: API_KEY
     value: "your-api-key"
   - name: API_KEY_FIELD_NAME

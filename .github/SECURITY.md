@@ -8,7 +8,7 @@ Only the latest version on the `main` branch receives security fixes.
 
 **Please do not open a public GitHub issue for security vulnerabilities.**
 
-Report vulnerabilities privately via [GitHub Security Advisories](https://github.com/schmenniooo/DataLama/security/advisories/new). Include as much detail as possible:
+Report vulnerabilities privately via [GitHub Security Advisories](https://github.com/schmenniooo/DataLens/security/advisories/new). Include as much detail as possible:
 
 - A description of the vulnerability and its potential impact
 - Steps to reproduce or a proof-of-concept
@@ -21,7 +21,13 @@ Report vulnerabilities privately via [GitHub Security Advisories](https://github
 
 - All endpoints except `/health` require an API key passed via the `X-API-Key` header (configurable via `API_KEY_FIELD_NAME`)
 - `DEBUG=true` disables authentication entirely — **never enable this in production**
-- Rotate `API_KEY` regularly and avoid reusing default values (`api-key`)
+- Rotate `API_KEY` regularly and avoid reusing default values
+
+### LLM Provider Credentials
+
+- `LLM_PROVIDER_API_TOKEN` holds the secret key for the configured LLM provider — **never commit it to version control**
+- Store it in a `.env` file (already in `.gitignore`) or inject it via Kubernetes Secrets / CI variables
+- Rotate the token periodically and restrict its scope to the minimum required permissions on the provider side
 
 ### Deployment
 

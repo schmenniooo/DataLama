@@ -12,8 +12,8 @@ def _create_test_config(api_key: str = DEFAULT_API_KEY) -> Config:
     return Config(
         api_key_field_name="X-API-Key",
         api_key=api_key,
-        ollama_base_url="http://localhost:11434",
-        ollama_model="llama3.2",
+        model="test-model",
+        llm_provider_api_token="test-token",
         debug=False,
         host="0.0.0.0",
         port=3000,

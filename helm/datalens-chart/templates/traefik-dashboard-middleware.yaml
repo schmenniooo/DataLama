@@ -1,0 +1,11 @@
+{{- if .Values.dashboard.enabled }}
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ include "datalens-deployment-chart.fullname" . }}-dashboard-auth
+  labels:
+    {{- include "datalens-deployment-chart.labels" . | nindent 4 }}
+spec:
+  basicAuth:
+    secret: {{ include "datalens-deployment-chart.fullname" . }}-dashboard-auth
+{{- end }}

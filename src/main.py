@@ -1,4 +1,4 @@
-"""Entry point for the DataLama application."""
+"""Entry point for the DataLens application."""
 
 import os
 import logging
@@ -11,7 +11,7 @@ from src.model.config.config import Config
 logger = logging.getLogger("logger")
 
 def main():
-    """Starts the DataLama application."""
+    """Starts the DataLens application."""
     load_dotenv()  # No-op if .env doesn't exist (e.g. in Docker)
 
     # Configuring app
@@ -21,8 +21,8 @@ def main():
         debug = os.getenv("DEBUG", "false").lower() == "true",
         host = os.getenv("HOST", "0.0.0.0"),
         port = int(os.getenv("PORT", "3000")),
-        ollama_base_url = os.getenv("OLLAMA_BASE_URL", ""),
-        ollama_model = os.getenv("OLLAMA_MODEL", "")
+        model= os.getenv("MODEL", ""),
+        llm_provider_api_token = os.getenv("LLM_PROVIDER_API_TOKEN", "")
     )
 
     # Creating and running server
@@ -30,5 +30,5 @@ def main():
     server.run()
 
 if __name__ == "__main__":
-    print("Hello from datalama!")
+    print("Hello from DataLens!")
     main()

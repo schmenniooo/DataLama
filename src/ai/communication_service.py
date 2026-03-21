@@ -2,8 +2,9 @@
 
 import logging
 
-import ollama
-from ollama import ChatResponse
+from langchain.chat_models import init_chat_model
+from langchain_core.exceptions import LangChainException
+from langchain_core.messages import AIMessage, SystemMessage, HumanMessage
 
 logger = logging.getLogger("logger")
 
@@ -57,21 +58,20 @@ analyses_types: dict[str, str] = {
 }
 
 
-class OllamaService:  # pylint: disable=too-few-public-methods
-    """Provides for ollama communication"""
+class AiCommunicationService:  # pylint: disable=too-few-public-methods
+    """Provides for ai communication"""
 
-    def __init__(self, ollama_base_url: str, ollama_model: str):
-        self.ollama_model = ollama_model
-        self.ollama_client = ollama.AsyncClient(host=ollama_base_url)
+    def __init__(self, model: str, api_key: str):
+        self.model = init_chat_model(model=model, api_key=api_key)
 
     async def health_check(self) -> bool:
         """Check the health of the service."""
         try:
-            await self.ollama_client.list()
-        except (ollama.ResponseError, ConnectionError) as e:
-            logger.error("Ollama request failed: %s", e)
+            self.model.invoke(input="health_check")
+        except LangChainException as e:
+            logger.error("Health check failed: %s", e)
             return False
-        # If operation does not fail -> ollama is up and running
+        # If operation does not fail -> Connection to LLM Provider is up and running
         return True
 
     async def make_analyse_request(
@@ -81,7 +81,7 @@ class OllamaService:  # pylint: disable=too-few-public-methods
         data_format: str,
         daterange: list[str]
     ) -> str:
-        """Makes a request to ollama with system and user messages"""
+        """Makes a request to AI with system and user messages"""
         system_prompt = analyses_types.get(analysis_type)
         if system_prompt is None:
             raise ValueError(f"Unknown analysis type: '{analysis_type}'")
@@ -91,22 +91,16 @@ class OllamaService:  # pylint: disable=too-few-public-methods
             data_format, f"{daterange[0]} to {daterange[1]}"
         )
 
-        logger.info("Sending '%s' analysis request to Ollama", analysis_type)
+        # Wrapping system and human prompt
+        messages = [SystemMessage(content=system_prompt), HumanMessage(content=data)]
 
-        # Processing LLM call through Ollama
+        logger.info(f"Sending {analysis_type} analysis request to LLM")
+
+        # Processing LLM call through selected provider
         try:
-            response: ChatResponse = await self.ollama_client.chat(
-                model=self.ollama_model,
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": data},
-                ],
-            )
-        except ollama.ResponseError as e:
+            response: AIMessage = await self.model.ainvoke(input=messages)
+        except LangChainException as e:
             logger.error("Ollama request failed: %s", e)
-            raise ollama.ResponseError(error=e.error, status_code=502)
-        except ConnectionError as e:
-            logger.error("Could not connect to Ollama: %s", e)
-            raise ollama.ResponseError(error=str(e), status_code=502)
+            raise LangChainException(e)
 
-        return response.message.content
+        return response.content

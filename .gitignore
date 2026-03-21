@@ -3,8 +3,8 @@
 .vscode
 
 **/__pycache__
-src/datalama.egg-info
+src/datalens.egg-info
 
-/helm/datalama-chart/charts/*.tgz
+/helm/datalens-chart/charts/*.tgz
 
 .env

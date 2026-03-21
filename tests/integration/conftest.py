@@ -11,19 +11,27 @@ from src.server.server import Server
 API_KEY = "test-secret"
 HEADERS = {"X-API-Key": API_KEY}
 
-VALID_PAYLOAD = {
+VALID_PAYLOAD_CSV = {
     "data_sets": ["date,value\n2024-01-01,100\n2024-01-02,110"],
     "format": "csv",
     "daterange": ["2024-01-01", "2024-12-31"],
 }
+
+VALID_PAYLOAD_JSON = {
+    "data_sets": [{"name": "Sales", "values": [100, 110, 120]}],
+    "format": "json",
+    "daterange": ["2024-01-01", "2024-12-31"],
+}
+
+VALID_PAYLOADS = [VALID_PAYLOAD_CSV, VALID_PAYLOAD_JSON]
 
 SEPARATOR = "\n---NEW---DATASET---\n"
 
 
 @pytest.fixture
 def client(test_config):
-    """TestClient with mocked OllamaService."""
-    with patch("src.server.server.OllamaService") as mock_service_class:
+    """TestClient with mocked AiCommunicationService."""
+    with patch("src.server.server.AiCommunicationService") as mock_service_class:
         mock_service = mock_service_class.return_value
         mock_service.health_check = AsyncMock(return_value=True)
         mock_service.make_analyse_request = AsyncMock(
