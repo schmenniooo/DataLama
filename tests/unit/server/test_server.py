@@ -11,28 +11,21 @@ from src.server.server import Server
 
 @pytest.fixture
 def client(test_config_with_key):
-    """TestClient for a configured Server with mocked OllamaService."""
+    """TestClient for a configured Server with mocked AiCommunicationService."""
     config = test_config_with_key(api_key="secret")
-    with patch("src.server.server.OllamaService") as mock_service_class:
+    with patch("src.server.server.AiCommunicationService") as mock_service_class:
         mock_service = mock_service_class.return_value
         mock_service.health_check = AsyncMock(return_value=True)
         server = Server(config=config)
         yield TestClient(server.app)
 
 
-def test_authenticated_request(client):
-    """Request with valid token reaches the route."""
-    response = client.get("/health", headers={"X-API-Key": "secret"})
-    assert response.status_code == 200
-
-
-def test_unauthenticated_request(client):
-    """Request without token is rejected by middleware."""
-    response = client.get("/health")
-    assert response.status_code == 401
-
-
-def test_wrong_token(client):
-    """Request with wrong token is rejected by middleware."""
-    response = client.get("/health", headers={"X-API-Key": "wrong"})
-    assert response.status_code == 401
+@pytest.mark.parametrize("headers,expected_status", [
+    ({"X-API-Key": "secret"}, 200),
+    ({}, 401),
+    ({"X-API-Key": "wrong"}, 401),
+], ids=["valid_token", "missing_token", "wrong_token"])
+def test_health_endpoint_authentication(client, headers, expected_status):
+    """Health endpoint enforces authentication correctly."""
+    response = client.get("/health", headers=headers)
+    assert response.status_code == expected_status

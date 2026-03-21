@@ -22,8 +22,8 @@ SEPARATOR = "\n---NEW---DATASET---\n"
 
 @pytest.fixture
 def client(test_config):
-    """TestClient with mocked OllamaService."""
-    with patch("src.server.server.OllamaService") as mock_service_class:
+    """TestClient with mocked AiCommunicationService."""
+    with patch("src.server.server.AiCommunicationService") as mock_service_class:
         mock_service = mock_service_class.return_value
         mock_service.health_check = AsyncMock(return_value=True)
         mock_service.make_analyse_request = AsyncMock(

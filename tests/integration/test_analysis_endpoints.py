@@ -1,7 +1,7 @@
 """Integration tests for all analysis endpoints."""
 
 import pytest
-import ai
+from langchain_core.exceptions import LangChainException
 
 from tests.integration.conftest import HEADERS, SEPARATOR, VALID_PAYLOAD
 
@@ -56,8 +56,8 @@ def test_llm_response_is_returned_as_message(client, endpoint):
 
 
 @pytest.mark.parametrize("endpoint", ENDPOINTS)
-def test_ollama_called_with_correct_analysis_type(client, endpoint):
-    """OllamaService is called with the matching analysis type."""
+def test_ai_service_called_with_correct_analysis_type(client, endpoint):
+    """AiCommunicationService is called with the matching analysis type."""
     test_client, mock_service = client
     test_client.post(f"/{endpoint}", json=VALID_PAYLOAD, headers=HEADERS)
     mock_service.make_analyse_request.assert_called_once()
@@ -67,7 +67,7 @@ def test_ollama_called_with_correct_analysis_type(client, endpoint):
 
 @pytest.mark.parametrize("endpoint", ENDPOINTS)
 def test_multiple_datasets_are_joined_with_separator(client, endpoint):
-    """Multiple datasets are joined with the separator before sending to Ollama."""
+    """Multiple datasets are joined with the separator before sending to the AI service."""
     test_client, mock_service = client
     payload = {
         "data_sets": ["date,value\n2024-01-01,100", "date,value\n2024-01-01,200"],
@@ -101,12 +101,12 @@ def test_validation_returns_400(client, endpoint, payload_override, description)
     assert response.status_code == 400
 
 
-# --- Ollama errors ---
+# --- LLM errors ---
 
 @pytest.mark.parametrize("endpoint", ENDPOINTS)
-def test_returns_502_on_ollama_error(client, endpoint):
-    """OllamaService failure returns 502."""
+def test_returns_502_on_llm_error(client, endpoint):
+    """AiCommunicationService failure returns 502."""
     test_client, mock_service = client
-    mock_service.make_analyse_request.side_effect = ai.ResponseError("model not found")
+    mock_service.make_analyse_request.side_effect = LangChainException("model not found")
     response = test_client.post(f"/{endpoint}", json=VALID_PAYLOAD, headers=HEADERS)
     assert response.status_code == 502
