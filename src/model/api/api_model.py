@@ -1,5 +1,4 @@
 """Model for network traffic"""
-import time
 from typing import Any
 
 from pydantic import BaseModel
