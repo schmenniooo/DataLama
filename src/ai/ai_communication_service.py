@@ -2,6 +2,8 @@
 
 import logging
 
+from langchain_core.exceptions import LangChainException
+
 import ai
 from langchain.chat_models import init_chat_model
 
@@ -66,9 +68,9 @@ class AiCommunicationService:  # pylint: disable=too-few-public-methods
     async def health_check(self) -> bool:
         """Check the health of the service."""
         try:
-            await self.ollama_client.list()
-        except (ai.ResponseError, ConnectionError) as e:
-            logger.error("Ollama request failed: %s", e)
+            self.model.invoke("health_check")
+        except LangChainException as e:
+            logger.error("Health check failed: %s", e)
             return False
         # If operation does not fail -> Connection to LLM Provider is up and running
         return True
