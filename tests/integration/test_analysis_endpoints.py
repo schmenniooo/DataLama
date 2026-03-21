@@ -1,11 +1,14 @@
 """Integration tests for all analysis endpoints."""
 
+import json
 from datetime import datetime
 
 import pytest
 from langchain_core.exceptions import LangChainException
 
-from tests.integration.conftest import HEADERS, SEPARATOR, VALID_PAYLOAD
+from tests.integration.conftest import (
+    HEADERS, SEPARATOR, VALID_PAYLOAD_CSV, VALID_PAYLOAD_JSON, VALID_PAYLOADS,
+)
 
 ENDPOINTS = ["forecasting", "summary", "anomaly", "pattern", "comparison"]
 
@@ -16,7 +19,7 @@ ENDPOINTS = ["forecasting", "summary", "anomaly", "pattern", "comparison"]
 def test_without_api_key_returns_401(client, endpoint):
     """Request without API key is rejected."""
     test_client, _ = client
-    response = test_client.post(f"/{endpoint}", json=VALID_PAYLOAD)
+    response = test_client.post(f"/{endpoint}", json=VALID_PAYLOAD_CSV)
     assert response.status_code == 401
 
 
@@ -24,25 +27,27 @@ def test_without_api_key_returns_401(client, endpoint):
 def test_with_wrong_api_key_returns_401(client, endpoint):
     """Request with wrong API key is rejected."""
     test_client, _ = client
-    response = test_client.post(f"/{endpoint}", json=VALID_PAYLOAD, headers={"X-API-Key": "wrong"})
+    response = test_client.post(f"/{endpoint}", json=VALID_PAYLOAD_CSV, headers={"X-API-Key": "wrong"})
     assert response.status_code == 401
 
 
 # --- Happy path ---
 
 @pytest.mark.parametrize("endpoint", ENDPOINTS)
-def test_returns_200_with_valid_payload(client, endpoint):
-    """Valid request returns 200."""
+@pytest.mark.parametrize("payload", VALID_PAYLOADS, ids=["csv", "json"])
+def test_returns_200_with_valid_payload(client, endpoint, payload):
+    """Valid request returns 200 for both string and object data_sets."""
     test_client, _ = client
-    response = test_client.post(f"/{endpoint}", json=VALID_PAYLOAD, headers=HEADERS)
+    response = test_client.post(f"/{endpoint}", json=payload, headers=HEADERS)
     assert response.status_code == 200
 
 
 @pytest.mark.parametrize("endpoint", ENDPOINTS)
-def test_response_contains_message_and_date(client, endpoint):
+@pytest.mark.parametrize("payload", VALID_PAYLOADS, ids=["csv", "json"])
+def test_response_contains_message_and_date(client, endpoint, payload):
     """Response contains a non-empty message string and a valid ISO date."""
     test_client, _ = client
-    response = test_client.post(f"/{endpoint}", json=VALID_PAYLOAD, headers=HEADERS)
+    response = test_client.post(f"/{endpoint}", json=payload, headers=HEADERS)
     body = response.json()
     assert isinstance(body["message"], str)
     assert len(body["message"]) > 0
@@ -54,7 +59,7 @@ def test_llm_response_is_returned_as_message(client, endpoint):
     """The LLM response text is returned in the message field."""
     test_client, mock_service = client
     mock_service.make_analyse_request.return_value = "Custom output"
-    response = test_client.post(f"/{endpoint}", json=VALID_PAYLOAD, headers=HEADERS)
+    response = test_client.post(f"/{endpoint}", json=VALID_PAYLOAD_CSV, headers=HEADERS)
     assert response.json()["message"] == "Custom output"
 
 
@@ -62,15 +67,15 @@ def test_llm_response_is_returned_as_message(client, endpoint):
 def test_ai_service_called_with_correct_analysis_type(client, endpoint):
     """AiCommunicationService is called with the matching analysis type."""
     test_client, mock_service = client
-    test_client.post(f"/{endpoint}", json=VALID_PAYLOAD, headers=HEADERS)
+    test_client.post(f"/{endpoint}", json=VALID_PAYLOAD_CSV, headers=HEADERS)
     mock_service.make_analyse_request.assert_called_once()
     call_kwargs = mock_service.make_analyse_request.call_args
     assert call_kwargs.kwargs["analysis_type"] == endpoint
 
 
 @pytest.mark.parametrize("endpoint", ENDPOINTS)
-def test_multiple_datasets_are_joined_with_separator(client, endpoint):
-    """Multiple datasets are joined with the separator before sending to the AI service."""
+def test_multiple_csv_datasets_are_joined_with_separator(client, endpoint):
+    """Multiple string datasets are joined with the separator."""
     test_client, mock_service = client
     payload = {
         "data_sets": ["date,value\n2024-01-01,100", "date,value\n2024-01-01,200"],
@@ -82,12 +87,29 @@ def test_multiple_datasets_are_joined_with_separator(client, endpoint):
     assert call_kwargs.kwargs["data"] == SEPARATOR.join(payload["data_sets"])
 
 
+@pytest.mark.parametrize("endpoint", ENDPOINTS)
+def test_multiple_json_datasets_are_joined_with_separator(client, endpoint):
+    """Multiple object datasets are JSON-serialized and joined with the separator."""
+    test_client, mock_service = client
+    ds1 = {"name": "A", "values": [1, 2]}
+    ds2 = {"name": "B", "values": [3, 4]}
+    payload = {
+        "data_sets": [ds1, ds2],
+        "format": "json",
+        "daterange": ["2024-01-01", "2024-12-31"],
+    }
+    test_client.post(f"/{endpoint}", json=payload, headers=HEADERS)
+    call_kwargs = mock_service.make_analyse_request.call_args
+    assert call_kwargs.kwargs["data"] == SEPARATOR.join([json.dumps(ds1), json.dumps(ds2)])
+
+
 # --- Validation ---
 
 @pytest.mark.parametrize("endpoint", ENDPOINTS)
 @pytest.mark.parametrize("payload_override,description", [
     ({"data_sets": []}, "empty data_sets"),
     ({"data_sets": [""]}, "empty dataset string"),
+    ({"data_sets": [{}]}, "empty dataset object"),
     ({"format": "xml"}, "unsupported format"),
     ({"daterange": ["2024-01-01"]}, "single date in range"),
     ({"daterange": ["01-01-2024", "12-31-2024"]}, "invalid date format"),
@@ -98,7 +120,7 @@ def test_validation_returns_400(client, endpoint, payload_override, description)
     test_client, _ = client
     response = test_client.post(
         f"/{endpoint}",
-        json={**VALID_PAYLOAD, **payload_override},
+        json={**VALID_PAYLOAD_CSV, **payload_override},
         headers=HEADERS,
     )
     assert response.status_code == 400
@@ -111,5 +133,5 @@ def test_returns_502_on_llm_error(client, endpoint):
     """AiCommunicationService failure returns 502."""
     test_client, mock_service = client
     mock_service.make_analyse_request.side_effect = LangChainException("model not found")
-    response = test_client.post(f"/{endpoint}", json=VALID_PAYLOAD, headers=HEADERS)
+    response = test_client.post(f"/{endpoint}", json=VALID_PAYLOAD_CSV, headers=HEADERS)
     assert response.status_code == 502

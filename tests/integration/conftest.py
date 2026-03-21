@@ -11,11 +11,19 @@ from src.server.server import Server
 API_KEY = "test-secret"
 HEADERS = {"X-API-Key": API_KEY}
 
-VALID_PAYLOAD = {
+VALID_PAYLOAD_CSV = {
     "data_sets": ["date,value\n2024-01-01,100\n2024-01-02,110"],
     "format": "csv",
     "daterange": ["2024-01-01", "2024-12-31"],
 }
+
+VALID_PAYLOAD_JSON = {
+    "data_sets": [{"name": "Sales", "values": [100, 110, 120]}],
+    "format": "json",
+    "daterange": ["2024-01-01", "2024-12-31"],
+}
+
+VALID_PAYLOADS = [VALID_PAYLOAD_CSV, VALID_PAYLOAD_JSON]
 
 SEPARATOR = "\n---NEW---DATASET---\n"
 

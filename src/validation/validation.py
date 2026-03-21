@@ -25,12 +25,14 @@ def validate_request(request: BaseRequest) -> str:
     return ""
 
 
-def _validate_data_to_analyse(data_sets: list[str]) -> str:
+def _validate_data_to_analyse(data_sets: list) -> str:
     if len(data_sets) == 0:
         return "Data cannot be empty"
 
     for data_set in data_sets:
-        if len(data_set) == 0:
+        if isinstance(data_set, str) and len(data_set) == 0:
+            return "Single data sets cannot be empty"
+        if isinstance(data_set, (dict, list)) and len(data_set) == 0:
             return "Single data sets cannot be empty"
 
     return ""

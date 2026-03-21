@@ -1,5 +1,6 @@
 """Model for network traffic"""
 import time
+from typing import Any
 
 from pydantic import BaseModel
 
@@ -7,7 +8,7 @@ from pydantic import BaseModel
 class BaseRequest(BaseModel):
     """Request model for analysis endpoints."""
 
-    data_sets: list[str]
+    data_sets: list[Any]
     format: str
     daterange: list[str]
 

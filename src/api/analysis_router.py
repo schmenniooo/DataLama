@@ -1,6 +1,7 @@
 """API route definitions for the DataLama application."""
 
 import datetime
+import json
 import langchain_core.exceptions
 from fastapi import APIRouter, HTTPException
 
@@ -63,11 +64,16 @@ class AnalysisRouter:  # pylint: disable=too-few-public-methods
         if not message == "":
             raise HTTPException(status_code=400, detail=f"Invalid request: {message}")
 
+        # Preparing data and splitting list into string by separator
+        prepared_data = self.DATASET_SEPERATOR.join(
+            ds if isinstance(ds, str) else json.dumps(ds) for ds in request.data_sets
+        )
+
         # Processing LLM-module call
         try:
             response = await self.ai_service.make_analyse_request(
                 analysis_type=analysis_type,
-                data=self.DATASET_SEPERATOR.join(request.data_sets),
+                data=prepared_data,
                 data_format=request.format,
                 daterange=request.daterange
             )
