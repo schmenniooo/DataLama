@@ -63,14 +63,6 @@ environmentVariables:
     value: "X-API-Key"
 ```
 
-All environment variables can be set directly via `--set` on install:
-
-```bash
-helm install datalama oci://ghcr.io/schmenniooo/helm/datalama-chart \
-  --set environmentVariables[0].name=OLLAMA_BASE_URL \
-  --set environmentVariables[0].value=http://ollama:11434
-```
-
 ### Values
 
 | Key                                        | Default                        | Description                                              |
