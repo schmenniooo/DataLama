@@ -21,7 +21,13 @@ Report vulnerabilities privately via [GitHub Security Advisories](https://github
 
 - All endpoints except `/health` require an API key passed via the `X-API-Key` header (configurable via `API_KEY_FIELD_NAME`)
 - `DEBUG=true` disables authentication entirely — **never enable this in production**
-- Rotate `API_KEY` regularly and avoid reusing default values (`api-key`)
+- Rotate `API_KEY` regularly and avoid reusing default values
+
+### LLM Provider Credentials
+
+- `LLM_PROVIDER_API_TOKEN` holds the secret key for the configured LLM provider — **never commit it to version control**
+- Store it in a `.env` file (already in `.gitignore`) or inject it via Kubernetes Secrets / CI variables
+- Rotate the token periodically and restrict its scope to the minimum required permissions on the provider side
 
 ### Deployment
 

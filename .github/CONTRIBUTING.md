@@ -6,7 +6,7 @@ Thank you for your interest in contributing to DataLama! This document outlines 
 
 - Python 3.13+
 - [uv](https://docs.astral.sh/uv/) for dependency management
-- A running [Ollama](https://ollama.com/) instance (for local testing)
+- An API token for a supported LLM provider (e.g. Anthropic, OpenAI)
 - Docker (optional, for container testing)
 
 ## Getting Started
@@ -25,7 +25,7 @@ Thank you for your interest in contributing to DataLama! This document outlines 
 3. Copy and configure environment variables:
    ```bash
    cp .env.example .env
-   # Edit .env with your Ollama URL, API key, etc.
+   # Edit .env with your MODEL, LLM_PROVIDER_API_TOKEN, API_KEY, etc.
    ```
 
 4. Run the service locally:
