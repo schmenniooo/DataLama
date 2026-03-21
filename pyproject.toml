@@ -26,7 +26,7 @@ asyncio_mode = "auto"
 source-roots = ["."]
 
 [tool.pylint.messages_control]
-  disable = ["fixme"]
+  disable = ["fixme", "logging-fstring-interpolation", "raise-missing-from"]
 
 [dependency-groups]
 dev = [
