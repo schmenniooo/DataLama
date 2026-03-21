@@ -8,7 +8,7 @@ from fastapi import FastAPI
 from src.api.analysis_router import AnalysisRouter
 from src.middleware.authentication import AuthInterceptor
 from src.model.config.config import Config
-from src.ai.llm_communication_service import AiCommunicationService
+from src.ai.communication_service import AiCommunicationService
 
 logger = logging.getLogger("logger")
 
