@@ -4,15 +4,15 @@
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
-import ollama
+import ai
 
-from src.ollama.ollama_service import OllamaService
+from src.ai.ai_communication_service import OllamaService
 
 
 @pytest.fixture
 def service():
-    """OllamaService with a mocked async ollama client."""
-    with patch("src.ollama.ollama_service.ollama.AsyncClient"):
+    """OllamaService with a mocked async ai client."""
+    with patch("src.ai.ollama_service.ai.AsyncClient"):
         instance = OllamaService(ollama_base_url="http://localhost:11434", ollama_model="llama3.2")
         instance.ollama_client = MagicMock()
         instance.ollama_client.chat = AsyncMock()
@@ -29,8 +29,8 @@ async def test_health_check_returns_true_when_ollama_is_up(service):
 
 @pytest.mark.asyncio
 async def test_health_check_returns_false_on_response_error(service):
-    """health_check returns False when ollama raises ResponseError."""
-    service.ollama_client.list.side_effect = ollama.ResponseError("connection refused")
+    """health_check returns False when ai raises ResponseError."""
+    service.ollama_client.list.side_effect = ai.ResponseError("connection refused")
     result = await service.health_check()
     assert result is False
 
@@ -87,10 +87,10 @@ async def test_chat_called_with_correct_messages(service):
 
 @pytest.mark.asyncio
 async def test_response_error_is_reraised(service):
-    """A ResponseError from ollama is caught, logged, and re-raised."""
-    service.ollama_client.chat.side_effect = ollama.ResponseError("model not found")
+    """A ResponseError from ai is caught, logged, and re-raised."""
+    service.ollama_client.chat.side_effect = ai.ResponseError("model not found")
 
-    with pytest.raises(ollama.ResponseError):
+    with pytest.raises(ai.ResponseError):
         await service.make_analyse_request(
             analysis_type="summary",
             data="some data",

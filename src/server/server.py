@@ -8,7 +8,7 @@ from fastapi import FastAPI
 from src.api.analysis_router import AnalysisRouter
 from src.middleware.authentication import AuthInterceptor
 from src.model.config.config import Config
-from src.ollama.ollama_service import OllamaService
+from src.ai.ai_communication_service import OllamaService
 
 logger = logging.getLogger("logger")
 
@@ -26,7 +26,7 @@ class Server:  # pylint: disable=too-few-public-methods
         if not config.debug:
             self._configure_authentication()
 
-        # Connecting to ollama
+        # Connecting to ai
         ollama_service = self._create_ollama_service()
 
         # Configuring api routes
@@ -42,7 +42,7 @@ class Server:  # pylint: disable=too-few-public-methods
         self.app.add_middleware(auth_middleware)
 
     def _create_ollama_service(self) -> OllamaService:
-        """Returns new ollama service class"""
+        """Returns new ai service class"""
         logger.info("Creating Ollama service (model: %s, url: %s)",
                     self.config.ollama_model, self.config.ollama_base_url)
         return OllamaService(

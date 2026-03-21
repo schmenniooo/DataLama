@@ -2,8 +2,8 @@
 
 import logging
 
-import ollama
-from ollama import ChatResponse
+import ai
+from ai import ChatResponse
 
 logger = logging.getLogger("logger")
 
@@ -58,20 +58,20 @@ analyses_types: dict[str, str] = {
 
 
 class OllamaService:  # pylint: disable=too-few-public-methods
-    """Provides for ollama communication"""
+    """Provides for ai communication"""
 
     def __init__(self, ollama_base_url: str, ollama_model: str):
         self.ollama_model = ollama_model
-        self.ollama_client = ollama.AsyncClient(host=ollama_base_url)
+        self.ollama_client = ai.AsyncClient(host=ollama_base_url)
 
     async def health_check(self) -> bool:
         """Check the health of the service."""
         try:
             await self.ollama_client.list()
-        except (ollama.ResponseError, ConnectionError) as e:
+        except (ai.ResponseError, ConnectionError) as e:
             logger.error("Ollama request failed: %s", e)
             return False
-        # If operation does not fail -> ollama is up and running
+        # If operation does not fail -> ai is up and running
         return True
 
     async def make_analyse_request(
@@ -81,7 +81,7 @@ class OllamaService:  # pylint: disable=too-few-public-methods
         data_format: str,
         daterange: list[str]
     ) -> str:
-        """Makes a request to ollama with system and user messages"""
+        """Makes a request to ai with system and user messages"""
         system_prompt = analyses_types.get(analysis_type)
         if system_prompt is None:
             raise ValueError(f"Unknown analysis type: '{analysis_type}'")
@@ -102,11 +102,11 @@ class OllamaService:  # pylint: disable=too-few-public-methods
                     {"role": "user", "content": data},
                 ],
             )
-        except ollama.ResponseError as e:
+        except ai.ResponseError as e:
             logger.error("Ollama request failed: %s", e)
-            raise ollama.ResponseError(error=e.error, status_code=502)
+            raise ai.ResponseError(error=e.error, status_code=502)
         except ConnectionError as e:
             logger.error("Could not connect to Ollama: %s", e)
-            raise ollama.ResponseError(error=str(e), status_code=502)
+            raise ai.ResponseError(error=str(e), status_code=502)
 
         return response.message.content

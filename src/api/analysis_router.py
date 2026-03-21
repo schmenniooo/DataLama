@@ -1,10 +1,10 @@
 """API route definitions for the DataLama application."""
 
 from fastapi import APIRouter, HTTPException
-import ollama
+import ai
 
 from src.model.api.api_model import BaseRequest, BaseResponse
-from src.ollama.ollama_service import OllamaService
+from src.ai.ai_communication_service import OllamaService
 from src.validation.validation import validate_request
 
 
@@ -56,7 +56,7 @@ class AnalysisRouter:  # pylint: disable=too-few-public-methods
         return await self._do_analyze_request(request=request, analysis_type="comparison")
 
     async def _do_analyze_request(self, request: BaseRequest, analysis_type: str) -> BaseResponse:
-        """Base analyse request for ollama."""
+        """Base analyse request for ai."""
         # Validating input data
         message = validate_request(request=request)
         if not message == "":
@@ -70,7 +70,7 @@ class AnalysisRouter:  # pylint: disable=too-few-public-methods
                 data_format=request.format,
                 daterange=request.daterange
             )
-        except ollama.ResponseError as e:
+        except ai.ResponseError as e:
             raise HTTPException(status_code=502, detail=f"Ollama request failed: {e.error}") from e
         except ValueError as e:
             raise HTTPException(status_code=400, detail=f"Invalid request: {e}") from e

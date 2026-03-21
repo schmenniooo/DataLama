@@ -1,7 +1,7 @@
 """Integration tests for all analysis endpoints."""
 
 import pytest
-import ollama
+import ai
 
 from tests.integration.conftest import HEADERS, SEPARATOR, VALID_PAYLOAD
 
@@ -107,6 +107,6 @@ def test_validation_returns_400(client, endpoint, payload_override, description)
 def test_returns_502_on_ollama_error(client, endpoint):
     """OllamaService failure returns 502."""
     test_client, mock_service = client
-    mock_service.make_analyse_request.side_effect = ollama.ResponseError("model not found")
+    mock_service.make_analyse_request.side_effect = ai.ResponseError("model not found")
     response = test_client.post(f"/{endpoint}", json=VALID_PAYLOAD, headers=HEADERS)
     assert response.status_code == 502
