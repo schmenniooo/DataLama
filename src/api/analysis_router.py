@@ -4,7 +4,7 @@ from fastapi import APIRouter, HTTPException
 import ai
 
 from src.model.api.api_model import BaseRequest, BaseResponse
-from src.ai.ai_communication_service import AiCommunicationService
+from src.ai.llm_communication_service import AiCommunicationService
 from src.validation.validation import validate_request
 
 

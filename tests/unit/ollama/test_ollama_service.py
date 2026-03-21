@@ -6,7 +6,7 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 import ai
 
-from src.ai.ai_communication_service import AiCommunicationService
+from src.ai.llm_communication_service import AiCommunicationService
 
 
 @pytest.fixture
