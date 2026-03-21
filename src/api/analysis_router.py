@@ -4,7 +4,7 @@ from fastapi import APIRouter, HTTPException
 import ai
 
 from src.model.api.api_model import BaseRequest, BaseResponse
-from src.ai.ai_communication_service import OllamaService
+from src.ai.ai_communication_service import AiCommunicationService
 from src.validation.validation import validate_request
 
 
@@ -13,7 +13,7 @@ class AnalysisRouter:  # pylint: disable=too-few-public-methods
 
     DATASET_SEPERATOR = "\n---NEW---DATASET---\n"
 
-    def __init__(self, ollama_service: OllamaService):
+    def __init__(self, ollama_service: AiCommunicationService):
         self.router = APIRouter()
         self.ollama_service = ollama_service
         self._register_routes()

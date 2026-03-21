@@ -57,7 +57,7 @@ analyses_types: dict[str, str] = {
 }
 
 
-class OllamaService:  # pylint: disable=too-few-public-methods
+class AiCommunicationService:  # pylint: disable=too-few-public-methods
     """Provides for ai communication"""
 
     def __init__(self, ollama_base_url: str, ollama_model: str):

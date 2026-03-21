@@ -6,14 +6,14 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 import ai
 
-from src.ai.ai_communication_service import OllamaService
+from src.ai.ai_communication_service import AiCommunicationService
 
 
 @pytest.fixture
 def service():
     """OllamaService with a mocked async ai client."""
     with patch("src.ai.ollama_service.ai.AsyncClient"):
-        instance = OllamaService(ollama_base_url="http://localhost:11434", ollama_model="llama3.2")
+        instance = AiCommunicationService(ollama_base_url="http://localhost:11434", ollama_model="llama3.2")
         instance.ollama_client = MagicMock()
         instance.ollama_client.chat = AsyncMock()
         instance.ollama_client.list = AsyncMock()
