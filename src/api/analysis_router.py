@@ -1,5 +1,5 @@
 """API route definitions for the DataLama application."""
-
+import langchain_core.exceptions
 from fastapi import APIRouter, HTTPException
 import ai
 
@@ -64,14 +64,14 @@ class AnalysisRouter:  # pylint: disable=too-few-public-methods
 
         # Processing LLM-module call
         try:
-            response = await self.ai_service.make_analyse_request(
+            response = self.ai_service.make_analyse_request(
                 analysis_type=analysis_type,
                 data=self.DATASET_SEPERATOR.join(request.data_sets),
                 data_format=request.format,
                 daterange=request.daterange
             )
-        except ai.ResponseError as e:
-            raise HTTPException(status_code=502, detail=f"Ollama request failed: {e.error}") from e
+        except langchain_core.exceptions.LangChainException as e:
+            raise HTTPException(status_code=502, detail=f"Ollama request failed: {e}") from e
         except ValueError as e:
             raise HTTPException(status_code=400, detail=f"Invalid request: {e}") from e
 
