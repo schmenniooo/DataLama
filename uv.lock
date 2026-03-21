@@ -148,7 +148,7 @@ wheels = [
 ]
 
 [[package]]
-name = "datalama"
+name = "datalens"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [

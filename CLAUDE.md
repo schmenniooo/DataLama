@@ -5,7 +5,7 @@ This project is a portfolio learning project. Never provide for code suggestions
 
 ## Project Overview
 
-DataLama is a Python microservice that accepts data (CSV, JSON, YAML) and returns LLM-powered analysis (forecasting, summary, anomaly detection, pattern recognition, dataset comparison). Built with FastAPI, LangChain, and uv for package management.
+DataLens is a Python microservice that accepts data (CSV, JSON, YAML) and returns LLM-powered analysis (forecasting, summary, anomaly detection, pattern recognition, dataset comparison). Built with FastAPI, LangChain, and uv for package management.
 
 ## Common Commands
 
@@ -63,7 +63,7 @@ The app reads environment variables (see README for full list). Key ones: `MODEL
 ## Deployment
 
 - **Docker**: Multi-stage build with `python:3.13-slim` and uv. Entrypoint: `uv run python -m src.main`.
-- **Helm**: Chart at `helm/datalama-chart/` includes Traefik reverse proxy, Redis for rate limiting, and HPA autoscaling. Published to GHCR.
+- **Helm**: Chart at `helm/datalens-chart/` includes Traefik reverse proxy, Redis for rate limiting, and HPA autoscaling. Published to GHCR.
 
 ## Pylint
 

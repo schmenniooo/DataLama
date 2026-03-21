@@ -1,4 +1,4 @@
-"""Entry point for the DataLama application."""
+"""Entry point for the DataLens application."""
 
 import os
 import logging
@@ -11,7 +11,7 @@ from src.model.config.config import Config
 logger = logging.getLogger("logger")
 
 def main():
-    """Starts the DataLama application."""
+    """Starts the DataLens application."""
     load_dotenv()  # No-op if .env doesn't exist (e.g. in Docker)
 
     # Configuring app
@@ -30,5 +30,5 @@ def main():
     server.run()
 
 if __name__ == "__main__":
-    print("Hello from datalama!")
+    print("Hello from DataLens!")
     main()

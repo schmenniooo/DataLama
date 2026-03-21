@@ -1,4 +1,4 @@
-"""API route definitions for the DataLama application."""
+"""API route definitions for the DataLens application."""
 
 import datetime
 import json

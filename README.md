@@ -1,4 +1,4 @@
-# DataLama
+# DataLens
 
 A microservice that takes data in several formats and returns a forecast or a summary of the data.
 Runs Python with FastAPI and uses LangChain to analyse the given data through a chosen LLM provider.
@@ -34,7 +34,7 @@ The service is configured via environment variables:
 
 ## Helm Chart
 
-The chart is published to GHCR and can be used to deploy DataLama to a Kubernetes cluster.
+The chart is published to GHCR and can be used to deploy DataLens to a Kubernetes cluster.
 
 The chart includes:
 - **Traefik** as a reverse proxy with an optional authenticated dashboard
@@ -44,7 +44,7 @@ The chart includes:
 ### Installation
 
 ```bash
-helm install datalama oci://ghcr.io/schmenniooo/helm/datalama-chart
+helm install datalens oci://ghcr.io/schmenniooo/helm/datalens-chart
 ```
 
 ### Configuration

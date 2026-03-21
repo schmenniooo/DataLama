@@ -1,7 +1,7 @@
 
 # Container Configuration
 
-# Environment variables for the datalama microservice container
+# Environment variables for the datalens microservice container
 environmentVariables:
   - name: "API_KEY_FIELD_NAME"
     value: "X-API-Key"
@@ -32,7 +32,7 @@ autoscaling:
 replicaCount: 1
 
 podLabels:
-  name: datalama-service
+  name: datalens-service
 
 resources:                                                                           
   requests:                                                                          
@@ -47,7 +47,7 @@ resources:
 serviceAccount:
   create: true
   automount: true
-  name: "datalama-user-service-account"
+  name: "datalens-user-service-account"
 
 # Running the container as non-root user for security
 podSecurityContext:                                                                  

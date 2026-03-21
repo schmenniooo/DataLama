@@ -1,6 +1,6 @@
-# Contributing to DataLama
+# Contributing to DataLens
 
-Thank you for your interest in contributing to DataLama! This document outlines the process for contributing to this project.
+Thank you for your interest in contributing to DataLens! This document outlines the process for contributing to this project.
 
 ## Prerequisites
 
@@ -13,8 +13,8 @@ Thank you for your interest in contributing to DataLama! This document outlines 
 
 1. Fork the repository and clone your fork:
    ```bash
-   git clone https://github.com/<your-username>/DataLama.git
-   cd DataLama
+   git clone https://github.com/<your-username>/DataLens.git
+   cd DataLens
    ```
 
 2. Install dependencies:

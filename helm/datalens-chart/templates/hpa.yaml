@@ -2,14 +2,14 @@
 apiVersion: autoscaling/v2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "datalama-deployment-chart.fullname" . }}
+  name: {{ include "datalens-deployment-chart.fullname" . }}
   labels:
-    {{- include "datalama-deployment-chart.labels" . | nindent 4 }}
+    {{- include "datalens-deployment-chart.labels" . | nindent 4 }}
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: {{ include "datalama-deployment-chart.fullname" . }}
+    name: {{ include "datalens-deployment-chart.fullname" . }}
   minReplicas: {{ .Values.autoscaling.minReplicas }}
   maxReplicas: {{ .Values.autoscaling.maxReplicas }}
   metrics:

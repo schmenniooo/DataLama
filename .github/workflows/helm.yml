@@ -20,13 +20,13 @@ jobs:
                 version: "v3.16.3"
 
             - name: Linting Helm Chart
-              run: helm lint ./helm/datalama-chart
+              run: helm lint ./helm/datalens-chart
 
             - name: Update dependencies
-              run: helm dependency update ./helm/datalama-chart
+              run: helm dependency update ./helm/datalens-chart
 
             - name: Testing Helm Chart
-              run: helm template datalama ./helm/datalama-chart --values ./helm/datalama-chart/values.yaml
+              run: helm template datalens ./helm/datalens-chart --values ./helm/datalens-chart/values.yaml
 
     build-push:
         runs-on: ubuntu-latest
@@ -40,10 +40,10 @@ jobs:
                 version: "v3.16.3"
 
             - name: Update dependencies
-              run: helm dependency update ./helm/datalama-chart
+              run: helm dependency update ./helm/datalens-chart
 
             - name: Build Helm Chart
-              run: helm package ./helm/datalama-chart
+              run: helm package ./helm/datalens-chart
 
             - name: Log in to GHCR
               run: helm registry login ghcr.io --username ${{ github.actor }} --password ${{ secrets.GITHUB_TOKEN }}
