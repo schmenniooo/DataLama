@@ -1,4 +1,5 @@
 """Model for network traffic"""
+import time
 
 from pydantic import BaseModel
 
@@ -15,3 +16,4 @@ class BaseResponse(BaseModel):
     """Response model for analysis endpoints."""
 
     message: str
+    date: str

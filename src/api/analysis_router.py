@@ -1,4 +1,6 @@
 """API route definitions for the DataLama application."""
+
+import datetime
 import langchain_core.exceptions
 from fastapi import APIRouter, HTTPException
 
@@ -74,4 +76,4 @@ class AnalysisRouter:  # pylint: disable=too-few-public-methods
         except ValueError as e:
             raise HTTPException(status_code=400, detail=f"Invalid request: {e}") from e
 
-        return BaseResponse(message=response)
+        return BaseResponse(message=response, date=datetime.datetime.now().isoformat())
