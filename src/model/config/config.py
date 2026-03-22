@@ -12,6 +12,9 @@ class Config:
     llm_provider: str
     llm_provider_api_token: str
     model: str
+    langsmith_tracing_enabled: bool
+    langsmith_api_key: str
+    langsmith_project: str
     debug: bool
     host: str
     port: int
