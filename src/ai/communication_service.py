@@ -1,4 +1,4 @@
-"""Ollama communication module to chat with chosen model"""
+"""LangChain communication module to chat with chosen model"""
 
 import logging
 
