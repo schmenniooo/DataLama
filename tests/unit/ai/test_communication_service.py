@@ -7,7 +7,7 @@ import pytest
 from langchain_core.exceptions import LangChainException
 from langchain_core.messages import AIMessage, SystemMessage, HumanMessage
 
-from src.ai.communication_service import AiCommunicationService
+from src.ai.langchain.communication_service import AiCommunicationService
 
 
 @pytest.fixture
