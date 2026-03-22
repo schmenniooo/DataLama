@@ -45,6 +45,7 @@ class Server:  # pylint: disable=too-few-public-methods
         """Returns new AI service class"""
         logger.info(f"Creating AI communication service with {self.config.model}")
         return AiCommunicationService(
+            provider=self.config.llm_provider,
             model=self.config.model,
             api_key=self.config.llm_provider_api_token,
         )

@@ -9,8 +9,9 @@ class Config:
 
     api_key_field_name: str
     api_key: str
-    model: str
+    llm_provider: str
     llm_provider_api_token: str
+    model: str
     debug: bool
     host: str
     port: int
