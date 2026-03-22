@@ -33,7 +33,7 @@ class Server:  # pylint: disable=too-few-public-methods
         self._configure_analysis_router(ai_service=ai_service)
 
         # Connecting to LangSmith if enabled
-        if not config.langsmith_tracing_enabled:
+        if config.langsmith_tracing_enabled:
             self._configure_langsmith()
 
     def _configure_authentication(self) -> None:
