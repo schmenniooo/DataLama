@@ -23,9 +23,18 @@ WORKDIR /app
 COPY --from=build /app .
 
 # Setting environment variables
+
+# LLM Communication
 ENV LLM_PROVIDER="anthropic"
 ENV LLM_PROVIDER_API_TOKEN="anthropic-api-key"
 ENV MODEL="claude-sonnet-4-6"
+
+# Langsmith Integration
+ENV LANGSMITH_TRACING="false"
+ENV LANGSMITH_API_KEY="langsmith-api-key"
+ENV LANGSMITH_PROJECT="my-project"
+
+# Application Config
 ENV DEBUG="false"
 ENV HOST="0.0.0.0"
 ENV PORT=3000
