@@ -22,15 +22,17 @@ All endpoints except `/health` require an API key passed via the header configur
 
 The service is configured via environment variables:
 
-| Variable                 | Default     | Description                                          |
-| ------------------------ | ----------- |------------------------------------------------------|
-| `MODEL`                  | —           | LangChain model identifier (e.g. `anthropic/claude-sonnet-4-5-20250514`) |
-| `LLM_PROVIDER_API_TOKEN` | —           | API token for the LLM provider                       |
-| `API_KEY`                | —           | API key for authenticating requests                  |
-| `API_KEY_FIELD_NAME`     | `X-API-Key` | Header name used to pass the API key                 |
-| `HOST`                   | `0.0.0.0`  | Host the server binds to                             |
-| `PORT`                   | `3000`     | Port the server listens on                           |
-| `DEBUG`                  | `false`    | Enable debug mode (no authentication needed)         |
+| Variable                 | Default             | Description                                          |
+| ------------------------ |---------------------|------------------------------------------------------|
+| `MODEL`                  | `claude-sonnet-4-6` | LangChain model identifier (e.g. `anthropic/claude-sonnet-4-5-20250514`) |
+| `LLM_PROVIDER_API_TOKEN` | —                   | API token for the LLM provider                       |
+| `API_KEY`                | —                   | API key for authenticating requests                  |
+| `API_KEY_FIELD_NAME`     | `X-API-Key`         | Header name used to pass the API key                 |
+| `HOST`                   | `0.0.0.0`           | Host the server binds to                             |
+| `PORT`                   | `3000`              | Port the server listens on                           |
+| `DEBUG`                  | `false`             | Enable debug mode (no authentication needed)         |
+
+The model name has to follow the [LangChain's model name schema](https://docs.langchain.com/oss/python/langchain/models)
 
 ## Helm Chart
 
