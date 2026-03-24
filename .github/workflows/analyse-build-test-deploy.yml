@@ -211,3 +211,13 @@ jobs:
 
       - name: Push Helm Chart to GitHub Packages
         run: helm push *.tgz oci://ghcr.io/${{ github.repository_owner }}
+
+
+  deploy-docs:
+    runs-on: ubuntu-latest
+    needs: [test-python-package, codeql]
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install mkdocs mkdocstrings[python] mkdocs-material
+      - run: mkdocs build
+      - run: mkdocs gh-deploy
