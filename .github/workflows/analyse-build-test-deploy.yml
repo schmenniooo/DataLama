@@ -137,6 +137,7 @@ jobs:
   build-push-docker-image:
     runs-on: ubuntu-latest
     needs: [test-python-package]
+    if: github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v4
 
