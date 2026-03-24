@@ -11,8 +11,7 @@ permissions:
   packages: write
 
 jobs:
-  # ── Notify Stage ───────────────────────────────
-
+  # ── Analyse Stage ──────────────────────────────
   notify:
     runs-on: ubuntu-latest
     permissions:
@@ -29,7 +28,6 @@ jobs:
               body: `🔍 [Take a look on the Workflow Graph!](${context.serverUrl}/${context.repo.owner}/${context.repo.repo}/actions/runs/${context.runId})`
             })
 
-  # ── Analyse Stage ──────────────────────────────
 
   codeql:
     runs-on: ubuntu-latest
