@@ -1,4 +1,4 @@
-name: "Project action"
+name: "analyse-build-test-deploy"
 
 # TODO: Remove name from jobs
 
@@ -116,7 +116,6 @@ jobs:
 
       - name: Run tests
         run: uv run pytest ./tests
-
 
   test-helm-chart:
     name: test-helm-chart
