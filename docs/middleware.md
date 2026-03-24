@@ -1,3 +1,0 @@
-# Authentication Middleware
-
-::: middleware.authentication
