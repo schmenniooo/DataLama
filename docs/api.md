@@ -1,3 +1,3 @@
-# API Reference
+# Analysis Router
 
-::: datalens.analyse
+::: api.analysis_router
