@@ -10,4 +10,10 @@ extensions = [
     "sphinx.ext.viewcode",
 ]
 
+autodoc_default_options = {
+    "members": True,
+    "undoc-members": True,
+    "private-members": True
+}
+
 html_theme = "furo"
