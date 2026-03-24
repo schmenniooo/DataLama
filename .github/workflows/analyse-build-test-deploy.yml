@@ -1,0 +1,235 @@
+name: "analyse-build-test-deploy"
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  # ── Analyse Stage ──────────────────────────────
+  notify:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const sha = context.sha.substring(0, 7);
+            const commit = await github.rest.git.getCommit({
+              owner,
+              repo,
+              commit_sha: context.sha,
+            });
+            const message = commit.data.message.split('\n')[0];
+            const runUrl = `${context.serverUrl}/${owner}/${repo}/actions/runs/${context.runId}`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner,
+              repo,
+              body: `🔍 Workflow Run #${context.runNumber} for \`${sha}\` (${message})\n[View Graph](${runUrl})`
+            })
+
+
+  codeql:
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      packages: read
+      actions: read
+      contents: read
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - language: actions
+            build-mode: none
+          - language: python
+            build-mode: none
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v4
+        with:
+          languages: ${{ matrix.language }}
+          build-mode: ${{ matrix.build-mode }}
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v4
+        with:
+          category: "/language:${{matrix.language}}"
+
+  lint-python-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          python-version: '3.13'
+          enable-cache: true
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Lint package
+        run: uv run pylint ./src
+
+      - name: Lint tests
+        run: uv run pylint ./tests
+
+  lint-helm-chart:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: "v3.16.3"
+
+      - name: Linting Helm Chart
+        run: helm lint ./helm/datalens-chart
+
+  # ── Build Stage ────────────────────────────────
+
+  build-python-package:
+    runs-on: ubuntu-latest
+    needs: lint-python-package
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          python-version: '3.13'
+          enable-cache: true
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Build package
+        run: uv build
+
+  # ── Test Stage ─────────────────────────────────
+
+  test-python-package:
+    runs-on: ubuntu-latest
+    needs: [build-python-package]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          python-version: '3.13'
+          enable-cache: true
+
+      - name: Install dependencies
+        run: uv sync
+
+      - name: Run tests
+        run: uv run pytest ./tests
+
+  test-helm-chart:
+    runs-on: ubuntu-latest
+    needs: [lint-helm-chart]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: "v3.16.3"
+
+      - name: Update dependencies
+        run: helm dependency update ./helm/datalens-chart
+
+      - name: Testing Helm Chart
+        run: helm template datalens ./helm/datalens-chart --values ./helm/datalens-chart/values.yaml
+
+  # ── Deploy Stage ─────────────────────────────────
+
+  build-push-docker-image:
+    runs-on: ubuntu-latest
+    needs: [test-python-package]
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: ghcr.io/${{ github.repository }}
+          tags: |
+            type=ref,event=pr
+            type=sha,prefix={{branch}}-
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Build and push
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  build-push-helm-chart:
+    runs-on: ubuntu-latest
+    needs: [lint-helm-chart, test-helm-chart]
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: "v3.16.3"
+
+      - name: Update dependencies
+        run: helm dependency update ./helm/datalens-chart
+
+      - name: Build Helm Chart
+        run: helm package ./helm/datalens-chart
+
+      - name: Log in to GHCR
+        run: helm registry login ghcr.io --username ${{ github.actor }} --password ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Push Helm Chart to GitHub Packages
+        run: helm push *.tgz oci://ghcr.io/${{ github.repository_owner }}
+
+  deploy-docs:
+    runs-on: ubuntu-latest
+    needs: [test-python-package, codeql]
+    permissions:
+      contents: write
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      - run: pip install mkdocs mkdocstrings[python] mkdocs-material
+      - run: mkdocs build
+      - run: mkdocs gh-deploy --force

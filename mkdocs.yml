@@ -1,0 +1,19 @@
+site_name: DataLens Documentation
+
+theme:
+  name: material
+
+nav:
+  - Main: main.md
+  - AI Service: ai.md
+  - API: api.md
+  - Middleware: middleware.md
+  - Models: models.md
+  - Server: server.md
+  - Validation: validation.md
+
+plugins:
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [src]
