@@ -1,0 +1,11 @@
+name: "Project action"
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  analyse:
+    runs-on: ubuntu-latest
