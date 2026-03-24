@@ -1,0 +1,10 @@
+site_name: DataLens Documentation
+
+theme:
+  name: material
+
+plugins:
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [src]
