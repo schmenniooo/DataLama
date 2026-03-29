@@ -11,6 +11,13 @@ environmentVariables:
     value: "api-token"
   - name: "MODEL"
     value: "claude-sonnet-4-6"
+  # Optional: LangSmith tracing
+  - name: "LANGSMITH_TRACING"
+    value: "false"
+  - name: "LANGSMITH_API_KEY"
+    value: "your-langsmith-api-key"
+  - name: "LANGSMITH_PROJECT"
+    value: "your-langsmith-project"
   - name: "DEBUG"
     value: "false"
   - name: "HOST"
