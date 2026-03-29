@@ -17,7 +17,9 @@ def service():
         mock_model = MagicMock()
         mock_model.ainvoke = AsyncMock()
         mock_init.return_value = mock_model
-        instance = AiCommunicationService(provider="anthropic", model="test-model", api_key="test-key")
+        instance = AiCommunicationService(
+            provider="anthropic", model="test-model", api_key="test-key"
+        )
         yield instance, mock_model
 
 
