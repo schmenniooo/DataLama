@@ -5,6 +5,7 @@ import logging
 from langchain.chat_models import init_chat_model
 from langchain_core.exceptions import LangChainException
 from langchain_core.messages import AIMessage, SystemMessage, HumanMessage
+from langsmith import traceable
 
 logger = logging.getLogger("logger")
 
@@ -74,6 +75,7 @@ class AiCommunicationService:  # pylint: disable=too-few-public-methods
         # If operation does not fail -> Connection to LLM Provider is up and running
         return True
 
+    @traceable(run_type="llm")
     async def make_analyse_request(
         self,
         analysis_type: str,
