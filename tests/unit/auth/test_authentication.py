@@ -5,7 +5,7 @@ import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from src.middleware.authentication import AuthInterceptor
+from middleware.auth.authentication import AuthInterceptor
 
 
 @pytest.fixture

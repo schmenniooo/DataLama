@@ -6,7 +6,7 @@ import uvicorn
 from fastapi import FastAPI
 
 from src.api.analysis_router import AnalysisRouter
-from src.middleware.authentication import AuthInterceptor
+from middleware.auth.authentication import AuthInterceptor
 from src.model.config.config import Config
 from src.ai.langchain.communication_service import AiCommunicationService
 
