@@ -6,9 +6,9 @@ import os
 import uvicorn
 from fastapi import FastAPI
 
-from middleware.rate_limiting.rate_limiter import RateLimiter
+from src.middleware.rate_limiting.rate_limiter import RateLimiter
 from src.api.analysis_router import AnalysisRouter
-from middleware.auth.authentication import AuthInterceptor
+from src.middleware.auth.authentication import AuthInterceptor
 from src.model.config.config import Config
 from src.ai.langchain.communication_service import AiCommunicationService
 
@@ -27,6 +27,9 @@ class Server:  # pylint: disable=too-few-public-methods
         # Skipping authentication in debug mode
         if not config.debug:
             self._configure_authentication()
+
+        # Registering rate limiter with Redis
+        self._register_rate_limiter()
 
         # Connecting to AI provider
         ai_service = self._create_ai_service()
