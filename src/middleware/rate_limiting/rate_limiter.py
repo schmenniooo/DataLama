@@ -2,7 +2,7 @@
 
 from typing import Type, Callable
 
-from redis import Redis, RedisError
+from redis.asyncio import (Redis, RedisError)
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
 from starlette.responses import Response
