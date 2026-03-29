@@ -13,5 +13,5 @@ class RateLimiter:
 
     def register_rate_limiter(self) -> Type[BaseHTTPMiddleware]:
         class _Middleware(BaseHTTPMiddleware): # pylint: disable=too-few-public-methods
-            pass
+            self.redis.set("key", "value")
         return _Middleware
