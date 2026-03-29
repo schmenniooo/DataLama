@@ -172,7 +172,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
       </label>
     </div>
@@ -232,13 +232,32 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="ai-communication-service">
-<h1>AI Communication Service<a class="headerlink" href="#ai-communication-service" title="Link to this heading">¶</a></h1>
+          <section id="module-ai.langchain.communication_service">
+<span id="ai-communication-service"></span><h1>AI Communication Service<a class="headerlink" href="#module-ai.langchain.communication_service" title="Link to this heading">¶</a></h1>
+<p>LangChain communication module to chat with chosen model</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="ai.langchain.communication_service.AiCommunicationService">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">ai.langchain.communication_service.</span></span><span class="sig-name descname"><span class="pre">AiCommunicationService</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">provider</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/ai/langchain/communication_service.html#AiCommunicationService"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai.langchain.communication_service.AiCommunicationService" title="Link to this definition">¶</a></dt>
+<dd><p>Provides for ai communication</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="ai.langchain.communication_service.AiCommunicationService.health_check">
+<span class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">health_check</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/ai/langchain/communication_service.html#AiCommunicationService.health_check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai.langchain.communication_service.AiCommunicationService.health_check" title="Link to this definition">¶</a></dt>
+<dd><p>Check the health of the service.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="ai.langchain.communication_service.AiCommunicationService.make_analyse_request">
+<span class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">make_analyse_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">analysis_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">daterange</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/ai/langchain/communication_service.html#AiCommunicationService.make_analyse_request"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#ai.langchain.communication_service.AiCommunicationService.make_analyse_request" title="Link to this definition">¶</a></dt>
+<dd><p>Makes a request to AI with system and user messages</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
         </article>
@@ -284,8 +303,31 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">AI Communication Service</a><ul>
+<li><a class="reference internal" href="#ai.langchain.communication_service.AiCommunicationService"><code class="docutils literal notranslate"><span class="pre">AiCommunicationService</span></code></a><ul>
+<li><a class="reference internal" href="#ai.langchain.communication_service.AiCommunicationService.health_check"><code class="docutils literal notranslate"><span class="pre">AiCommunicationService.health_check()</span></code></a></li>
+<li><a class="reference internal" href="#ai.langchain.communication_service.AiCommunicationService.make_analyse_request"><code class="docutils literal notranslate"><span class="pre">AiCommunicationService.make_analyse_request()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
