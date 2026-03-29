@@ -13,6 +13,7 @@ dependencies = [
     "langsmith>=0.7.22",
     "pylint>=4.0.5",
     "pytest>=9.0.2",
+    "redis>=7.4.0",
     "uvicorn>=0.34.0",
 ]
 
