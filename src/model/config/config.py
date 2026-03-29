@@ -4,7 +4,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class Config:
+class Config:  # pylint: disable=too-many-instance-attributes
     """Holds all configuration values for the microservice."""
 
     api_key_field_name: str
