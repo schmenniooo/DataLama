@@ -21,8 +21,12 @@ def main():
         debug = os.getenv("DEBUG", "false").lower() == "true",
         host = os.getenv("HOST", "0.0.0.0"),
         port = int(os.getenv("PORT", "3000")),
-        model= os.getenv("MODEL", ""),
-        llm_provider_api_token = os.getenv("LLM_PROVIDER_API_TOKEN", "")
+        llm_provider=os.getenv("LLM_PROVIDER", ""),
+        llm_provider_api_token = os.getenv("LLM_PROVIDER_API_TOKEN", ""),
+        model = os.getenv("MODEL", ""),
+        langsmith_tracing_enabled=os.getenv("LANGSMITH_TRACING_ENABLED", "false").lower() == "true",
+        langsmith_api_key = os.getenv("LANGSMITH_API_KEY", ""),
+        langsmith_project = os.getenv("LANGSMITH_PROJECT", ""),
     )
 
     # Creating and running server

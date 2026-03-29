@@ -1,10 +1,11 @@
-"""Ollama communication module to chat with chosen model"""
+"""LangChain communication module to chat with chosen model"""
 
 import logging
 
 from langchain.chat_models import init_chat_model
 from langchain_core.exceptions import LangChainException
 from langchain_core.messages import AIMessage, SystemMessage, HumanMessage
+from langsmith import traceable
 
 logger = logging.getLogger("logger")
 
@@ -61,8 +62,8 @@ analyses_types: dict[str, str] = {
 class AiCommunicationService:  # pylint: disable=too-few-public-methods
     """Provides for ai communication"""
 
-    def __init__(self, model: str, api_key: str):
-        self.model = init_chat_model(model=model, api_key=api_key)
+    def __init__(self, provider: str, model: str, api_key: str):
+        self.model = init_chat_model(model_provider=provider, model=model, api_key=api_key)
 
     async def health_check(self) -> bool:
         """Check the health of the service."""
@@ -74,6 +75,7 @@ class AiCommunicationService:  # pylint: disable=too-few-public-methods
         # If operation does not fail -> Connection to LLM Provider is up and running
         return True
 
+    @traceable(run_type="llm")
     async def make_analyse_request(
         self,
         analysis_type: str,

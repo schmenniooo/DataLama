@@ -8,7 +8,7 @@ from fastapi import FastAPI
 from src.api.analysis_router import AnalysisRouter
 from src.middleware.authentication import AuthInterceptor
 from src.model.config.config import Config
-from src.ai.communication_service import AiCommunicationService
+from src.ai.langchain.communication_service import AiCommunicationService
 
 logger = logging.getLogger("logger")
 
@@ -32,6 +32,10 @@ class Server:  # pylint: disable=too-few-public-methods
         # Configuring api routes
         self._configure_analysis_router(ai_service=ai_service)
 
+        # Connecting to LangSmith if enabled
+        if config.langsmith_tracing_enabled:
+            self._configure_langsmith()
+
     def _configure_authentication(self) -> None:
         """Registers authentication interceptor module"""
         logger.info("Registering authentication middleware")
@@ -45,6 +49,7 @@ class Server:  # pylint: disable=too-few-public-methods
         """Returns new AI service class"""
         logger.info(f"Creating AI communication service with {self.config.model}")
         return AiCommunicationService(
+            provider=self.config.llm_provider,
             model=self.config.model,
             api_key=self.config.llm_provider_api_token,
         )
@@ -54,6 +59,9 @@ class Server:  # pylint: disable=too-few-public-methods
         logger.info("Registering analysis routes")
         analysis_router = AnalysisRouter(ai_service=ai_service)
         self.app.include_router(analysis_router.router)
+
+    def _configure_langsmith(self):
+        pass
 
     def run(self) -> None:
         """Starts uvicorn server"""

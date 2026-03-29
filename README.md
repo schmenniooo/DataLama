@@ -22,15 +22,30 @@ All endpoints except `/health` require an API key passed via the header configur
 
 The service is configured via environment variables:
 
-| Variable                 | Default     | Description                                          |
-| ------------------------ | ----------- |------------------------------------------------------|
-| `MODEL`                  | —           | LangChain model identifier (e.g. `anthropic/claude-sonnet-4-5-20250514`) |
-| `LLM_PROVIDER_API_TOKEN` | —           | API token for the LLM provider                       |
-| `API_KEY`                | —           | API key for authenticating requests                  |
-| `API_KEY_FIELD_NAME`     | `X-API-Key` | Header name used to pass the API key                 |
-| `HOST`                   | `0.0.0.0`  | Host the server binds to                             |
-| `PORT`                   | `3000`     | Port the server listens on                           |
-| `DEBUG`                  | `false`    | Enable debug mode (no authentication needed)         |
+| Variable                 | Default             | Description                                          |
+| ------------------------ |---------------------|------------------------------------------------------|
+| `MODEL`                  | `claude-sonnet-4-6` | LangChain model identifier (e.g. `anthropic/claude-sonnet-4-5-20250514`) |
+| `LLM_PROVIDER_API_TOKEN` | —                   | API token for the LLM provider                       |
+| `API_KEY`                | —                   | API key for authenticating requests                  |
+| `API_KEY_FIELD_NAME`     | `X-API-Key`         | Header name used to pass the API key                 |
+| `HOST`                   | `0.0.0.0`           | Host the server binds to                             |
+| `PORT`                   | `3000`              | Port the server listens on                           |
+| `DEBUG`                  | `false`             | Enable debug mode (no authentication needed)         |
+
+The model name has to follow the [LangChain's model name schema](https://docs.langchain.com/oss/python/langchain/models)
+
+### LangSmith Tracing (Optional)
+
+DataLens supports [LangSmith](https://smith.langchain.com/) for tracing and observability of LLM calls. To enable it, set the following environment variables:
+
+| Variable              | Default | Description                                              |
+| --------------------- |---------| -------------------------------------------------------- |
+| `LANGSMITH_TRACING`   | false   | Set to `true` to enable LangSmith tracing                |
+| `LANGSMITH_API_KEY`   | —       | Your LangSmith API key                                   |
+| `LANGSMITH_PROJECT`   | —       | LangSmith project name to group traces under             |
+| `LANGSMITH_ENDPOINT`  | —       | LangSmith API endpoint (optional, for self-hosted setups)|
+
+When enabled, all LLM analysis requests are traced via the `@traceable` decorator and visible in your LangSmith dashboard.
 
 ## Helm Chart
 
@@ -61,6 +76,13 @@ environmentVariables:
     value: "your-api-key"
   - name: API_KEY_FIELD_NAME
     value: "X-API-Key"
+  # Optional: LangSmith tracing
+  - name: LANGSMITH_TRACING
+    value: "false"
+  - name: LANGSMITH_API_KEY
+    value: "your-langsmith-api-key"
+  - name: LANGSMITH_PROJECT
+    value: "your-langsmith-project"
 ```
 
 ### Values

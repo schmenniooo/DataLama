@@ -12,8 +12,12 @@ def _create_test_config(api_key: str = DEFAULT_API_KEY) -> Config:
     return Config(
         api_key_field_name="X-API-Key",
         api_key=api_key,
+        llm_provider="anthropic",
         model="test-model",
         llm_provider_api_token="test-token",
+        langsmith_tracing_enabled=False,
+        langsmith_api_key="",
+        langsmith_project="",
         debug=False,
         host="0.0.0.0",
         port=3000,
