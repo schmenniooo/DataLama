@@ -31,5 +31,7 @@ source-roots = ["."]
 
 [dependency-groups]
 dev = [
+    "sphinx>=8.0.0",
+    "furo>=2024.0.0",
     "pytest-asyncio>=1.3.0",
 ]
