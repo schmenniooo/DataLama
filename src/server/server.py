@@ -1,6 +1,7 @@
 """Server module for building and running the FastAPI application."""
 
 import logging
+import os
 
 import uvicorn
 from fastapi import FastAPI
@@ -45,7 +46,12 @@ class Server:  # pylint: disable=too-few-public-methods
     def _register_rate_limiter(self) -> None:
         """Registers rate limiter"""
         logger.info("Registering rate limiter")
-        rate_limiter = RateLimiter().register_rate_limiter()
+
+        redis_host = os.environ.get("REDIS_HOST", "localhost")
+        redis_port = int(os.environ.get("REDIS_PORT", 6379))
+
+        rate_limiter = RateLimiter(host=redis_host, port=redis_port).register_rate_limiter()
+
         self.app.add_middleware(rate_limiter)
 
     def _create_ai_service(self) -> AiCommunicationService:
