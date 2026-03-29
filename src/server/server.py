@@ -5,6 +5,7 @@ import logging
 import uvicorn
 from fastapi import FastAPI
 
+from middleware.rate_limiting.rate_limiter import RateLimiter
 from src.api.analysis_router import AnalysisRouter
 from middleware.auth.authentication import AuthInterceptor
 from src.model.config.config import Config
@@ -40,6 +41,12 @@ class Server:  # pylint: disable=too-few-public-methods
             api_key=self.config.api_key
         ).register_auth_interceptor()
         self.app.add_middleware(auth_middleware)
+
+    def _register_rate_limiter(self) -> None:
+        """Registers rate limiter"""
+        logger.info("Registering rate limiter")
+        rate_limiter = RateLimiter().register_rate_limiter()
+        self.app.add_middleware(rate_limiter)
 
     def _create_ai_service(self) -> AiCommunicationService:
         """Returns new AI service class"""
