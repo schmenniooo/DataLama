@@ -58,7 +58,7 @@ GitHub Actions workflow (`python-package.yml`) runs on PRs and pushes to `main`:
 
 ## Configuration
 
-The app reads environment variables (see README for full list). Key ones: `MODEL` (LangChain model identifier), `LLM_PROVIDER_API_TOKEN`, `API_KEY`, `DEBUG` (disables auth when `true`). A `.env` file is loaded if present.
+The app reads environment variables (see README for full list). Key ones: `MODEL` (LangChain model identifier), `LLM_PROVIDER_API_TOKEN`, `API_KEY`, `DEBUG` (disables auth when `true`). A `.env` file is loaded if present. Optional LangSmith tracing is configured via `LANGSMITH_TRACING`, `LANGSMITH_API_KEY`, `LANGSMITH_PROJECT`, and `LANGSMITH_ENDPOINT`.
 
 ## Deployment
 

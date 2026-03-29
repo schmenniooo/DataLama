@@ -34,6 +34,19 @@ The service is configured via environment variables:
 
 The model name has to follow the [LangChain's model name schema](https://docs.langchain.com/oss/python/langchain/models)
 
+### LangSmith Tracing (Optional)
+
+DataLens supports [LangSmith](https://smith.langchain.com/) for tracing and observability of LLM calls. To enable it, set the following environment variables:
+
+| Variable              | Default | Description                                              |
+| --------------------- | ------- | -------------------------------------------------------- |
+| `LANGSMITH_TRACING`   | —       | Set to `true` to enable LangSmith tracing                |
+| `LANGSMITH_API_KEY`   | —       | Your LangSmith API key                                   |
+| `LANGSMITH_PROJECT`   | —       | LangSmith project name to group traces under             |
+| `LANGSMITH_ENDPOINT`  | —       | LangSmith API endpoint (optional, for self-hosted setups)|
+
+When enabled, all LLM analysis requests are traced via the `@traceable` decorator and visible in your LangSmith dashboard.
+
 ## Helm Chart
 
 The chart is published to GHCR and can be used to deploy DataLens to a Kubernetes cluster.
@@ -63,6 +76,13 @@ environmentVariables:
     value: "your-api-key"
   - name: API_KEY_FIELD_NAME
     value: "X-API-Key"
+  # Optional: LangSmith tracing
+  - name: LANGSMITH_TRACING
+    value: "true"
+  - name: LANGSMITH_API_KEY
+    value: "your-langsmith-api-key"
+  - name: LANGSMITH_PROJECT
+    value: "your-langsmith-project"
 ```
 
 ### Values

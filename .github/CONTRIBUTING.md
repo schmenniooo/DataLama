@@ -26,6 +26,7 @@ Thank you for your interest in contributing to DataLens! This document outlines 
    ```bash
    cp .env.example .env
    # Edit .env with your MODEL, LLM_PROVIDER_API_TOKEN, API_KEY, etc.
+   # Optionally configure LANGSMITH_TRACING, LANGSMITH_API_KEY, and LANGSMITH_PROJECT for LLM tracing
    ```
 
 4. Run the service locally:
