@@ -32,10 +32,6 @@ class Server:  # pylint: disable=too-few-public-methods
         # Configuring api routes
         self._configure_analysis_router(ai_service=ai_service)
 
-        # Connecting to LangSmith if enabled
-        if config.langsmith_tracing_enabled:
-            self._configure_langsmith()
-
     def _configure_authentication(self) -> None:
         """Registers authentication interceptor module"""
         logger.info("Registering authentication middleware")
@@ -59,9 +55,6 @@ class Server:  # pylint: disable=too-few-public-methods
         logger.info("Registering analysis routes")
         analysis_router = AnalysisRouter(ai_service=ai_service)
         self.app.include_router(analysis_router.router)
-
-    def _configure_langsmith(self):
-        pass
 
     def run(self) -> None:
         """Starts uvicorn server"""
