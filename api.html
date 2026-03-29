@@ -172,7 +172,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
       </label>
     </div>
@@ -232,13 +232,73 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="analysis-router">
-<h1>Analysis Router<a class="headerlink" href="#analysis-router" title="Link to this heading">¶</a></h1>
+          <section id="module-api.analysis_router">
+<span id="analysis-router"></span><h1>Analysis Router<a class="headerlink" href="#module-api.analysis_router" title="Link to this heading">¶</a></h1>
+<p>API route definitions for the DataLens application.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="api.analysis_router.AnalysisRouter">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">api.analysis_router.</span></span><span class="sig-name descname"><span class="pre">AnalysisRouter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ai_service</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AiCommunicationService</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/api/analysis_router.html#AnalysisRouter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.analysis_router.AnalysisRouter" title="Link to this definition">¶</a></dt>
+<dd><p>Registers and handles all analysis API routes.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="api.analysis_router.AnalysisRouter.DATASET_SEPERATOR">
+<span class="sig-name descname"><span class="pre">DATASET_SEPERATOR</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'\n---NEW---DATASET---\n'</span></span><a class="headerlink" href="#api.analysis_router.AnalysisRouter.DATASET_SEPERATOR" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.analysis_router.AnalysisRouter._anomaly_detection">
+<span class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">_anomaly_detection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BaseRequest</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">BaseResponse</span></span></span><a class="reference internal" href="_modules/api/analysis_router.html#AnalysisRouter._anomaly_detection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.analysis_router.AnalysisRouter._anomaly_detection" title="Link to this definition">¶</a></dt>
+<dd><p>Detect anomalies in the data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.analysis_router.AnalysisRouter._comparison">
+<span class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">_comparison</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BaseRequest</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">BaseResponse</span></span></span><a class="reference internal" href="_modules/api/analysis_router.html#AnalysisRouter._comparison"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.analysis_router.AnalysisRouter._comparison" title="Link to this definition">¶</a></dt>
+<dd><p>Compare datasets.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.analysis_router.AnalysisRouter._do_analyze_request">
+<span class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">_do_analyze_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BaseRequest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">analysis_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">BaseResponse</span></span></span><a class="reference internal" href="_modules/api/analysis_router.html#AnalysisRouter._do_analyze_request"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.analysis_router.AnalysisRouter._do_analyze_request" title="Link to this definition">¶</a></dt>
+<dd><p>Base analyse request for ai.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.analysis_router.AnalysisRouter._forecasting">
+<span class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">_forecasting</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BaseRequest</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">BaseResponse</span></span></span><a class="reference internal" href="_modules/api/analysis_router.html#AnalysisRouter._forecasting"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.analysis_router.AnalysisRouter._forecasting" title="Link to this definition">¶</a></dt>
+<dd><p>Perform time series forecasting.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.analysis_router.AnalysisRouter._health">
+<span class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">_health</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/api/analysis_router.html#AnalysisRouter._health"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.analysis_router.AnalysisRouter._health" title="Link to this definition">¶</a></dt>
+<dd><p>Check the health of the service.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.analysis_router.AnalysisRouter._pattern_recognition">
+<span class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">_pattern_recognition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BaseRequest</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">BaseResponse</span></span></span><a class="reference internal" href="_modules/api/analysis_router.html#AnalysisRouter._pattern_recognition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.analysis_router.AnalysisRouter._pattern_recognition" title="Link to this definition">¶</a></dt>
+<dd><p>Recognize patterns in the data.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.analysis_router.AnalysisRouter._register_routes">
+<span class="sig-name descname"><span class="pre">_register_routes</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/api/analysis_router.html#AnalysisRouter._register_routes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.analysis_router.AnalysisRouter._register_routes" title="Link to this definition">¶</a></dt>
+<dd><p>Registers all routes to the router.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="api.analysis_router.AnalysisRouter._summary">
+<span class="property"><span class="k"><span class="pre">async</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">_summary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BaseRequest</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">BaseResponse</span></span></span><a class="reference internal" href="_modules/api/analysis_router.html#AnalysisRouter._summary"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#api.analysis_router.AnalysisRouter._summary" title="Link to this definition">¶</a></dt>
+<dd><p>Generate a summary of the data.</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
         </article>
@@ -284,8 +344,38 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Analysis Router</a><ul>
+<li><a class="reference internal" href="#api.analysis_router.AnalysisRouter"><code class="docutils literal notranslate"><span class="pre">AnalysisRouter</span></code></a><ul>
+<li><a class="reference internal" href="#api.analysis_router.AnalysisRouter.DATASET_SEPERATOR"><code class="docutils literal notranslate"><span class="pre">AnalysisRouter.DATASET_SEPERATOR</span></code></a></li>
+<li><a class="reference internal" href="#api.analysis_router.AnalysisRouter._anomaly_detection"><code class="docutils literal notranslate"><span class="pre">AnalysisRouter._anomaly_detection()</span></code></a></li>
+<li><a class="reference internal" href="#api.analysis_router.AnalysisRouter._comparison"><code class="docutils literal notranslate"><span class="pre">AnalysisRouter._comparison()</span></code></a></li>
+<li><a class="reference internal" href="#api.analysis_router.AnalysisRouter._do_analyze_request"><code class="docutils literal notranslate"><span class="pre">AnalysisRouter._do_analyze_request()</span></code></a></li>
+<li><a class="reference internal" href="#api.analysis_router.AnalysisRouter._forecasting"><code class="docutils literal notranslate"><span class="pre">AnalysisRouter._forecasting()</span></code></a></li>
+<li><a class="reference internal" href="#api.analysis_router.AnalysisRouter._health"><code class="docutils literal notranslate"><span class="pre">AnalysisRouter._health()</span></code></a></li>
+<li><a class="reference internal" href="#api.analysis_router.AnalysisRouter._pattern_recognition"><code class="docutils literal notranslate"><span class="pre">AnalysisRouter._pattern_recognition()</span></code></a></li>
+<li><a class="reference internal" href="#api.analysis_router.AnalysisRouter._register_routes"><code class="docutils literal notranslate"><span class="pre">AnalysisRouter._register_routes()</span></code></a></li>
+<li><a class="reference internal" href="#api.analysis_router.AnalysisRouter._summary"><code class="docutils literal notranslate"><span class="pre">AnalysisRouter._summary()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>

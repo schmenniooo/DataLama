@@ -172,7 +172,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
       </label>
     </div>
@@ -232,13 +232,49 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="server">
-<h1>Server<a class="headerlink" href="#server" title="Link to this heading">¶</a></h1>
+          <section id="module-server.server">
+<span id="server"></span><h1>Server<a class="headerlink" href="#module-server.server" title="Link to this heading">¶</a></h1>
+<p>Server module for building and running the FastAPI application.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="server.server.Server">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">server.server.</span></span><span class="sig-name descname"><span class="pre">Server</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/server/server.html#Server"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#server.server.Server" title="Link to this definition">¶</a></dt>
+<dd><p>Builds and configures the FastAPI application.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="server.server.Server._configure_analysis_router">
+<span class="sig-name descname"><span class="pre">_configure_analysis_router</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ai_service</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AiCommunicationService</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/server/server.html#Server._configure_analysis_router"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#server.server.Server._configure_analysis_router" title="Link to this definition">¶</a></dt>
+<dd><p>Creates new AnalysisRouter class and injects it to FastAPI</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="server.server.Server._configure_authentication">
+<span class="sig-name descname"><span class="pre">_configure_authentication</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/server/server.html#Server._configure_authentication"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#server.server.Server._configure_authentication" title="Link to this definition">¶</a></dt>
+<dd><p>Registers authentication interceptor module</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="server.server.Server._configure_langsmith">
+<span class="sig-name descname"><span class="pre">_configure_langsmith</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/server/server.html#Server._configure_langsmith"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#server.server.Server._configure_langsmith" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="server.server.Server._create_ai_service">
+<span class="sig-name descname"><span class="pre">_create_ai_service</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">AiCommunicationService</span></span></span><a class="reference internal" href="_modules/server/server.html#Server._create_ai_service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#server.server.Server._create_ai_service" title="Link to this definition">¶</a></dt>
+<dd><p>Returns new AI service class</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="server.server.Server.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/server/server.html#Server.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#server.server.Server.run" title="Link to this definition">¶</a></dt>
+<dd><p>Starts uvicorn server</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
         </article>
@@ -284,8 +320,34 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Server</a><ul>
+<li><a class="reference internal" href="#server.server.Server"><code class="docutils literal notranslate"><span class="pre">Server</span></code></a><ul>
+<li><a class="reference internal" href="#server.server.Server._configure_analysis_router"><code class="docutils literal notranslate"><span class="pre">Server._configure_analysis_router()</span></code></a></li>
+<li><a class="reference internal" href="#server.server.Server._configure_authentication"><code class="docutils literal notranslate"><span class="pre">Server._configure_authentication()</span></code></a></li>
+<li><a class="reference internal" href="#server.server.Server._configure_langsmith"><code class="docutils literal notranslate"><span class="pre">Server._configure_langsmith()</span></code></a></li>
+<li><a class="reference internal" href="#server.server.Server._create_ai_service"><code class="docutils literal notranslate"><span class="pre">Server._create_ai_service()</span></code></a></li>
+<li><a class="reference internal" href="#server.server.Server.run"><code class="docutils literal notranslate"><span class="pre">Server.run()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>

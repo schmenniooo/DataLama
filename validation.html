@@ -172,7 +172,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
       </label>
     </div>
@@ -232,13 +232,35 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="validation">
-<h1>Validation<a class="headerlink" href="#validation" title="Link to this heading">¶</a></h1>
+          <section id="module-validation.validation">
+<span id="validation"></span><h1>Validation<a class="headerlink" href="#module-validation.validation" title="Link to this heading">¶</a></h1>
+<p>Client input validation module</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="validation.validation._validate_data_format">
+<span class="sig-prename descclassname"><span class="pre">validation.validation.</span></span><span class="sig-name descname"><span class="pre">_validate_data_format</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/validation/validation.html#_validate_data_format"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#validation.validation._validate_data_format" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="validation.validation._validate_data_to_analyse">
+<span class="sig-prename descclassname"><span class="pre">validation.validation.</span></span><span class="sig-name descname"><span class="pre">_validate_data_to_analyse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data_sets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/validation/validation.html#_validate_data_to_analyse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#validation.validation._validate_data_to_analyse" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="validation.validation._validate_daterange">
+<span class="sig-prename descclassname"><span class="pre">validation.validation.</span></span><span class="sig-name descname"><span class="pre">_validate_daterange</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">daterange</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/validation/validation.html#_validate_daterange"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#validation.validation._validate_daterange" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="validation.validation.validate_request">
+<span class="sig-prename descclassname"><span class="pre">validation.validation.</span></span><span class="sig-name descname"><span class="pre">validate_request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">request</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">BaseRequest</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="reference internal" href="_modules/validation/validation.html#validate_request"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#validation.validation.validate_request" title="Link to this definition">¶</a></dt>
+<dd><p>Validates the incoming analysis request.</p>
+</dd></dl>
+
 </section>
 
         </article>
@@ -276,8 +298,30 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Validation</a><ul>
+<li><a class="reference internal" href="#validation.validation._validate_data_format"><code class="docutils literal notranslate"><span class="pre">_validate_data_format()</span></code></a></li>
+<li><a class="reference internal" href="#validation.validation._validate_data_to_analyse"><code class="docutils literal notranslate"><span class="pre">_validate_data_to_analyse()</span></code></a></li>
+<li><a class="reference internal" href="#validation.validation._validate_daterange"><code class="docutils literal notranslate"><span class="pre">_validate_daterange()</span></code></a></li>
+<li><a class="reference internal" href="#validation.validation.validate_request"><code class="docutils literal notranslate"><span class="pre">validate_request()</span></code></a></li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>
