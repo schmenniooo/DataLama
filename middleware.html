@@ -172,7 +172,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
         <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
       </label>
     </div>
@@ -232,26 +232,13 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
             <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
           </label>
         </div>
         <article role="main" id="furo-main-content">
           <section id="authentication-middleware">
 <h1>Authentication Middleware<a class="headerlink" href="#authentication-middleware" title="Link to this heading">¶</a></h1>
-<p id="module-middleware.authentication">Authentication module</p>
-<dl class="py class">
-<dt class="sig sig-object py" id="middleware.authentication.AuthInterceptor">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">middleware.authentication.</span></span><span class="sig-name descname"><span class="pre">AuthInterceptor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_key_field_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/middleware/authentication.html#AuthInterceptor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#middleware.authentication.AuthInterceptor" title="Link to this definition">¶</a></dt>
-<dd><p>Handles authentication through api tokens</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="middleware.authentication.AuthInterceptor.register_auth_interceptor">
-<span class="sig-name descname"><span class="pre">register_auth_interceptor</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><span class="pre">BaseHTTPMiddleware</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/middleware/authentication.html#AuthInterceptor.register_auth_interceptor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#middleware.authentication.AuthInterceptor.register_auth_interceptor" title="Link to this definition">¶</a></dt>
-<dd><p>Returns inner base middleware class</p>
-</dd></dl>
-
-</dd></dl>
-
 </section>
 
         </article>
@@ -297,30 +284,8 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer">
+    <aside class="toc-drawer no-toc">
       
-      
-      <div class="toc-sticky toc-scroll">
-        <div class="toc-title-container">
-          <span class="toc-title">
-            On this page
-          </span>
-        </div>
-        <div class="toc-tree-container">
-          <div class="toc-tree">
-            <ul>
-<li><a class="reference internal" href="#">Authentication Middleware</a><ul>
-<li><a class="reference internal" href="#middleware.authentication.AuthInterceptor"><code class="docutils literal notranslate"><span class="pre">AuthInterceptor</span></code></a><ul>
-<li><a class="reference internal" href="#middleware.authentication.AuthInterceptor.register_auth_interceptor"><code class="docutils literal notranslate"><span class="pre">AuthInterceptor.register_auth_interceptor()</span></code></a></li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-
-          </div>
-        </div>
-      </div>
       
       
     </aside>
