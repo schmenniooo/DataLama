@@ -13,7 +13,10 @@ from src.server.server import Server
 def client(test_config_with_key):
     """TestClient for a configured Server with mocked AiCommunicationService."""
     config = test_config_with_key(api_key="secret")
-    with patch("src.server.server.AiCommunicationService") as mock_service_class:
+    with (
+        patch("src.server.server.AiCommunicationService") as mock_service_class,
+        patch("src.middleware.rate_limiting.rate_limiter.Redis", return_value=AsyncMock()),
+    ):
         mock_service = mock_service_class.return_value
         mock_service.health_check = AsyncMock(return_value=True)
         server = Server(config=config)
