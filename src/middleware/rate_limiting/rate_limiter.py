@@ -31,7 +31,7 @@ class RateLimiter:
 
                     # Fetching requests counter for ip
                     ip = request.client.host
-                    request_counter = await redis.get(ip)
+                    request_counter = await redis.get(name=ip)
 
                     if request_counter is None:
                         # client ip not registered yet -> letting trough
@@ -41,11 +41,11 @@ class RateLimiter:
                     request_counter = int(request_counter)
                     if request_counter >= RateLimiter.MAX_REQUESTS_PER_SECOND:
                         # client overflowed the limit
-                        await redis.set(ip, request_counter + 1)
+                        await redis.set(name=ip, value=request_counter + 1, ex=1)
                         return Response(status_code=429)
 
                     # Increasing counter in every case
-                    await redis.set(ip, request_counter + 1)
+                    await redis.set(name=ip, value=request_counter + 1, ex=1)
                 except RedisError:
                     raise RedisError("Redis Error")
                 return await call_next(request)
