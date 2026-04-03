@@ -143,9 +143,6 @@ jobs:
       - name: Install dependencies
         run: uv sync
 
-      - name: Check redis
-        run: uv run python -c "import redis; print(redis.__version__)"
-
       - name: Run tests
         run: uv run pytest ./tests
 
