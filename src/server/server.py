@@ -21,26 +21,26 @@ class Server:  # pylint: disable=too-few-public-methods
     """Builds and configures the FastAPI application."""
 
     def __init__(self, config: Config):
-        self.config = config
-
         logger.info("Configuring server")
-
-        # Create rate limiter first (needed by lifespan)
-        self.rate_limiter = self._configure_rate_limiter()
-
-        self.app = FastAPI(lifespan=lambda app: self._rate_limiting_redis_lifecycle(app))
-
-        # Registering rate limiter middleware
-        self.app.add_middleware(self.rate_limiter.register_rate_limiter())
+        self.config = config
 
         # Skipping authentication in debug mode
         if not config.debug:
             self._configure_authentication()
 
+        # Create rate limiter first (needed by lifespan when creating FastAPI instance)
+        self.rate_limiter = self._configure_rate_limiter()
+
+        # Creating FastAPI instance and registering auto redis flush
+        self.app = FastAPI(lifespan=lambda app: self._rate_limiting_redis_lifecycle(app))
+
+        # Registering rate limiter middleware
+        self.app.add_middleware(self.rate_limiter.register_rate_limiter())
+
         # Connecting to AI provider
         ai_service = self._create_ai_service()
 
-        # Configuring api routes
+        # Registering api routes
         self._configure_analysis_router(ai_service=ai_service)
 
     def _configure_authentication(self) -> None:
