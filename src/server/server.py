@@ -20,8 +20,11 @@ class Server:  # pylint: disable=too-few-public-methods
     """Builds and configures the FastAPI application."""
 
     def __init__(self, config: Config):
-        logger.info("Configuring server")
+        logger.info("Configuring datalens server")
         self.config = config
+
+        # Creating FastAPI instance and registering auto redis flush
+        self.app = FastAPI()
 
         # Skipping authentication in debug mode
         if not config.debug:
@@ -29,12 +32,6 @@ class Server:  # pylint: disable=too-few-public-methods
 
         # Create rate limiter first (needed by lifespan when creating FastAPI instance)
         self.rate_limiter = self._configure_rate_limiter()
-
-        # Creating FastAPI instance and registering auto redis flush
-        self.app = FastAPI(lifespan=lambda app: self._rate_limiting_redis_lifecycle(app))
-
-        # Registering rate limiter middleware
-        self.app.add_middleware(self.rate_limiter.register_rate_limiter())
 
         # Connecting to AI provider
         ai_service = self._create_ai_service()
@@ -51,21 +48,16 @@ class Server:  # pylint: disable=too-few-public-methods
         ).register_auth_interceptor()
         self.app.add_middleware(auth_middleware)
 
-    @staticmethod
-    def _configure_rate_limiter() -> RateLimiter:
+    def _configure_rate_limiter(self) -> RateLimiter:
+        logger.info("Registering rate limiter")
         # Getting env variables here as they aren't configurable by the user
         redis_host = os.environ.get("REDIS_HOST", "localhost")
         redis_port = int(os.environ.get("REDIS_PORT", 6379))
         rate_limiter = RateLimiter(host=redis_host, port=redis_port)
-        return rate_limiter
 
-    @asynccontextmanager
-    async def _rate_limiting_redis_lifecycle(self, _app: FastAPI):
-        """Registers redis lifecycle middleware"""
-        task = asyncio.create_task(self.rate_limiter.flush_redis_periodically(interval_seconds=3600))
-        yield
-        # Shutdown: cancel the task
-        task.cancel()
+        # Registering rate limiter middleware
+        self.app.add_middleware(self.rate_limiter.register_rate_limiter())
+        return rate_limiter
 
     def _create_ai_service(self) -> AiCommunicationService:
         """Returns new AI service class"""
