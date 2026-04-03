@@ -13,8 +13,6 @@ class RateLimiter:
 
     MAX_REQUESTS_PER_SECOND = 10
 
-    BURST_SIZE = 20
-
     def __init__(self, host: str = "localhost", port: int = 6379):
         self.redis = Redis(host=host, port=port, db=0, decode_responses=True)
 
@@ -46,7 +44,7 @@ class RateLimiter:
                         await redis.set(ip, request_counter + 1)
                         return Response(status_code=429)
 
-                    # Happens in every case
+                    # Increasing counter in every case
                     await redis.set(ip, request_counter + 1)
                 except RedisError:
                     raise RedisError("Redis Error")
