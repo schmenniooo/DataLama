@@ -6,10 +6,14 @@ import asyncio
 from redis.asyncio import (Redis, RedisError)
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
-from starlette.responses import Response
+from starlette.responses import Response, JSONResponse
 
 
 class RateLimiter:
+
+    MAX_REQUESTS_PER_SECOND = 10
+
+    BURST_SIZE = 20
 
     def __init__(self, host: str = "localhost", port: int = 6379):
         self.redis = Redis(host=host, port=port, db=0, decode_responses=True)
@@ -23,7 +27,19 @@ class RateLimiter:
         class _Middleware(BaseHTTPMiddleware): # pylint: disable=too-few-public-methods
             async def dispatch(self, request: Request, call_next: Callable) -> Response:
                 try:
-                    await redis.set("Key", "Value")
+                    if request.client is not None:
+                        return await call_next(request)
+                    ip = request.client.host
+
+                    request_counter = int(await redis.get(ip))
+                    if request_counter is None:
+                        return JSONResponse({"detail": "Unauthorized"}, status_code=401)
+
+                    if request_counter >= RateLimiter.MAX_REQUESTS_PER_SECOND:
+                        return Response(status_code=429)
+
+                    # Happens in every case
+                    await redis.set(ip, request_counter + 1)
                 except RedisError:
                     raise RedisError("Redis Error")
                 return await call_next(request)
