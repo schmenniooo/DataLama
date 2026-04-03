@@ -6,7 +6,7 @@
 <link rel="index" title="Index" href="genindex.html"><link rel="search" title="Search" href="search.html"><link rel="next" title="Models" href="models.html"><link rel="prev" title="Analysis Router" href="api.html">
 
     <!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
-        <title>Authentication Middleware - DataLens documentation</title>
+        <title>Middleware - DataLens documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -172,7 +172,7 @@
           <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
         </button>
       </div>
-      <label class="toc-overlay-icon toc-header-icon no-toc" for="__toc">
+      <label class="toc-overlay-icon toc-header-icon" for="__toc">
         <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
       </label>
     </div>
@@ -195,7 +195,7 @@
 <li class="toctree-l1"><a class="reference internal" href="main.html">Main</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ai.html">AI Communication Service</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">Analysis Router</a></li>
-<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Authentication Middleware</a></li>
+<li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Middleware</a></li>
 <li class="toctree-l1"><a class="reference internal" href="models.html">Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="server.html">Server</a></li>
 <li class="toctree-l1"><a class="reference internal" href="validation.html">Validation</a></li>
@@ -232,13 +232,58 @@
               <svg class="theme-icon-when-light"><use href="#svg-sun"></use></svg>
             </button>
           </div>
-          <label class="toc-overlay-icon toc-content-icon no-toc" for="__toc">
+          <label class="toc-overlay-icon toc-content-icon" for="__toc">
             <span class="icon"><svg><use href="#svg-toc"></use></svg></span>
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <section id="authentication-middleware">
-<h1>Authentication Middleware<a class="headerlink" href="#authentication-middleware" title="Link to this heading">¶</a></h1>
+          <section id="middleware">
+<h1>Middleware<a class="headerlink" href="#middleware" title="Link to this heading">¶</a></h1>
+<section id="module-middleware.auth.authentication">
+<span id="authentication"></span><h2>Authentication<a class="headerlink" href="#module-middleware.auth.authentication" title="Link to this heading">¶</a></h2>
+<p>Authentication module</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="middleware.auth.authentication.AuthInterceptor">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">middleware.auth.authentication.</span></span><span class="sig-name descname"><span class="pre">AuthInterceptor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_key_field_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/middleware/auth/authentication.html#AuthInterceptor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#middleware.auth.authentication.AuthInterceptor" title="Link to this definition">¶</a></dt>
+<dd><p>Handles authentication through api tokens</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="middleware.auth.authentication.AuthInterceptor.register_auth_interceptor">
+<span class="sig-name descname"><span class="pre">register_auth_interceptor</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><span class="pre">BaseHTTPMiddleware</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/middleware/auth/authentication.html#AuthInterceptor.register_auth_interceptor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#middleware.auth.authentication.AuthInterceptor.register_auth_interceptor" title="Link to this definition">¶</a></dt>
+<dd><p>Returns inner base middleware class for auth middleware. Compares api key from request header</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-middleware.rate_limiting.rate_limiter">
+<span id="rate-limiting"></span><h2>Rate Limiting<a class="headerlink" href="#module-middleware.rate_limiting.rate_limiter" title="Link to this heading">¶</a></h2>
+<p>Module for IP-based rate limiting using Redis as a backing store.</p>
+<p>Each client IP gets a request counter in Redis.
+When the counter exceeds the configured threshold, subsequent requests are
+rejected with HTTP 429 (Too Many Requests) until the key expires.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="middleware.rate_limiting.rate_limiter.RateLimiter">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">middleware.rate_limiting.rate_limiter.</span></span><span class="sig-name descname"><span class="pre">RateLimiter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'localhost'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">6379</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/middleware/rate_limiting/rate_limiter.html#RateLimiter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#middleware.rate_limiting.rate_limiter.RateLimiter" title="Link to this definition">¶</a></dt>
+<dd><p>Provides a configurable rate limiting middleware backed by async Redis.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="middleware.rate_limiting.rate_limiter.RateLimiter.MAX_REQUESTS_PER_MINUTE">
+<span class="sig-name descname"><span class="pre">MAX_REQUESTS_PER_MINUTE</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10</span></span><a class="headerlink" href="#middleware.rate_limiting.rate_limiter.RateLimiter.MAX_REQUESTS_PER_MINUTE" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="middleware.rate_limiting.rate_limiter.RateLimiter.TIME_WINDOW">
+<span class="sig-name descname"><span class="pre">TIME_WINDOW</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">60</span></span><a class="headerlink" href="#middleware.rate_limiting.rate_limiter.RateLimiter.TIME_WINDOW" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="middleware.rate_limiting.rate_limiter.RateLimiter.register_rate_limiter">
+<span class="sig-name descname"><span class="pre">register_rate_limiter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Type</span><span class="p"><span class="pre">[</span></span><span class="pre">BaseHTTPMiddleware</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/middleware/rate_limiting/rate_limiter.html#RateLimiter.register_rate_limiter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#middleware.rate_limiting.rate_limiter.RateLimiter.register_rate_limiter" title="Link to this definition">¶</a></dt>
+<dd><p>Returns a BaseHTTPMiddleware subclass that enforces per-IP rate limiting.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
 </section>
 
         </article>
@@ -284,8 +329,42 @@
         
       </footer>
     </div>
-    <aside class="toc-drawer no-toc">
+    <aside class="toc-drawer">
       
+      
+      <div class="toc-sticky toc-scroll">
+        <div class="toc-title-container">
+          <span class="toc-title">
+            On this page
+          </span>
+        </div>
+        <div class="toc-tree-container">
+          <div class="toc-tree">
+            <ul>
+<li><a class="reference internal" href="#">Middleware</a><ul>
+<li><a class="reference internal" href="#module-middleware.auth.authentication">Authentication</a><ul>
+<li><a class="reference internal" href="#middleware.auth.authentication.AuthInterceptor"><code class="docutils literal notranslate"><span class="pre">AuthInterceptor</span></code></a><ul>
+<li><a class="reference internal" href="#middleware.auth.authentication.AuthInterceptor.register_auth_interceptor"><code class="docutils literal notranslate"><span class="pre">AuthInterceptor.register_auth_interceptor()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-middleware.rate_limiting.rate_limiter">Rate Limiting</a><ul>
+<li><a class="reference internal" href="#middleware.rate_limiting.rate_limiter.RateLimiter"><code class="docutils literal notranslate"><span class="pre">RateLimiter</span></code></a><ul>
+<li><a class="reference internal" href="#middleware.rate_limiting.rate_limiter.RateLimiter.MAX_REQUESTS_PER_MINUTE"><code class="docutils literal notranslate"><span class="pre">RateLimiter.MAX_REQUESTS_PER_MINUTE</span></code></a></li>
+<li><a class="reference internal" href="#middleware.rate_limiting.rate_limiter.RateLimiter.TIME_WINDOW"><code class="docutils literal notranslate"><span class="pre">RateLimiter.TIME_WINDOW</span></code></a></li>
+<li><a class="reference internal" href="#middleware.rate_limiting.rate_limiter.RateLimiter.register_rate_limiter"><code class="docutils literal notranslate"><span class="pre">RateLimiter.register_rate_limiter()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+          </div>
+        </div>
+      </div>
       
       
     </aside>

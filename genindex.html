@@ -193,7 +193,7 @@
 <li class="toctree-l1"><a class="reference internal" href="main.html">Main</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ai.html">AI Communication Service</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">Analysis Router</a></li>
-<li class="toctree-l1"><a class="reference internal" href="middleware.html">Authentication Middleware</a></li>
+<li class="toctree-l1"><a class="reference internal" href="middleware.html">Middleware</a></li>
 <li class="toctree-l1"><a class="reference internal" href="models.html">Models</a></li>
 <li class="toctree-l1"><a class="reference internal" href="server.html">Server</a></li>
 <li class="toctree-l1"><a class="reference internal" href="validation.html">Validation</a></li>
@@ -232,7 +232,7 @@
           
 <section class="genindex-section">
   <h1 id="index">Index</h1>
-  <div class="genindex-jumpbox"><a href="#_"><strong>_</strong></a> | <a href="#A"><strong>A</strong></a> | <a href="#B"><strong>B</strong></a> | <a href="#C"><strong>C</strong></a> | <a href="#D"><strong>D</strong></a> | <a href="#F"><strong>F</strong></a> | <a href="#H"><strong>H</strong></a> | <a href="#L"><strong>L</strong></a> | <a href="#M"><strong>M</strong></a> | <a href="#P"><strong>P</strong></a> | <a href="#R"><strong>R</strong></a> | <a href="#S"><strong>S</strong></a> | <a href="#V"><strong>V</strong></a></div>
+  <div class="genindex-jumpbox"><a href="#_"><strong>_</strong></a> | <a href="#A"><strong>A</strong></a> | <a href="#B"><strong>B</strong></a> | <a href="#C"><strong>C</strong></a> | <a href="#D"><strong>D</strong></a> | <a href="#F"><strong>F</strong></a> | <a href="#H"><strong>H</strong></a> | <a href="#L"><strong>L</strong></a> | <a href="#M"><strong>M</strong></a> | <a href="#P"><strong>P</strong></a> | <a href="#R"><strong>R</strong></a> | <a href="#S"><strong>S</strong></a> | <a href="#T"><strong>T</strong></a> | <a href="#V"><strong>V</strong></a></div>
 </section>
 <section id="_" class="genindex-section">
   <h2>_</h2>
@@ -307,6 +307,8 @@
         <li><a href="models.html#model.config.config.Config.api_key">api_key (model.config.config.Config attribute)</a>
 </li>
         <li><a href="models.html#model.config.config.Config.api_key_field_name">api_key_field_name (model.config.config.Config attribute)</a>
+</li>
+        <li><a href="middleware.html#middleware.auth.authentication.AuthInterceptor">AuthInterceptor (class in middleware.auth.authentication)</a>
 </li>
     </ul></td>
   </tr></table>
@@ -415,8 +417,24 @@
 </li>
         <li><a href="ai.html#ai.langchain.communication_service.AiCommunicationService.make_analyse_request">make_analyse_request() (ai.langchain.communication_service.AiCommunicationService method)</a>
 </li>
+        <li><a href="middleware.html#middleware.rate_limiting.rate_limiter.RateLimiter.MAX_REQUESTS_PER_MINUTE">MAX_REQUESTS_PER_MINUTE (middleware.rate_limiting.rate_limiter.RateLimiter attribute)</a>
+</li>
         <li><a href="models.html#model.api.api_model.BaseResponse.message">message (model.api.api_model.BaseResponse attribute)</a>
 </li>
+        <li>
+    middleware.auth.authentication
+
+        <ul>
+          <li><a href="middleware.html#module-middleware.auth.authentication">module</a>
+</li>
+        </ul></li>
+        <li>
+    middleware.rate_limiting.rate_limiter
+
+        <ul>
+          <li><a href="middleware.html#module-middleware.rate_limiting.rate_limiter">module</a>
+</li>
+        </ul></li>
         <li><a href="models.html#model.config.config.Config.model">model (model.config.config.Config attribute)</a>
 </li>
         <li>
@@ -426,6 +444,8 @@
           <li><a href="models.html#module-model.api.api_model">module</a>
 </li>
         </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li>
     model.config.config
 
@@ -433,8 +453,6 @@
           <li><a href="models.html#module-model.config.config">module</a>
 </li>
         </ul></li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="models.html#model.api.api_model.BaseRequest.model_config">model_config (model.api.api_model.BaseRequest attribute)</a>
 
         <ul>
@@ -450,6 +468,10 @@
           <li><a href="api.html#module-api.analysis_router">api.analysis_router</a>
 </li>
           <li><a href="main.html#module-main">main</a>
+</li>
+          <li><a href="middleware.html#module-middleware.auth.authentication">middleware.auth.authentication</a>
+</li>
+          <li><a href="middleware.html#module-middleware.rate_limiting.rate_limiter">middleware.rate_limiting.rate_limiter</a>
 </li>
           <li><a href="models.html#module-model.api.api_model">model.api.api_model</a>
 </li>
@@ -478,6 +500,14 @@
   <h2>R</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="middleware.html#middleware.rate_limiting.rate_limiter.RateLimiter">RateLimiter (class in middleware.rate_limiting.rate_limiter)</a>
+</li>
+        <li><a href="middleware.html#middleware.auth.authentication.AuthInterceptor.register_auth_interceptor">register_auth_interceptor() (middleware.auth.authentication.AuthInterceptor method)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="middleware.html#middleware.rate_limiting.rate_limiter.RateLimiter.register_rate_limiter">register_rate_limiter() (middleware.rate_limiting.rate_limiter.RateLimiter method)</a>
+</li>
         <li><a href="server.html#server.server.Server.run">run() (server.server.Server method)</a>
 </li>
     </ul></td>
@@ -499,6 +529,16 @@
           <li><a href="server.html#module-server.server">module</a>
 </li>
         </ul></li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="T" class="genindex-section">
+  <h2>T</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="middleware.html#middleware.rate_limiting.rate_limiter.RateLimiter.TIME_WINDOW">TIME_WINDOW (middleware.rate_limiting.rate_limiter.RateLimiter attribute)</a>
+</li>
     </ul></td>
   </tr></table>
 </section>

@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../../genindex.html"><link rel="search" title="Search" href="../../../search.html">
 
     <!-- Generated with Sphinx 9.1.0 and Furo 2025.12.19 -->
-        <title>model.config.config - DataLens documentation</title>
+        <title>middleware.rate_limiting.rate_limiter - DataLens documentation</title>
       <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=d111a655" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo.css?v=7bdb33bb" />
     <link rel="stylesheet" type="text/css" href="../../../_static/styles/furo-extensions.css?v=8dab3a3b" />
@@ -230,29 +230,68 @@
           </label>
         </div>
         <article role="main" id="furo-main-content">
-          <h1>Source code for model.config.config</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Stores global microservice configuration.&quot;&quot;&quot;</span>
+          <h1>Source code for middleware.rate_limiting.rate_limiter</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;Module for IP-based rate limiting using Redis as a backing store.</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">dataclass</span>
+<span class="sd">Each client IP gets a request counter in Redis.</span>
+<span class="sd">When the counter exceeds the configured threshold, subsequent requests are</span>
+<span class="sd">rejected with HTTP 429 (Too Many Requests) until the key expires.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Callable</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">redis.asyncio</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span><span class="n">Redis</span><span class="p">,</span> <span class="n">RedisError</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">starlette.middleware.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseHTTPMiddleware</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">starlette.requests</span><span class="w"> </span><span class="kn">import</span> <span class="n">Request</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">starlette.responses</span><span class="w"> </span><span class="kn">import</span> <span class="n">Response</span>
 
 
-<div class="viewcode-block" id="Config">
-<a class="viewcode-back" href="../../../models.html#model.config.config.Config">[docs]</a>
-<span class="nd">@dataclass</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">Config</span><span class="p">:</span>  <span class="c1"># pylint: disable=too-many-instance-attributes</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Holds all configuration values for the microservice.&quot;&quot;&quot;</span>
+<div class="viewcode-block" id="RateLimiter">
+<a class="viewcode-back" href="../../../middleware.html#middleware.rate_limiting.rate_limiter.RateLimiter">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">RateLimiter</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Provides a configurable rate limiting middleware backed by async Redis.&quot;&quot;&quot;</span>
 
-    <span class="n">api_key_field_name</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">api_key</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">llm_provider</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">llm_provider_api_token</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">model</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">langsmith_tracing_enabled</span><span class="p">:</span> <span class="nb">bool</span>
-    <span class="n">langsmith_api_key</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">langsmith_project</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">debug</span><span class="p">:</span> <span class="nb">bool</span>
-    <span class="n">host</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="n">port</span><span class="p">:</span> <span class="nb">int</span></div>
+    <span class="n">TIME_WINDOW</span> <span class="o">=</span> <span class="mi">60</span>
+    <span class="n">MAX_REQUESTS_PER_MINUTE</span> <span class="o">=</span> <span class="mi">10</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;localhost&quot;</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">6379</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the async Redis connection used for tracking request counts.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">redis</span> <span class="o">=</span> <span class="n">Redis</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">decode_responses</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<div class="viewcode-block" id="RateLimiter.register_rate_limiter">
+<a class="viewcode-back" href="../../../middleware.html#middleware.rate_limiting.rate_limiter.RateLimiter.register_rate_limiter">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">register_rate_limiter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseHTTPMiddleware</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns a BaseHTTPMiddleware subclass that enforces per-IP rate limiting.&quot;&quot;&quot;</span>
+        <span class="n">redis</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">redis</span>
+        <span class="k">class</span><span class="w"> </span><span class="nc">_Middleware</span><span class="p">(</span><span class="n">BaseHTTPMiddleware</span><span class="p">):</span> <span class="c1"># pylint: disable=too-few-public-methods</span>
+            <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">dispatch</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">request</span><span class="p">:</span> <span class="n">Request</span><span class="p">,</span> <span class="n">call_next</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Response</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">request</span><span class="o">.</span><span class="n">client</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="k">return</span> <span class="k">await</span> <span class="n">call_next</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+
+                    <span class="c1"># Fetching requests counter for ip</span>
+                    <span class="n">ip</span> <span class="o">=</span> <span class="n">request</span><span class="o">.</span><span class="n">client</span><span class="o">.</span><span class="n">host</span>
+                    <span class="n">request_counter</span> <span class="o">=</span> <span class="k">await</span> <span class="n">redis</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">ip</span><span class="p">)</span>
+
+                    <span class="k">if</span> <span class="n">request_counter</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="c1"># client ip not registered yet -&gt; letting trough</span>
+                        <span class="k">await</span> <span class="n">redis</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">ex</span><span class="o">=</span><span class="n">RateLimiter</span><span class="o">.</span><span class="n">TIME_WINDOW</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="k">await</span> <span class="n">call_next</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+
+                    <span class="c1"># Converting to Integer</span>
+                    <span class="n">request_counter</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">request_counter</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">request_counter</span> <span class="o">&gt;=</span> <span class="n">RateLimiter</span><span class="o">.</span><span class="n">MAX_REQUESTS_PER_MINUTE</span><span class="p">:</span>
+                        <span class="c1"># client overflowed the limit</span>
+                        <span class="k">await</span> <span class="n">redis</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">request_counter</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">ex</span><span class="o">=</span><span class="n">RateLimiter</span><span class="o">.</span><span class="n">TIME_WINDOW</span><span class="p">)</span>
+                        <span class="k">return</span> <span class="n">Response</span><span class="p">(</span><span class="n">status_code</span><span class="o">=</span><span class="mi">429</span><span class="p">)</span>
+
+                    <span class="c1"># Increasing counter in every case</span>
+                    <span class="k">await</span> <span class="n">redis</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="n">ip</span><span class="p">,</span> <span class="n">value</span><span class="o">=</span><span class="n">request_counter</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="n">ex</span><span class="o">=</span><span class="n">RateLimiter</span><span class="o">.</span><span class="n">TIME_WINDOW</span><span class="p">)</span>
+                <span class="k">except</span> <span class="n">RedisError</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="n">RedisError</span><span class="p">(</span><span class="s2">&quot;Redis Error&quot;</span><span class="p">)</span>
+                <span class="k">return</span> <span class="k">await</span> <span class="n">call_next</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">_Middleware</span></div>
+</div>
 
 </pre></div>
         </article>
