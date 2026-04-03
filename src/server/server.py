@@ -1,16 +1,18 @@
 """Server module for building and running the FastAPI application."""
-
+import asyncio
 import logging
 import os
+from contextlib import asynccontextmanager
+from typing import Any
 
 import uvicorn
 from fastapi import FastAPI
 
-from src.middleware.rate_limiting.rate_limiter import RateLimiter
+from src.ai.langchain.communication_service import AiCommunicationService
 from src.api.analysis_router import AnalysisRouter
 from src.middleware.auth.authentication import AuthInterceptor
+from src.middleware.rate_limiting.rate_limiter import RateLimiter
 from src.model.config.config import Config
-from src.ai.langchain.communication_service import AiCommunicationService
 
 logger = logging.getLogger("logger")
 
@@ -19,17 +21,21 @@ class Server:  # pylint: disable=too-few-public-methods
     """Builds and configures the FastAPI application."""
 
     def __init__(self, config: Config):
-        self.app = FastAPI()
         self.config = config
 
         logger.info("Configuring server")
 
+        # Create rate limiter first (needed by lifespan)
+        self.rate_limiter = self._configure_rate_limiter()
+
+        self.app = FastAPI(lifespan=lambda app: self._rate_limiting_redis_lifecycle(app))
+
+        # Registering rate limiter middleware
+        self.app.add_middleware(self.rate_limiter.register_rate_limiter())
+
         # Skipping authentication in debug mode
         if not config.debug:
             self._configure_authentication()
-
-        # Registering rate limiter with Redis
-        self._register_rate_limiter()
 
         # Connecting to AI provider
         ai_service = self._create_ai_service()
@@ -46,16 +52,21 @@ class Server:  # pylint: disable=too-few-public-methods
         ).register_auth_interceptor()
         self.app.add_middleware(auth_middleware)
 
-    def _register_rate_limiter(self) -> None:
-        """Registers rate limiter"""
-        logger.info("Registering rate limiter")
-
+    @staticmethod
+    def _configure_rate_limiter() -> RateLimiter:
+        # Getting env variables here as they aren't configurable by the user
         redis_host = os.environ.get("REDIS_HOST", "localhost")
         redis_port = int(os.environ.get("REDIS_PORT", 6379))
+        rate_limiter = RateLimiter(host=redis_host, port=redis_port)
+        return rate_limiter
 
-        rate_limiter = RateLimiter(host=redis_host, port=redis_port).register_rate_limiter()
-
-        self.app.add_middleware(rate_limiter)
+    @asynccontextmanager
+    async def _rate_limiting_redis_lifecycle(self, _app: FastAPI):
+        """Registers redis lifecycle middleware"""
+        task = asyncio.create_task(self.rate_limiter.flush_redis_periodically(interval_seconds=3600))
+        yield
+        # Shutdown: cancel the task
+        task.cancel()
 
     def _create_ai_service(self) -> AiCommunicationService:
         """Returns new AI service class"""
