@@ -29,9 +29,18 @@ SEPARATOR = "\n---NEW---DATASET---\n"
 
 
 @pytest.fixture
-def client(test_config):
-    """TestClient with mocked AiCommunicationService."""
-    with patch("src.server.server.AiCommunicationService") as mock_service_class:
+def mock_redis():
+    """Returns a mocked async Redis instance."""
+    return AsyncMock()
+
+
+@pytest.fixture
+def client(test_config, mock_redis):
+    """TestClient with mocked AiCommunicationService and Redis."""
+    with (
+        patch("src.server.server.AiCommunicationService") as mock_service_class,
+        patch("src.middleware.rate_limiting.rate_limiter.Redis", return_value=mock_redis),
+    ):
         mock_service = mock_service_class.return_value
         mock_service.health_check = AsyncMock(return_value=True)
         mock_service.make_analyse_request = AsyncMock(
