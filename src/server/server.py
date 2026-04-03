@@ -1,8 +1,6 @@
 """Server module for building and running the FastAPI application."""
-import asyncio
 import logging
 import os
-from contextlib import asynccontextmanager
 
 import uvicorn
 from fastapi import FastAPI
@@ -23,15 +21,15 @@ class Server:  # pylint: disable=too-few-public-methods
         logger.info("Configuring datalens server")
         self.config = config
 
-        # Creating FastAPI instance and registering auto redis flush
+        # Creating FastAPI instance
         self.app = FastAPI()
 
         # Skipping authentication in debug mode
         if not config.debug:
             self._configure_authentication()
 
-        # Create rate limiter first (needed by lifespan when creating FastAPI instance)
-        self.rate_limiter = self._configure_rate_limiter()
+        # Create rate limiter
+        self._configure_rate_limiter()
 
         # Connecting to AI provider
         ai_service = self._create_ai_service()
@@ -56,7 +54,7 @@ class Server:  # pylint: disable=too-few-public-methods
         rate_limiter = RateLimiter(host=redis_host, port=redis_port)
 
         # Registering rate limiter middleware
-        self.app.add_middleware(self.rate_limiter.register_rate_limiter())
+        self.app.add_middleware(rate_limiter.register_rate_limiter())
         return rate_limiter
 
     def _create_ai_service(self) -> AiCommunicationService:

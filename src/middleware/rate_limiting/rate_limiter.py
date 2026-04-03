@@ -1,12 +1,11 @@
 """Module for handling rate limiting with Redis"""
 
 from typing import Type, Callable
-import asyncio
 
 from redis.asyncio import (Redis, RedisError)
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request
-from starlette.responses import Response, JSONResponse
+from starlette.responses import Response
 
 
 class RateLimiter:
@@ -31,6 +30,7 @@ class RateLimiter:
 
                     if request_counter is None:
                         # client ip not registered yet -> letting trough
+                        await redis.set(name=ip, value=0, ex=RateLimiter.TIME_WINDOW)
                         return await call_next(request)
 
                     # Converting to Integer
