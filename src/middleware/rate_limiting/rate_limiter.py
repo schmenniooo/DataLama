@@ -1,4 +1,9 @@
-"""Module for handling rate limiting with Redis"""
+"""Module for IP-based rate limiting using Redis as a backing store.
+
+Each client IP gets a request counter in Redis.
+When the counter exceeds the configured threshold, subsequent requests are
+rejected with HTTP 429 (Too Many Requests) until the key expires.
+"""
 
 from typing import Type, Callable
 
@@ -9,14 +14,17 @@ from starlette.responses import Response
 
 
 class RateLimiter:
+    """Provides a configurable rate limiting middleware backed by async Redis."""
 
     TIME_WINDOW = 60
     MAX_REQUESTS_PER_MINUTE = 10
 
     def __init__(self, host: str = "localhost", port: int = 6379):
+        """Initializes the async Redis connection used for tracking request counts."""
         self.redis = Redis(host=host, port=port, db=0, decode_responses=True)
 
     def register_rate_limiter(self) -> Type[BaseHTTPMiddleware]:
+        """Returns a BaseHTTPMiddleware subclass that enforces per-IP rate limiting."""
         redis = self.redis
         class _Middleware(BaseHTTPMiddleware): # pylint: disable=too-few-public-methods
             async def dispatch(self, request: Request, call_next: Callable) -> Response:
