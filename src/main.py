@@ -16,8 +16,8 @@ def main():
 
     # Configuring app
     config = Config(
-        api_key_field_name = os.getenv("API_KEY_FIELD_NAME"),
-        api_key = os.getenv("API_KEY"),
+        api_key_field_name = os.getenv("API_KEY_FIELD_NAME", ""),
+        api_key = os.getenv("API_KEY", ""),
         debug = os.getenv("DEBUG", "false").lower() == "true",
         host = os.getenv("HOST", "0.0.0.0"),
         port = int(os.getenv("PORT", "3000")),
