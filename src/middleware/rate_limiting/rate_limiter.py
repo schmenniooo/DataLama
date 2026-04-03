@@ -19,22 +19,27 @@ class RateLimiter:
         self.redis = Redis(host=host, port=port, db=0, decode_responses=True)
 
     async def flush_redis_periodically(self, interval_seconds: int):
-        await asyncio.sleep(interval_seconds)
-        await self.redis.flushdb()
+        while True:
+            await asyncio.sleep(interval_seconds)
+            await self.redis.flushdb()
 
     def register_rate_limiter(self) -> Type[BaseHTTPMiddleware]:
         redis = self.redis
         class _Middleware(BaseHTTPMiddleware): # pylint: disable=too-few-public-methods
             async def dispatch(self, request: Request, call_next: Callable) -> Response:
                 try:
-                    if request.client is not None:
+                    if request.client is None:
                         return await call_next(request)
                     ip = request.client.host
 
-                    request_counter = int(await redis.get(ip))
+                    request_counter = await redis.get(ip)
                     if request_counter is None:
-                        return JSONResponse({"detail": "Unauthorized"}, status_code=401)
+                        # client ip not registered yet -> letting trough
+                        await redis.set(ip, 1)
+                        return await call_next(request)
 
+                    # Converting to Integer
+                    request_counter = int(request_counter)
                     if request_counter >= RateLimiter.MAX_REQUESTS_PER_SECOND:
                         return Response(status_code=429)
 
