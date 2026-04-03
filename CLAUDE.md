@@ -1,7 +1,7 @@
 # CLAUDE.md
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
-This project is a portfolio learning project. Never provide for code suggestions unless you are asked to as this project is meant to learn.
+This project is a portfolio learning project. Never provide code suggestions unless explicitly asked to. Instead, guide conceptually and look at the user's current implementation first before giving advice. This project is meant to learn.
 
 ## Project Overview
 

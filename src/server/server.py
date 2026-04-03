@@ -1,14 +1,15 @@
 """Server module for building and running the FastAPI application."""
-
 import logging
+import os
 
 import uvicorn
 from fastapi import FastAPI
 
-from src.api.analysis_router import AnalysisRouter
-from src.middleware.authentication import AuthInterceptor
-from src.model.config.config import Config
 from src.ai.langchain.communication_service import AiCommunicationService
+from src.api.analysis_router import AnalysisRouter
+from src.middleware.auth.authentication import AuthInterceptor
+from src.middleware.rate_limiting.rate_limiter import RateLimiter
+from src.model.config.config import Config
 
 logger = logging.getLogger("logger")
 
@@ -17,24 +18,24 @@ class Server:  # pylint: disable=too-few-public-methods
     """Builds and configures the FastAPI application."""
 
     def __init__(self, config: Config):
-        self.app = FastAPI()
+        logger.info("Configuring datalens server")
         self.config = config
 
-        logger.info("Configuring server")
+        # Creating FastAPI instance
+        self.app = FastAPI()
 
         # Skipping authentication in debug mode
         if not config.debug:
             self._configure_authentication()
 
+        # Create rate limiter
+        self._configure_rate_limiter()
+
         # Connecting to AI provider
         ai_service = self._create_ai_service()
 
-        # Configuring api routes
+        # Registering api routes
         self._configure_analysis_router(ai_service=ai_service)
-
-        # Connecting to LangSmith if enabled
-        if config.langsmith_tracing_enabled:
-            self._configure_langsmith()
 
     def _configure_authentication(self) -> None:
         """Registers authentication interceptor module"""
@@ -44,6 +45,17 @@ class Server:  # pylint: disable=too-few-public-methods
             api_key=self.config.api_key
         ).register_auth_interceptor()
         self.app.add_middleware(auth_middleware)
+
+    def _configure_rate_limiter(self) -> RateLimiter:
+        logger.info("Registering rate limiter")
+        # Getting env variables here as they aren't configurable by the user
+        redis_host = os.environ.get("REDIS_HOST", "localhost")
+        redis_port = int(os.environ.get("REDIS_PORT", 6379))
+        rate_limiter = RateLimiter(host=redis_host, port=redis_port)
+
+        # Registering rate limiter middleware
+        self.app.add_middleware(rate_limiter.register_rate_limiter())
+        return rate_limiter
 
     def _create_ai_service(self) -> AiCommunicationService:
         """Returns new AI service class"""
@@ -59,9 +71,6 @@ class Server:  # pylint: disable=too-few-public-methods
         logger.info("Registering analysis routes")
         analysis_router = AnalysisRouter(ai_service=ai_service)
         self.app.include_router(analysis_router.router)
-
-    def _configure_langsmith(self):
-        pass
 
     def run(self) -> None:
         """Starts uvicorn server"""
