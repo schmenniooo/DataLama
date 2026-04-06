@@ -52,7 +52,6 @@ When enabled, all LLM analysis requests are traced via the `@traceable` decorato
 DataLens can enrich analyses with data pulled from your own knowledge sources. The following providers are supported:
 
 - **GitHub**
-- **SharePoint**
 - **Slack**
 - **Jira**
 - **Confluence**
@@ -73,10 +72,6 @@ knowledge_bases:
   - provider: slack
     token: xoxb-...
     channel_ids: ["C123", "C456"]
-  - provider: sharepoint
-    client_id: ...
-    client_secret: ...
-    site_url: ...
 ```
 
 Mount the file into the running environment (e.g. via a Docker volume or a Kubernetes Secret/ConfigMap) so the path matches `KNOWLEDGE_BASE_CONFIG_PATH`.

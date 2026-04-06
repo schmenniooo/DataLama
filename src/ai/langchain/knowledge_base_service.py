@@ -3,7 +3,6 @@ import logging
 
 import yaml
 from langchain_community.document_loaders import SlackDirectoryLoader
-from langchain_community.document_loaders.sharepoint import SharePointLoader
 from langchain_community.document_loaders import ConfluenceLoader
 from langchain_community.document_loaders import JiraLoader
 from langchain_community.document_loaders import GithubFileLoader
@@ -17,7 +16,6 @@ class KnowledgeBaseService:
 
     _REQUIRED_FIELDS: dict[str, set[str]] = {
         "slack": {"token", "channel_ids"},
-        "sharepoint": {"client_id", "client_secret", "site_url"},
         "jira": {"api_token", "username", "server", "project"},
         "confluence": {"url", "username", "api_key"},
         "github": {"repo", "access_token"},
@@ -87,13 +85,6 @@ class KnowledgeBaseService:
         if name == "slack":
             # Using slack sdk directly
             docs = self._load_slack_documents(provider=provider)
-        elif name == "sharepoint":
-            loader = SharePointLoader(
-                client_id=provider.client_id,
-                client_secret=provider.client_secret,
-                site_url=provider.site_url
-            )
-            docs = loader.load()
         elif name == "jira":
             loader = JiraLoader(
                 cloud=True,
