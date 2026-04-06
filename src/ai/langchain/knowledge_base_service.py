@@ -1,0 +1,1 @@
+"""Module to fetch data from configured knowledge base"""
