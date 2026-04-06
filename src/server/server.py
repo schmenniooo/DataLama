@@ -74,6 +74,11 @@ class Server:  # pylint: disable=too-few-public-methods
         )
 
     def _configure_knowledge_base_service(self) -> None:
+        # Check for existence of config file
+        if self.config.knowledge_base_config_path is None:
+            logger.info("No knowledge base config path provided")
+            return
+
         # Injecting config file path to new service
         service = KnowledgeBaseService(config_file_path=self.config.knowledge_base_config_path)
 
