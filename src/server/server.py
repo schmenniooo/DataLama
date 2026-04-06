@@ -4,7 +4,9 @@ import os
 
 import uvicorn
 from fastapi import FastAPI
+from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
+from src.ai.langchain.knowledge_base_service import KnowledgeBaseService
 from src.ai.langchain.communication_service import AiCommunicationService
 from src.api.analysis_router import AnalysisRouter
 from src.middleware.auth.authentication import AuthInterceptor
@@ -33,6 +35,9 @@ class Server:  # pylint: disable=too-few-public-methods
 
         # Connecting to AI provider
         ai_service = self._create_ai_service()
+
+        # Registering auto knowledge-base handler
+        self._configure_knowledge_base_service()
 
         # Registering api routes
         self._configure_analysis_router(ai_service=ai_service)
@@ -65,6 +70,13 @@ class Server:  # pylint: disable=too-few-public-methods
             model=self.config.model,
             api_key=self.config.llm_provider_api_token,
         )
+
+    @staticmethod
+    def _configure_knowledge_base_service() -> None:
+        service = KnowledgeBaseService()
+        scheduler = AsyncIOScheduler()
+        scheduler.add_job(service.knowledge_base_fetch_workflow(), "interval", minutes=30)
+        return
 
     def _configure_analysis_router(self, ai_service: AiCommunicationService) -> None:
         """Creates new AnalysisRouter class and injects it to FastAPI"""
