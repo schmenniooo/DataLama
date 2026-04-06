@@ -53,12 +53,8 @@ class KnowledgeBaseService:
         # TODO: Use fields from provider object
 
         if name == "slack":
-            loader = ConfluenceLoader(
-                url="https://yourcompany.atlassian.net/wiki",
-                username="your@email.com",
-                api_key="..."
-            )
-            docs = loader.load(space_key="ENG")
+            loader = SlackDirectoryLoader(zip_path="slack_export.zip")
+            docs = loader.load()
         elif name == "sharepoint":
             loader = SharePointLoader(
                 client_id="...",
