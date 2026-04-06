@@ -47,6 +47,32 @@ DataLens supports [LangSmith](https://smith.langchain.com/) for tracing and obse
 
 When enabled, all LLM analysis requests are traced via the `@traceable` decorator and visible in your LangSmith dashboard.
 
+### Knowledge Base (Optional)
+
+DataLens can enrich analyses with data pulled from your own knowledge sources (e.g. Slack, SharePoint). To enable it, set the following environment variables:
+
+| Variable                     | Default                          | Description                                                |
+| ---------------------------- | -------------------------------- | ---------------------------------------------------------- |
+| `KNOWLEDGE_BASE_ENABLED`     | `false`                          | Set to `true` to enable knowledge base ingestion           |
+| `KNOWLEDGE_BASE_CONFIG_PATH` | `/app/config/knowledge_bases.yml`| Path to the knowledge base config file inside the container |
+
+When enabled, the service reads provider definitions and credentials from the YAML file at `KNOWLEDGE_BASE_CONFIG_PATH` and periodically fetches data from each configured provider.
+
+The config file follows this format:
+
+```yaml
+knowledge_bases:
+  - provider: slack
+    token: xoxb-...
+    channel_ids: ["C123", "C456"]
+  - provider: sharepoint
+    client_id: ...
+    client_secret: ...
+    site_url: ...
+```
+
+Mount the file into the running environment (e.g. via a Docker volume or a Kubernetes Secret/ConfigMap) so the path matches `KNOWLEDGE_BASE_CONFIG_PATH`.
+
 ## Helm Chart
 
 The chart is published to GHCR and can be used to deploy DataLens to a Kubernetes cluster.
