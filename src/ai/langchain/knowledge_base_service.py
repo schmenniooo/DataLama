@@ -23,12 +23,20 @@ class KnowledgeBaseService:
         return config.get("knowledge_bases", [])
 
     def knowledge_base_fetch_workflow(self):
+        # Validating config file at every call
         if not self._validate_config(self.providers):
             logger.error("Invalid knowledge base provider configuration")
             return
 
+        # Iterating through providers and saving their content in chroma
         for provider in self.providers:
-            self._get_knowledge_base_data(provider=provider)
+            logger.info(f"Fetching data from {provider.get("name")}")
+
+            # Get data from provider
+            docs = self._get_knowledge_base_data(provider=provider)
+
+            # Saving data in vector store
+            self._push_data_to_vector_store(docs=docs)
 
     @staticmethod
     def _validate_config(config: list) -> bool:
@@ -36,9 +44,10 @@ class KnowledgeBaseService:
             return False
         return False
 
-    def _get_knowledge_base_data(self, provider: Any) -> list:
-        docs = []
+    def _get_knowledge_base_data(self, provider: Any) -> list or None:
         name = provider.get("name")
+
+        # TODO: Use fields from provider object
 
         if name == "slack":
             loader = ConfluenceLoader(
@@ -80,10 +89,19 @@ class KnowledgeBaseService:
             docs = loader.load()
         else:
             logger.error("Unknown provider")
-            return []
+            return None
 
         logger.info(f"Found {len(docs)} documents in {name}")
         return docs
 
-    def _push_data_to_vector_store(self):
-        pass
+    def _push_data_to_vector_store(self, docs: list) -> None:
+        if docs is None:
+            logger.error("documents empty")
+            return
+
+        logger.info(f"Pushing {len(docs)} documents to vector store")
+
+        # TODO: Save documents in chroma
+
+        logger.info(f"Finished pushing {len(docs)} documents to vector store")
+        return
