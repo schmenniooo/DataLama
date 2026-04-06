@@ -53,10 +53,12 @@ class KnowledgeBaseService:
 
     @classmethod
     def _validate_config(cls, config: list) -> bool:
+        # Type check
         if not isinstance(config, list):
             logger.error("Knowledge base config must be a list")
             return False
 
+        # Checking if appropriate fields are present for each provider and its fields
         for index, provider in enumerate(config):
             if not isinstance(provider, dict):
                 logger.error(f"Provider at index {index} must be a mapping")
@@ -81,7 +83,9 @@ class KnowledgeBaseService:
     def _get_knowledge_base_data(self, provider: Any) -> list | None:
         name = provider.get("name")
 
+        # Checking for chosen provider
         if name == "slack":
+            # Using slack sdk directly
             docs = self._load_slack_documents(provider=provider)
         elif name == "sharepoint":
             loader = SharePointLoader(
@@ -129,10 +133,13 @@ class KnowledgeBaseService:
         client = WebClient(token=token)
         docs = []
 
+        # Iterating through every given channel
         for channel_id in channel_ids:
             response = client.conversations_history(channel=channel_id)
+            # Creating doc for every message in channel
             for message in response["messages"]:
                 if message.get("text"):
+                    # Creating new doc with message text and id
                     docs.append(Document(
                         page_content=message["text"],
                         metadata={"channel": channel_id, "ts": message["ts"]}
