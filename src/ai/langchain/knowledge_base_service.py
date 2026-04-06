@@ -13,6 +13,14 @@ logger = logging.getLogger("logger")
 
 class KnowledgeBaseService:
 
+    _REQUIRED_FIELDS: dict[str, set[str]] = {
+        "slack": {"token", "channel_ids"},
+        "sharepoint": {"client_id", "client_secret", "site_url"},
+        "jira": {"api_token", "username", "server", "project"},
+        "confluence": {"url", "username", "api_key"},
+        "github": {"repo", "access_token"},
+    }
+
     def __init__(self, config_file_path: str):
         self.providers = self._read_provider_config_file(config_file_path)
 
@@ -41,11 +49,32 @@ class KnowledgeBaseService:
             # Saving data in vector store
             self._push_data_to_vector_store(docs=docs)
 
-    @staticmethod
-    def _validate_config(config: list) -> bool:
-        if config is None:
+    @classmethod
+    def _validate_config(cls, config: list) -> bool:
+        if not isinstance(config, list):
+            logger.error("Knowledge base config must be a list")
             return False
-        return False
+
+        for index, provider in enumerate(config):
+            if not isinstance(provider, dict):
+                logger.error(f"Provider at index {index} must be a mapping")
+                return False
+
+            name = provider.get("provider")
+            if not name:
+                logger.error(f"Provider at index {index} is missing the 'provider' field")
+                return False
+
+            if name not in cls._REQUIRED_FIELDS:
+                logger.error(f"Unsupported provider '{name}' at index {index}")
+                return False
+
+            missing = cls._REQUIRED_FIELDS[name] - provider.keys()
+            if missing:
+                logger.error(f"Provider '{name}' at index {index} is missing fields: {sorted(missing)}")
+                return False
+
+        return True
 
     def _get_knowledge_base_data(self, provider: Any) -> list | None:
         name = provider.get("name")
