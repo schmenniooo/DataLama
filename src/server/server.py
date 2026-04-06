@@ -36,8 +36,9 @@ class Server:  # pylint: disable=too-few-public-methods
         # Connecting to AI provider
         ai_service = self._create_ai_service()
 
-        # Registering auto knowledge-base handler
-        self._configure_knowledge_base_service()
+        # Registering auto knowledge-base handler if enabled
+        if config.knowledge_base_enabled:
+            self._configure_knowledge_base_service()
 
         # Registering api routes
         self._configure_analysis_router(ai_service=ai_service)
