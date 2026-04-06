@@ -28,8 +28,8 @@ ENV LLM_PROVIDER_API_TOKEN="anthropic-api-key"
 ENV MODEL="claude-sonnet-4-6"
 
 # Knowledge Base Handling
-ENV KNOWLEDGEBASE_ENABLED="false"
-ENV KNOWLEDGEBASE_CONFIG_PATH="/app/config/knowledge_bases.yml"
+ENV KNOWLEDGE_BASE_ENABLED="false"
+ENV KNOWLEDGE_BASE_CONFIG_PATH="/app/config/knowledge_bases.yml"
 
 # Langsmith Integration
 ENV LANGSMITH_TRACING="false"
