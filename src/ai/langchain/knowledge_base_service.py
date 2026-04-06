@@ -2,11 +2,12 @@
 
 class KnowledgeBaseService:
 
-    def __init__(self):
-        pass
+    def __init__(self, config_file_path: str):
+        self.providers = self._read_provider_config_file(config_file_path)
 
-    def _read_provider_config_file(self):
-        pass
+    @staticmethod
+    def _read_provider_config_file(path: str):
+        return []
 
     def knowledge_base_fetch_workflow(self):
         pass

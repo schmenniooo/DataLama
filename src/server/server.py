@@ -6,6 +6,7 @@ import uvicorn
 from fastapi import FastAPI
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
+from model.config.config import Config
 from src.ai.langchain.knowledge_base_service import KnowledgeBaseService
 from src.ai.langchain.communication_service import AiCommunicationService
 from src.api.analysis_router import AnalysisRouter
@@ -72,9 +73,11 @@ class Server:  # pylint: disable=too-few-public-methods
             api_key=self.config.llm_provider_api_token,
         )
 
-    @staticmethod
-    def _configure_knowledge_base_service() -> None:
-        service = KnowledgeBaseService()
+    def _configure_knowledge_base_service(self) -> None:
+        # Injecting config file path to new service
+        service = KnowledgeBaseService(config_file_path=self.config.knowledge_base_config_path)
+
+        # Registering scheduler to auto update knowledge base
         scheduler = AsyncIOScheduler()
         scheduler.add_job(service.knowledge_base_fetch_workflow(), "interval", minutes=30)
         return
