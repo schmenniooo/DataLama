@@ -49,7 +49,15 @@ When enabled, all LLM analysis requests are traced via the `@traceable` decorato
 
 ### Knowledge Base (Optional)
 
-DataLens can enrich analyses with data pulled from your own knowledge sources (e.g. Slack, SharePoint). To enable it, set the following environment variables:
+DataLens can enrich analyses with data pulled from your own knowledge sources. The following providers are supported:
+
+- **GitHub**
+- **SharePoint**
+- **Slack**
+- **Jira**
+- **Confluence**
+
+To enable it, set the following environment variables:
 
 | Variable                     | Default                          | Description                                                |
 | ---------------------------- | -------------------------------- | ---------------------------------------------------------- |
