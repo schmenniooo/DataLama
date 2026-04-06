@@ -1,5 +1,7 @@
 """Module to fetch data from configured knowledge base"""
 
+import yaml
+
 class KnowledgeBaseService:
 
     def __init__(self, config_file_path: str):
@@ -7,7 +9,9 @@ class KnowledgeBaseService:
 
     @staticmethod
     def _read_provider_config_file(path: str):
-        return []
+        with open(path, "r") as f:
+            config = yaml.safe_load(f)
+        return config.get("knowledge_bases", [])
 
     def knowledge_base_fetch_workflow(self):
         pass
