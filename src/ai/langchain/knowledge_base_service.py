@@ -8,6 +8,8 @@ from langchain_community.document_loaders import ConfluenceLoader
 from langchain_community.document_loaders import JiraLoader
 from langchain_community.document_loaders import GithubFileLoader
 from typing_extensions import Any
+from slack_sdk import WebClient
+from langchain_core.documents import Document
 
 logger = logging.getLogger("logger")
 
@@ -79,40 +81,37 @@ class KnowledgeBaseService:
     def _get_knowledge_base_data(self, provider: Any) -> list | None:
         name = provider.get("name")
 
-        # TODO: Use fields from provider object
-
         if name == "slack":
-            loader = SlackDirectoryLoader(zip_path="slack_export.zip")
-            docs = loader.load()
+            docs = self._load_slack_documents(provider=provider)
         elif name == "sharepoint":
             loader = SharePointLoader(
-                client_id="...",
-                client_secret="...",
-                site_url="https://yourcompany.sharepoint.com/sites/yoursite"
+                client_id=provider.client_id,
+                client_secret=provider.client_secret,
+                site_url=provider.site_url
             )
             docs = loader.load()
         elif name == "jira":
             loader = JiraLoader(
                 cloud=True,
-                api_token="...",
-                username="your@email.com",
-                server="https://yourcompany.atlassian.net",
-                project="ENG"
+                api_token=provider.api_token,
+                username=provider.username,
+                server=provider.server,
+                project=provider.project,
             )
             docs = loader.load()
         elif name == "confluence":
             loader = ConfluenceLoader(
-                url="https://yourcompany.atlassian.net/wiki",
-                username="your@email.com",
-                api_key="..."
+                url=provider.url,
+                username=provider.username,
+                api_key=provider.api_key,
             )
-            docs = loader.load(space_key="ENG")
+            docs = loader.load()
         elif name == "github":
             loader = GithubFileLoader(
-                repo="org/repo",
-                access_token="ghp_...",
+                repo=provider.repo,
+                access_token=provider.access_token,
                 github_api_url="https://api.github.com",
-                file_filter=lambda path: path.endswith(".md")  # e.g. only docs
+                file_filter=lambda path: path.endswith(".md")
             )
             docs = loader.load()
         else:
@@ -122,7 +121,26 @@ class KnowledgeBaseService:
         logger.info(f"Found {len(docs)} documents in {name}")
         return docs
 
-    def _push_data_to_vector_store(self, docs: list) -> None:
+    @staticmethod
+    def _load_slack_documents(provider: Any) -> list[Document]:
+        token = provider.token
+        channel_ids = provider.channel_ids
+
+        client = WebClient(token=token)
+        docs = []
+
+        for channel_id in channel_ids:
+            response = client.conversations_history(channel=channel_id)
+            for message in response["messages"]:
+                if message.get("text"):
+                    docs.append(Document(
+                        page_content=message["text"],
+                        metadata={"channel": channel_id, "ts": message["ts"]}
+                    ))
+        return docs
+
+    @staticmethod
+    def _push_data_to_vector_store(docs: list) -> None:
         logger.info(f"Pushing {len(docs)} documents to vector store")
 
         # TODO: Save documents in chroma
