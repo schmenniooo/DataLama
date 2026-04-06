@@ -34,6 +34,9 @@ class KnowledgeBaseService:
 
             # Get data from provider
             docs = self._get_knowledge_base_data(provider=provider)
+            if docs is None:
+                logger.error(f"Failed to fetch data from {provider.get('name')}")
+                return
 
             # Saving data in vector store
             self._push_data_to_vector_store(docs=docs)
@@ -44,7 +47,7 @@ class KnowledgeBaseService:
             return False
         return False
 
-    def _get_knowledge_base_data(self, provider: Any) -> list or None:
+    def _get_knowledge_base_data(self, provider: Any) -> list | None:
         name = provider.get("name")
 
         # TODO: Use fields from provider object
@@ -95,10 +98,6 @@ class KnowledgeBaseService:
         return docs
 
     def _push_data_to_vector_store(self, docs: list) -> None:
-        if docs is None:
-            logger.error("documents empty")
-            return
-
         logger.info(f"Pushing {len(docs)} documents to vector store")
 
         # TODO: Save documents in chroma
