@@ -9,6 +9,7 @@ from src.server.server import Server
 from src.model.config import Config
 
 logger = logging.getLogger("logger")
+logging.basicConfig(level=logging.INFO)
 
 def main():
     """Starts the DataLens application."""

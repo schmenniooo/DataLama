@@ -1,4 +1,4 @@
-"""Module to fetch data from configured knowledge base"""
+"""Module to fetch data from configured knowledge bases"""
 import hashlib
 import logging
 import os
