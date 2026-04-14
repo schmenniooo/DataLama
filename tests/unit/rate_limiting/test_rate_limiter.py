@@ -7,7 +7,7 @@ import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from src.middleware.rate_limiting.rate_limiter import RateLimiter
+from middleware.rate_limiter import RateLimiter
 
 
 @pytest.fixture

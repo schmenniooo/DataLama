@@ -9,8 +9,8 @@ from fastapi import FastAPI
 from src.ai.langchain.communication_service import AiCommunicationService
 from src.ai.langchain.knowledge_base_service import KnowledgeBaseService
 from src.api.analysis_router import AnalysisRouter
-from src.middleware.auth.authentication import AuthInterceptor
-from src.middleware.rate_limiting.rate_limiter import RateLimiter
+from src.middleware.authentication import AuthInterceptor
+from src.middleware.rate_limiter import RateLimiter
 from src.model.config import Config
 
 logger = logging.getLogger("logger")

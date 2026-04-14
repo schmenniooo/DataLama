@@ -2,7 +2,7 @@
 
 from tests.integration.conftest import HEADERS, VALID_PAYLOAD_CSV
 
-from src.middleware.rate_limiting.rate_limiter import RateLimiter
+from middleware.rate_limiter import RateLimiter
 
 
 def test_first_request_allowed(client, mock_redis):
