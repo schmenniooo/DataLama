@@ -2,17 +2,19 @@
 import logging
 
 import yaml
-from langchain_community.document_loaders import SlackDirectoryLoader
+import chromadb
 from langchain_community.document_loaders import ConfluenceLoader
-from langchain_community.document_loaders import JiraLoader
 from langchain_community.document_loaders import GithubFileLoader
-from typing_extensions import Any
-from slack_sdk import WebClient
+from langchain_community.document_loaders import JiraLoader
 from langchain_core.documents import Document
+from slack_sdk import WebClient
+from typing_extensions import Any
 
 logger = logging.getLogger("logger")
 
 class KnowledgeBaseService:
+
+    CHROMA_COLLECTION_NAME = "datalens"
 
     _REQUIRED_FIELDS: dict[str, set[str]] = {
         "slack": {"token", "channel_ids"},
@@ -22,6 +24,11 @@ class KnowledgeBaseService:
     }
 
     def __init__(self, config_file_path: str):
+        # Initializing chroma db
+        self.chroma_client = chromadb.Client()
+        self.chroma_collection = self.chroma_client.create_collection(name=self.CHROMA_COLLECTION_NAME)
+
+        # Getting providers from config file
         self.providers = self._read_provider_config_file(config_file_path)
         self.configFileValid = False
 
