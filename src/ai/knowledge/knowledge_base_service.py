@@ -7,7 +7,7 @@ import yaml
 from langchain_chroma import Chroma
 from langchain_community.document_loaders import ConfluenceLoader
 from langchain_community.document_loaders import GithubFileLoader
-from langchain_community.document_loaders import JiraLoader
+from jira import JIRA
 from langchain_core.documents import Document
 from slack_sdk import WebClient
 from typing_extensions import Any
@@ -101,19 +101,19 @@ class KnowledgeBaseService:
         # Checking for chosen provider(s)
         match name:
             case "slack":
-                # Using slack sdk directly
-                token = provider.get("token")
-                channel_ids = provider.get("channel_ids")
-                docs = self._load_slack_documents(token=token, channel_ids=channel_ids)
+                # Using slack sdk
+                docs = self._load_slack_documents(
+                    token=provider.get("token"),
+                    channel_ids=provider.get("channel_ids")
+                )
             case "jira":
-                loader = JiraLoader(
-                    cloud=True,
-                    api_token=provider.get("api_token"),
-                    username=provider.get("username"),
+                # Using jira sdk
+                docs = self._load_jira_documents(
                     server=provider.get("server"),
+                    username=provider.get("username"),
+                    api_token=provider.get("api_token"),
                     project=provider.get("project"),
                 )
-                docs = loader.load()
             case "confluence":
                 loader = ConfluenceLoader(
                     url=provider.get("url"),
@@ -152,6 +152,19 @@ class KnowledgeBaseService:
                         page_content=message["text"],
                         metadata={"channel": channel_id, "ts": message["ts"]}
                     ))
+        return docs
+
+    @staticmethod
+    def _load_jira_documents(server: str, username: str, api_token: str, project: str) -> list[Document]:
+        client = JIRA(server=server, basic_auth=(username, api_token))
+        docs = []
+
+        issues = client.search_issues(f"project={project}", maxResults=False)
+        for issue in issues:
+            docs.append(Document(
+                page_content=f"{issue.fields.summary}\n{issue.fields.description or ''}",
+                metadata={"key": issue.key, "project": project, "status": str(issue.fields.status)},
+            ))
         return docs
 
     def _push_data_to_vector_store(self, docs: list[Document]) -> None:
