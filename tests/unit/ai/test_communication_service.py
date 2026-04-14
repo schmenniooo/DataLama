@@ -7,7 +7,7 @@ import pytest
 from langchain_core.exceptions import LangChainException
 from langchain_core.messages import AIMessage, SystemMessage, HumanMessage
 
-from src.ai.langchain.llm_communication_service import AiCommunicationService
+from src.ai.langchain.llm_communication_service import CommunicationService
 
 
 @pytest.fixture
@@ -17,7 +17,7 @@ def service():
         mock_model = MagicMock()
         mock_model.ainvoke = AsyncMock()
         mock_init.return_value = mock_model
-        instance = AiCommunicationService(
+        instance = CommunicationService(
             provider="anthropic", model="test-model", api_key="test-key"
         )
         yield instance, mock_model

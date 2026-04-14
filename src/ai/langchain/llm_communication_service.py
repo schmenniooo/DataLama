@@ -59,7 +59,7 @@ analyses_types: dict[str, str] = {
 }
 
 
-class AiCommunicationService:  # pylint: disable=too-few-public-methods
+class CommunicationService:  # pylint: disable=too-few-public-methods
     """Provides for ai communication"""
 
     def __init__(self, provider: str, model: str, api_key: str):
