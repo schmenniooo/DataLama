@@ -8,5 +8,6 @@ src/datalens.egg-info
 /helm/datalens-chart/charts/*.tgz
 
 .env
+knowledge_bases.yml
 
 docs/_build
