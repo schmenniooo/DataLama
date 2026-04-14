@@ -98,37 +98,38 @@ class KnowledgeBaseService:
     def _get_knowledge_base_data(self, provider: Any) -> list | None:
         name = provider.get("name")
 
-        # Checking for chosen provider
-        if name == "slack":
-            # Using slack sdk directly
-            docs = self._load_slack_documents(provider=provider)
-        elif name == "jira":
-            loader = JiraLoader(
-                cloud=True,
-                api_token=provider.api_token,
-                username=provider.username,
-                server=provider.server,
-                project=provider.project,
-            )
-            docs = loader.load()
-        elif name == "confluence":
-            loader = ConfluenceLoader(
-                url=provider.url,
-                username=provider.username,
-                api_key=provider.api_key,
-            )
-            docs = loader.load()
-        elif name == "github":
-            loader = GithubFileLoader(
-                repo=provider.repo,
-                access_token=provider.access_token,
-                github_api_url="https://api.github.com",
-                file_filter=lambda path: path.endswith(".md")
-            )
-            docs = loader.load()
-        else:
-            logger.error("Unknown provider")
-            return None
+        # Checking for chosen provider(s)
+        match name:
+            case "slack":
+                # Using slack sdk directly
+                docs = self._load_slack_documents(provider=provider)
+            case "jira":
+                loader = JiraLoader(
+                    cloud=True,
+                    api_token=provider.api_token,
+                    username=provider.username,
+                    server=provider.server,
+                    project=provider.project,
+                )
+                docs = loader.load()
+            case "confluence":
+                loader = ConfluenceLoader(
+                    url=provider.url,
+                    username=provider.username,
+                    api_key=provider.api_key,
+                )
+                docs = loader.load()
+            case "github":
+                loader = GithubFileLoader(
+                    repo=provider.repo,
+                    access_token=provider.access_token,
+                    github_api_url="https://api.github.com",
+                    file_filter=lambda path: path.endswith(".md")
+                )
+                docs = loader.load()
+            case _:
+                logger.error("Unknown provider")
+                return None
 
         logger.info(f"Found {len(docs)} documents in {name}")
         return docs
