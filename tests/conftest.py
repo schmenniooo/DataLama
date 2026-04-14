@@ -2,7 +2,7 @@
 
 import pytest
 
-from src.model.config.config import Config
+from model.config import Config
 
 DEFAULT_API_KEY = "test-secret"
 
