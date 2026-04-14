@@ -1,7 +1,9 @@
 # DataLens
 
-A microservice that takes data in several formats and returns a forecast or a summary of the data.
-Runs Python with FastAPI and uses LangChain to analyse the given data through a chosen LLM provider.
+A FastAPI based microservice that analyzes data in several formats using LangChain. 
+All LLM calls are traceable in your own LangSmith.
+We also offer an integration for knowledge bases to improove data enrichment. 
+The Docker Image and Helm Chart can be installed via GitHub Container Registry.
 
 ![logo.png](logo.png)
 
@@ -91,6 +93,7 @@ The chart is published to GHCR and can be used to deploy DataLens to a Kubernete
 The chart includes:
 - **Traefik** as a reverse proxy with an optional authenticated dashboard
 - **Redis** for rate limiting — `REDIS_HOST`, `REDIS_PORT`, and `REDIS_PASSWORD` are automatically injected into all pods
+- **ChromaDB** as a vector store for knowledge base ingestion — `CHROMA_HOST`, `CHROMA_PORT`, and `CHROMA_COLLECTION_NAME` are automatically injected into all pods
 - **HPA** for autoscaling based on CPU and memory utilization
 
 ### Installation
@@ -120,6 +123,11 @@ environmentVariables:
     value: "your-langsmith-api-key"
   - name: LANGSMITH_PROJECT
     value: "your-langsmith-project"
+  # Optional: Knowledge Base
+  - name: KNOWLEDGE_BASE_ENABLED
+    value: "false"
+  - name: KNOWLEDGE_BASE_CONFIG_PATH
+    value: "/app/config/knowledge_bases.yml"
 ```
 
 ### Values
@@ -146,3 +154,5 @@ environmentVariables:
 | `dashboard.tls.secretName`                 | `""`                           | Name of the k8s Secret containing `tls.crt` and `tls.key` |
 | `redis.auth.enabled`                       | `true`                         | Enable Redis authentication                              |
 | `redis.auth.password`                      | `changeme`                     | Redis password (also sets `REDIS_PASSWORD` in pods)      |
+| `chromadb.chromadb.serverHttpPort`         | `8000`                         | ChromaDB HTTP port                                       |
+| `chromadb.chromadb.collectionName`         | `datalens`                     | ChromaDB collection name for knowledge base documents    |
