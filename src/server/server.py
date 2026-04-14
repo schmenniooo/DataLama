@@ -2,6 +2,8 @@
 import logging
 import os
 
+from contextlib import asynccontextmanager
+
 import uvicorn
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from fastapi import FastAPI
@@ -23,8 +25,8 @@ class Server:  # pylint: disable=too-few-public-methods
         logger.info("Configuring datalens server")
         self.config = config
 
-        # Creating FastAPI instance
-        self.app = FastAPI()
+        # Creating FastAPI instance with lifespan
+        self.app = FastAPI(lifespan=self._lifespan)
 
         # Skipping authentication in debug mode
         if not config.debug:
@@ -36,12 +38,24 @@ class Server:  # pylint: disable=too-few-public-methods
         # Connecting to AI provider
         ai_service = self._create_ai_service()
 
-        # Registering auto knowledge-base handler if enabled
+        # Preparing knowledge-base scheduler if enabled
+        self.kb_scheduler = None
         if config.knowledge_base_enabled:
             self._configure_knowledge_base_service()
 
         # Registering api routes
         self._configure_analysis_router(ai_service=ai_service)
+
+    @asynccontextmanager
+    async def _lifespan(self, _app: FastAPI):
+        # Startup: start the knowledge base scheduler if configured
+        if self.kb_scheduler:
+            logger.info("Starting knowledge base scheduler")
+            self.kb_scheduler.start()
+        yield
+        # Shutdown: stop the scheduler
+        if self.kb_scheduler:
+            self.kb_scheduler.shutdown()
 
     def _configure_authentication(self) -> None:
         """Registers authentication interceptor module"""
@@ -81,10 +95,9 @@ class Server:  # pylint: disable=too-few-public-methods
         # Injecting config file path to new service
         service = KnowledgeBaseService(config_file_path=self.config.knowledge_base_config_path)
 
-        # Registering scheduler to auto update knowledge base
-        scheduler = AsyncIOScheduler()
-        scheduler.add_job(service.knowledge_base_fetch_workflow, "interval", minutes=1)
-        scheduler.start()
+        # Registering scheduler to auto update knowledge base (started in lifespan)
+        self.kb_scheduler = AsyncIOScheduler()
+        self.kb_scheduler.add_job(service.knowledge_base_fetch_workflow, "interval", minutes=1)
         return
 
     def _configure_analysis_router(self, ai_service: AiCommunicationService) -> None:
