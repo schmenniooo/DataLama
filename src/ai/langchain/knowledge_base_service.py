@@ -1,4 +1,5 @@
 """Module to fetch data from configured knowledge base"""
+import hashlib
 import logging
 
 import yaml
@@ -25,15 +26,15 @@ class KnowledgeBaseService:
 
     def __init__(self, config_file_path: str):
         # Initializing chroma db
-        self.chroma_client = chromadb.Client()
-        self.chroma_collection = self.chroma_client.create_collection(name=self.CHROMA_COLLECTION_NAME)
+        client = chromadb.Client()
+        self.chroma_collection = client.create_collection(name=self.CHROMA_COLLECTION_NAME)
 
         # Getting providers from config file
         self.providers = self._read_provider_config_file(config_file_path)
         self.configFileValid = False
 
         # Validating config
-        if not self._validate_config(self.providers):
+        if not self._validate_config(cls=self, config=self.providers):
             logger.error("Invalid knowledge base provider configuration")
         else:
             self.configFileValid = True
@@ -151,11 +152,15 @@ class KnowledgeBaseService:
                     ))
         return docs
 
-    @staticmethod
-    def _push_data_to_vector_store(docs: list) -> None:
+    def _push_data_to_vector_store(self, docs: list[Document]) -> None:
         logger.info(f"Pushing {len(docs)} documents to vector store")
 
-        # TODO: Save documents in chroma
+        # Preparing data to insert in collection as chroma doesn't accept langchain type docs
+        prepared_ids = [hashlib.sha256(doc.page_content.encode()).hexdigest() for doc in docs]
+        prepared_documents = [doc.metadata for doc in docs]
+        prepared_metadatas = [doc.metadata for doc in docs]
+
+        self.chroma_collection.add(ids=prepared_ids, documents=prepared_documents, metadatas=prepared_metadatas)
 
         logger.info(f"Finished pushing {len(docs)} documents to vector store")
         return
