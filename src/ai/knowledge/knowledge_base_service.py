@@ -1,9 +1,10 @@
 """Module to fetch data from configured knowledge base"""
 import hashlib
 import logging
+import os
 
 import yaml
-import chromadb
+from langchain_chroma import Chroma
 from langchain_community.document_loaders import ConfluenceLoader
 from langchain_community.document_loaders import GithubFileLoader
 from langchain_community.document_loaders import JiraLoader
@@ -15,8 +16,6 @@ logger = logging.getLogger("logger")
 
 class KnowledgeBaseService:
 
-    CHROMA_COLLECTION_NAME = "datalens"
-
     _REQUIRED_FIELDS: dict[str, set[str]] = {
         "slack": {"token", "channel_ids"},
         "jira": {"api_token", "username", "server", "project"},
@@ -26,8 +25,11 @@ class KnowledgeBaseService:
 
     def __init__(self, config_file_path: str):
         # Initializing chroma db
-        client = chromadb.Client()
-        self.chroma_collection = client.create_collection(name=self.CHROMA_COLLECTION_NAME)
+        self.chroma = Chroma(
+            collection_name=os.getenv("CHROMA_COLLECTION_NAME", ""),
+            host=os.getenv("CHROMA_HOST"),
+            port=int(os.getenv("CHROMA_PORT", ""))
+        )
 
         # Getting providers from config file
         self.providers = self._read_provider_config_file(config_file_path)
@@ -155,12 +157,7 @@ class KnowledgeBaseService:
     def _push_data_to_vector_store(self, docs: list[Document]) -> None:
         logger.info(f"Pushing {len(docs)} documents to vector store")
 
-        # Preparing data to insert in collection as chroma doesn't accept langchain type docs
-        prepared_ids = [hashlib.sha256(doc.page_content.encode()).hexdigest() for doc in docs]
-        prepared_documents = [doc.metadata for doc in docs]
-        prepared_metadatas = [doc.metadata for doc in docs]
-
-        self.chroma_collection.add(ids=prepared_ids, documents=prepared_documents, metadatas=prepared_metadatas)
+        self.chroma.add_documents(documents=docs)
 
         logger.info(f"Finished pushing {len(docs)} documents to vector store")
         return
