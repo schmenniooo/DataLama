@@ -24,6 +24,17 @@ environmentVariables:
     value: "0.0.0.0"
   - name: "PORT"
     value: "3000"
+  # Optional: Knowledge Base
+  - name: "KNOWLEDGE_BASE_ENABLED"
+    value: "false"
+  - name: "KNOWLEDGE_BASE_CONFIG_PATH"
+    value: "/app/config/knowledge_bases.yml"
+  - name: "CHROMA_COLLECTION_NAME"
+    value: "datalens"
+  - name: "CHROMA_HOST"
+    value: "localhost"
+  - name: "CHROMA_PORT"
+    value: "8000"
 
 # Horizontal Pod Autoscaler configuration based on CPU and Memory usage
 
