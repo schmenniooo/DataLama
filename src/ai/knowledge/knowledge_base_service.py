@@ -26,9 +26,9 @@ class KnowledgeBaseService:
     def __init__(self, config_file_path: str):
         # Initializing chroma db
         self.chroma = Chroma(
-            collection_name=os.getenv("CHROMA_COLLECTION_NAME", ""),
-            host=os.getenv("CHROMA_HOST"),
-            port=int(os.getenv("CHROMA_PORT", ""))
+            collection_name=os.getenv("CHROMA_COLLECTION_NAME", "datalens"),
+            host=os.getenv("CHROMA_HOST", "localhost"),
+            port=int(os.getenv("CHROMA_PORT", "8000"))
         )
 
         # Getting providers from config file
@@ -36,7 +36,7 @@ class KnowledgeBaseService:
         self.configFileValid = False
 
         # Validating config
-        if not self._validate_config(cls=self, config=self.providers):
+        if not self._validate_config(self.providers):
             logger.error("Invalid knowledge base provider configuration")
         else:
             self.configFileValid = True
@@ -47,7 +47,7 @@ class KnowledgeBaseService:
             config = yaml.safe_load(f)
         return config.get("knowledge_bases", [])
 
-    @staticmethod
+    @classmethod
     def _validate_config(cls, config: list) -> bool:
         # Type check
         if not isinstance(config, list):
