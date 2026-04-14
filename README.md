@@ -72,6 +72,14 @@ knowledge_bases:
   - provider: slack
     token: xoxb-...
     channel_ids: ["C123", "C456"]
+  - provider: github
+    repo: org/repo
+    access_token: ghp_...
+  - provider: jira
+    api_token: ...
+    username: your@email.com
+    server: https://yourcompany.atlassian.net
+    project: ENG
 ```
 
 Mount the file into the running environment (e.g. via a Docker volume or a Kubernetes Secret/ConfigMap) so the path matches `KNOWLEDGE_BASE_CONFIG_PATH`.
