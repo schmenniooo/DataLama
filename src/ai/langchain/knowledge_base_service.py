@@ -23,6 +23,13 @@ class KnowledgeBaseService:
 
     def __init__(self, config_file_path: str):
         self.providers = self._read_provider_config_file(config_file_path)
+        self.configFileValid = False
+
+        # Validating config
+        if not self._validate_config(self.providers):
+            logger.error("Invalid knowledge base provider configuration")
+        else:
+            self.configFileValid = True
 
     @staticmethod
     def _read_provider_config_file(path: str) -> list:
@@ -30,26 +37,7 @@ class KnowledgeBaseService:
             config = yaml.safe_load(f)
         return config.get("knowledge_bases", [])
 
-    def knowledge_base_fetch_workflow(self):
-        # Validating config file at every call
-        if not self._validate_config(self.providers):
-            logger.error("Invalid knowledge base provider configuration")
-            return
-
-        # Iterating through providers and saving their content in chroma
-        for provider in self.providers:
-            logger.info(f"Fetching data from {provider.get("name")}")
-
-            # Get data from provider
-            docs = self._get_knowledge_base_data(provider=provider)
-            if docs is None:
-                logger.error(f"Failed to fetch data from {provider.get('name')}")
-                return
-
-            # Saving data in vector store
-            self._push_data_to_vector_store(docs=docs)
-
-    @classmethod
+    @staticmethod
     def _validate_config(cls, config: list) -> bool:
         # Type check
         if not isinstance(config, list):
@@ -77,6 +65,25 @@ class KnowledgeBaseService:
                 return False
 
         return True
+
+    def knowledge_base_fetch_workflow(self):
+        # Checking for valid config
+        if not self.configFileValid:
+            logger.error("Knowledge base configuration not valid")
+            return
+
+        # Iterating through providers and saving their content in chroma
+        for provider in self.providers:
+            logger.info(f"Fetching data from {provider.get("name")}")
+
+            # Get data from provider
+            docs = self._get_knowledge_base_data(provider=provider)
+            if docs is None:
+                logger.error(f"Failed to fetch data from {provider.get('name')}")
+                return
+
+            # Saving data in vector store
+            self._push_data_to_vector_store(docs=docs)
 
     def _get_knowledge_base_data(self, provider: Any) -> list | None:
         name = provider.get("name")
