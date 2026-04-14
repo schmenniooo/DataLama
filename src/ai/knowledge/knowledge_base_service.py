@@ -84,45 +84,47 @@ class KnowledgeBaseService:
 
         # Iterating through providers and saving their content in chroma
         for provider in self.providers:
-            logger.info(f"Fetching data from {provider.get("name")}")
+            logger.info(f"Fetching data from {provider.get('provider')}")
 
             # Get data from provider
             docs = self._get_knowledge_base_data(provider=provider)
             if docs is None:
-                logger.error(f"Failed to fetch data from {provider.get('name')}")
+                logger.error(f"Failed to fetch data from {provider.get('provider')}")
                 return
 
             # Saving data in vector store
             self._push_data_to_vector_store(docs=docs)
 
     def _get_knowledge_base_data(self, provider: Any) -> list | None:
-        name = provider.get("name")
+        name = provider.get("provider")
 
         # Checking for chosen provider(s)
         match name:
             case "slack":
                 # Using slack sdk directly
-                docs = self._load_slack_documents(provider=provider)
+                token = provider.get("token")
+                channel_ids = provider.get("channel_ids")
+                docs = self._load_slack_documents(token=token, channel_ids=channel_ids)
             case "jira":
                 loader = JiraLoader(
                     cloud=True,
-                    api_token=provider.api_token,
-                    username=provider.username,
-                    server=provider.server,
-                    project=provider.project,
+                    api_token=provider.get("api_token"),
+                    username=provider.get("username"),
+                    server=provider.get("server"),
+                    project=provider.get("project"),
                 )
                 docs = loader.load()
             case "confluence":
                 loader = ConfluenceLoader(
-                    url=provider.url,
-                    username=provider.username,
-                    api_key=provider.api_key,
+                    url=provider.get("url"),
+                    username=provider.get("username"),
+                    api_key=provider.get("api_key"),
                 )
                 docs = loader.load()
             case "github":
                 loader = GithubFileLoader(
-                    repo=provider.repo,
-                    access_token=provider.access_token,
+                    repo=provider.get("repo"),
+                    access_token=provider.get("access_token"),
                     github_api_url="https://api.github.com",
                     file_filter=lambda path: path.endswith(".md")
                 )
@@ -135,10 +137,7 @@ class KnowledgeBaseService:
         return docs
 
     @staticmethod
-    def _load_slack_documents(provider: Any) -> list[Document]:
-        token = provider.token
-        channel_ids = provider.channel_ids
-
+    def _load_slack_documents(token: Any, channel_ids: Any) -> list[Document]:
         client = WebClient(token=token)
         docs = []
 
