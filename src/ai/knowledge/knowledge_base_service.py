@@ -1,13 +1,12 @@
-"""Module to fetch data from configured knowledge bases"""
-import hashlib
+"""Module for ingesting external knowledge base data into a ChromaDB vector store."""
 import logging
 import os
 
 import yaml
+from jira import JIRA
 from langchain_chroma import Chroma
 from langchain_community.document_loaders import ConfluenceLoader
 from langchain_community.document_loaders import GithubFileLoader
-from jira import JIRA
 from langchain_core.documents import Document
 from slack_sdk import WebClient
 from typing_extensions import Any
@@ -15,6 +14,9 @@ from typing_extensions import Any
 logger = logging.getLogger("logger")
 
 class KnowledgeBaseService:
+    """Periodically fetches documents from configured external providers
+    (Slack, Jira, Confluence, GitHub) and stores them in ChromaDB for
+    retrieval-augmented analysis."""
 
     _REQUIRED_FIELDS: dict[str, set[str]] = {
         "slack": {"token", "channel_ids"},
@@ -24,7 +26,7 @@ class KnowledgeBaseService:
     }
 
     def __init__(self, config_file_path: str):
-        # Initializing chroma db
+        logger.info(f"Initializing KnowledgeBaseService with config file path: {config_file_path}")
         self.chroma = Chroma(
             collection_name=os.getenv("CHROMA_COLLECTION_NAME", "datalens"),
             host=os.getenv("CHROMA_HOST", "localhost"),
@@ -43,12 +45,14 @@ class KnowledgeBaseService:
 
     @staticmethod
     def _read_provider_config_file(path: str) -> list:
+        """Reads and parses the YAML config file, returning the list of provider definitions."""
         with open(path, "r") as f:
             config = yaml.safe_load(f)
         return config.get("knowledge_bases", [])
 
     @classmethod
     def _validate_config(cls, config: list) -> bool:
+        """Validates that each provider entry has the correct type and all required fields."""
         # Type check
         if not isinstance(config, list):
             logger.error("Knowledge base config must be a list")
@@ -77,6 +81,9 @@ class KnowledgeBaseService:
         return True
 
     def knowledge_base_fetch_workflow(self):
+        """Scheduled workflow that fetches documents from all configured providers
+        and pushes them into the ChromaDB vector store."""
+
         # Checking for valid config
         if not self.configFileValid:
             logger.error("Knowledge base configuration not valid")
@@ -96,6 +103,7 @@ class KnowledgeBaseService:
             self._push_data_to_vector_store(docs=docs)
 
     def _get_knowledge_base_data(self, provider: Any) -> list | None:
+        """Routes a provider config to the appropriate loader and returns the fetched documents."""
         name = provider.get("provider")
 
         # Checking for chosen provider(s)
@@ -138,6 +146,7 @@ class KnowledgeBaseService:
 
     @staticmethod
     def _load_slack_documents(token: Any, channel_ids: Any) -> list[Document]:
+        """Fetches message history from the given Slack channels using the Slack SDK."""
         client = WebClient(token=token)
         docs = []
 
@@ -156,6 +165,7 @@ class KnowledgeBaseService:
 
     @staticmethod
     def _load_jira_documents(server: str, username: str, api_token: str, project: str) -> list[Document]:
+        """Fetches all issues from a Jira project using the Jira SDK."""
         client = JIRA(server=server, basic_auth=(username, api_token))
         docs = []
 
@@ -168,6 +178,7 @@ class KnowledgeBaseService:
         return docs
 
     def _push_data_to_vector_store(self, docs: list[Document]) -> None:
+        """Inserts the given documents into the ChromaDB collection."""
         logger.info(f"Pushing {len(docs)} documents to vector store")
 
         self.chroma.add_documents(documents=docs)
