@@ -7,7 +7,7 @@ from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from fastapi import FastAPI
 
 from src.ai.langchain.communication_service import AiCommunicationService
-from src.ai.langchain.knowledge_base_service import KnowledgeBaseService
+from src.ai.knowledge.knowledge_base_service import KnowledgeBaseService
 from src.api.analysis_router import AnalysisRouter
 from src.middleware.authentication import AuthInterceptor
 from src.middleware.rate_limiter import RateLimiter
