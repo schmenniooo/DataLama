@@ -5,7 +5,7 @@ All LLM calls are traceable in your own LangSmith.
 We also offer an integration for knowledge bases to improove data enrichment. 
 The Docker Image and Helm Chart can be installed via GitHub Container Registry.
 
-![logo.png](logo.png)
+<img src="logo.png" alt="logo" width="300">
 
 ## API Endpoints
 
