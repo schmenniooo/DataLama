@@ -51,6 +51,12 @@ spec:
                   name: "{{ .Release.Name }}-redis"
                   key: redis-password
             {{- end }}
+            - name: CHROMA_HOST
+              value: "{{ .Release.Name }}-chromadb"
+            - name: CHROMA_PORT
+              value: "{{ .Values.chromadb.chromadb.serverHttpPort | default 8000 }}"
+            - name: CHROMA_COLLECTION_NAME
+              value: "{{ .Values.chromadb.chromadb.collectionName | default "datalens" }}"
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}

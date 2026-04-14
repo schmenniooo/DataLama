@@ -29,12 +29,6 @@ environmentVariables:
     value: "false"
   - name: "KNOWLEDGE_BASE_CONFIG_PATH"
     value: "/app/config/knowledge_bases.yml"
-  - name: "CHROMA_COLLECTION_NAME"
-    value: "datalens"
-  - name: "CHROMA_HOST"
-    value: "localhost"
-  - name: "CHROMA_PORT"
-    value: "8000"
 
 # Horizontal Pod Autoscaler configuration based on CPU and Memory usage
 
@@ -99,6 +93,12 @@ redis:
   auth:
     enabled: true
     password: "changeme"              # Override before deploying
+
+# ChromaDB Configuration
+chromadb:
+  chromadb:
+    serverHttpPort: 8000
+    collectionName: "datalens"
 
 # Traefik Reverse Proxy Configuration
 
