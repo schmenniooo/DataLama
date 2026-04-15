@@ -1,13 +1,17 @@
 """Module for ingesting external knowledge base data into a ChromaDB vector store."""
 import logging
 import os
+from os import name
 
 import yaml
+from chromadb.utils.embedding_functions import HuggingFaceEmbeddingFunction
 from jira import JIRA
 from langchain_chroma import Chroma
 from langchain_community.document_loaders import ConfluenceLoader
 from langchain_community.document_loaders import GithubFileLoader
+from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_core.documents import Document
+from langchain_core.embeddings import Embeddings
 from slack_sdk import WebClient
 from typing_extensions import Any
 
@@ -27,7 +31,11 @@ class KnowledgeBaseService:
 
     def __init__(self, config_file_path: str):
         logger.info(f"Initializing KnowledgeBaseService with config file path: {config_file_path}")
+
+        # Using embeddings to numerize documents
+        embedding = HuggingFaceEmbeddings(name="all-MiniLM-L6-v2")
         self.chroma = Chroma(
+            embedding_function=embedding,
             collection_name=os.getenv("CHROMA_COLLECTION_NAME", "datalens"),
             host=os.getenv("CHROMA_HOST", "localhost"),
             port=int(os.getenv("CHROMA_PORT", "8000"))
