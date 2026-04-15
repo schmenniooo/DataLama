@@ -61,7 +61,7 @@ analyses_types: dict[str, str] = {
 
 
 class CommunicationService:  # pylint: disable=too-few-public-methods
-    """Provides for ai communication"""
+    """Provides for AI communication"""
 
     def __init__(self, provider: str, model: str, api_key: str):
         self.model = init_chat_model(model_provider=provider, model=model, api_key=api_key)

@@ -99,6 +99,8 @@ class KnowledgeBaseService:
                 logger.error(f"Failed to fetch data from {provider.get('provider')}")
                 return
 
+            # TODO: Chunk data and use embedding model
+
             # Saving data in vector store
             self._push_data_to_vector_store(docs=docs)
 
