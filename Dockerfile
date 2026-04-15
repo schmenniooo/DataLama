@@ -35,6 +35,7 @@ ENV KNOWLEDGE_BASE_CONFIG_PATH="/app/config/knowledge_bases.yml"
 ENV LANGSMITH_TRACING="false"
 ENV LANGSMITH_API_KEY="langsmith-api-key"
 ENV LANGSMITH_PROJECT="my-project"
+ENV HUGGING_FACE_EMBEDDING="all-MiniLM-L6-v2"
 
 # Service Config
 ENV DEBUG="false"
