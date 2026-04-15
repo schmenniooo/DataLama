@@ -12,6 +12,7 @@ from langchain_community.document_loaders import GithubFileLoader
 from langchain_community.embeddings import HuggingFaceEmbeddings
 from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
+from langchain_text_splitters import RecursiveCharacterTextSplitter
 from slack_sdk import WebClient
 from typing_extensions import Any
 
@@ -29,8 +30,18 @@ class KnowledgeBaseService:
         "github": {"repo", "access_token"},
     }
 
+    CHUNK_SIZE = 500
+
+    CHUNK_OVERLAP = 10
+
     def __init__(self, config_file_path: str):
         logger.info(f"Initializing KnowledgeBaseService with config file path: {config_file_path}")
+
+        # Creating chunk splitter for documents processing
+        self.splitter = RecursiveCharacterTextSplitter(
+            chunk_size=KnowledgeBaseService.CHUNK_SIZE,
+            chunk_overlap=KnowledgeBaseService.CHUNK_OVERLAP,
+        )
 
         # Using embeddings to numerize documents
         embedding = HuggingFaceEmbeddings(name="all-MiniLM-L6-v2")
@@ -107,10 +118,11 @@ class KnowledgeBaseService:
                 logger.error(f"Failed to fetch data from {provider.get('provider')}")
                 return
 
-            # TODO: Chunk data and use embedding model
+            # Splitting documents into chunks with default size
+            split_documents = self._split_documents_to_chunks(docs=docs,)
 
             # Saving data in vector store
-            self._push_data_to_vector_store(docs=docs)
+            self._push_data_to_vector_store(docs=split_documents)
 
     def _get_knowledge_base_data(self, provider: Any) -> list | None:
         """Routes a provider config to the appropriate loader and returns the fetched documents."""
@@ -186,6 +198,10 @@ class KnowledgeBaseService:
                 metadata={"key": issue.key, "project": project, "status": str(issue.fields.status)},
             ))
         return docs
+
+    def _split_documents_to_chunks(self, docs: list[Document]) -> list[Document]:
+        """Splits documents into chunks based on chunk size."""
+        return self.splitter.split_documents(docs)
 
     def _push_data_to_vector_store(self, docs: list[Document]) -> None:
         """Inserts the given documents into the ChromaDB collection."""
