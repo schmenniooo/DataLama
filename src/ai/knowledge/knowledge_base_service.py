@@ -1,17 +1,14 @@
 """Module for ingesting external knowledge base data into a ChromaDB vector store."""
 import logging
 import os
-from os import name
 
 import yaml
-from chromadb.utils.embedding_functions import HuggingFaceEmbeddingFunction
 from jira import JIRA
 from langchain_chroma import Chroma
 from langchain_community.document_loaders import ConfluenceLoader
 from langchain_community.document_loaders import GithubFileLoader
-from langchain_community.embeddings import HuggingFaceEmbeddings
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_core.documents import Document
-from langchain_core.embeddings import Embeddings
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from slack_sdk import WebClient
 from typing_extensions import Any
@@ -32,7 +29,7 @@ class KnowledgeBaseService:
 
     CHUNK_SIZE = 500
 
-    CHUNK_OVERLAP = 10
+    CHUNK_OVERLAP = 60
 
     def __init__(self, config_file_path: str):
         logger.info(f"Initializing KnowledgeBaseService with config file path: {config_file_path}")
@@ -44,7 +41,7 @@ class KnowledgeBaseService:
         )
 
         # Using embeddings to numerize documents
-        embedding = HuggingFaceEmbeddings(name="all-MiniLM-L6-v2")
+        embedding = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
         self.chroma = Chroma(
             embedding_function=embedding,
             collection_name=os.getenv("CHROMA_COLLECTION_NAME", "datalens"),
@@ -119,7 +116,7 @@ class KnowledgeBaseService:
                 return
 
             # Splitting documents into chunks with default size
-            split_documents = self._split_documents_to_chunks(docs=docs,)
+            split_documents = self._split_documents_to_chunks(docs=docs)
 
             # Saving data in vector store
             self._push_data_to_vector_store(docs=split_documents)
