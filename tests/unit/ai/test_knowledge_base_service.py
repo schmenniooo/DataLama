@@ -30,9 +30,12 @@ def _write_config(providers: list) -> str:
 
 @pytest.fixture
 def mock_chroma():
-    """Patches the Chroma client so no real connection is needed."""
-    with patch("src.ai.knowledge.knowledge_base_service.Chroma") as mock:
-        yield mock
+    """Patches Chroma and HuggingFaceEmbeddings so no real connection or model download is needed."""
+    with (
+        patch("src.ai.knowledge.knowledge_base_service.Chroma") as mock_chroma_cls,
+        patch("src.ai.knowledge.knowledge_base_service.HuggingFaceEmbeddings"),
+    ):
+        yield mock_chroma_cls
 
 
 @pytest.fixture
@@ -145,15 +148,17 @@ def test_workflow_skips_on_invalid_config(mock_chroma):
         mock_get.assert_not_called()
 
 
-def test_workflow_calls_get_data_and_push_for_each_provider(service_with_all_providers):
-    """Workflow fetches and pushes data for every configured provider."""
+def test_workflow_calls_get_data_chunk_and_push_for_each_provider(service_with_all_providers):
+    """Workflow fetches, chunks, and pushes data for every configured provider."""
     mock_docs = [Document(page_content="test")]
     with (
         patch.object(service_with_all_providers, "_get_knowledge_base_data", return_value=mock_docs) as mock_get,
+        patch.object(service_with_all_providers, "_split_documents_to_chunks", return_value=mock_docs) as mock_split,
         patch.object(service_with_all_providers, "_push_data_to_vector_store") as mock_push,
     ):
         service_with_all_providers.knowledge_base_fetch_workflow()
         assert mock_get.call_count == 4
+        assert mock_split.call_count == 4
         assert mock_push.call_count == 4
 
 
@@ -228,6 +233,31 @@ def test_load_jira_documents_handles_none_description():
 
     assert len(docs) == 1
     assert "No desc" in docs[0].page_content
+
+
+# --- Chunking ---
+
+def test_split_documents_returns_smaller_chunks(service_with_slack):
+    """_split_documents_to_chunks breaks long documents into multiple chunks based on CHUNK_SIZE."""
+    long_text = "sentence. " * 200  # ~2000 chars, well over CHUNK_SIZE (500)
+    docs = [Document(page_content=long_text, metadata={"source": "test"})]
+
+    chunks = service_with_slack._split_documents_to_chunks(docs)
+
+    assert len(chunks) > 1
+    for chunk in chunks:
+        assert len(chunk.page_content) <= KnowledgeBaseService.CHUNK_SIZE
+        assert chunk.metadata == {"source": "test"}
+
+
+def test_split_documents_leaves_short_docs_unchanged(service_with_slack):
+    """Documents shorter than CHUNK_SIZE stay as a single chunk."""
+    docs = [Document(page_content="short message", metadata={"channel": "C1"})]
+
+    chunks = service_with_slack._split_documents_to_chunks(docs)
+
+    assert len(chunks) == 1
+    assert chunks[0].page_content == "short message"
 
 
 # --- Push to vector store ---
