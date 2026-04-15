@@ -41,7 +41,7 @@ class KnowledgeBaseService:
         )
 
         # Using embeddings to numerize documents
-        embedding = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+        embedding = HuggingFaceEmbeddings(model_name=os.getenv("HUGGINGFACE_EMBEDDING_MODEL", "all-MiniLM-L6-v2"))
         self.chroma = Chroma(
             embedding_function=embedding,
             collection_name=os.getenv("CHROMA_COLLECTION_NAME", "datalens"),
