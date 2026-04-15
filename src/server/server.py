@@ -8,7 +8,7 @@ import uvicorn
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from fastapi import FastAPI
 
-from src.ai.langchain.llm_communication_service import CommunicationService
+from src.ai.communication.llm_communication_service import CommunicationService
 from src.ai.knowledge.knowledge_base_service import KnowledgeBaseService
 from src.api.analysis_router import AnalysisRouter
 from src.middleware.authentication import AuthInterceptor

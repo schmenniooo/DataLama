@@ -5,7 +5,7 @@ import json
 import langchain_core.exceptions
 from fastapi import APIRouter, HTTPException
 
-from src.ai.langchain.llm_communication_service import CommunicationService
+from src.ai.communication.llm_communication_service import CommunicationService
 from src.model.api_model import BaseRequest, BaseResponse
 from src.validation.validation import validate_request
 

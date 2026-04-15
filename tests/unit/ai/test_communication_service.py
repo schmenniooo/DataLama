@@ -7,13 +7,13 @@ import pytest
 from langchain_core.exceptions import LangChainException
 from langchain_core.messages import AIMessage, SystemMessage, HumanMessage
 
-from src.ai.langchain.llm_communication_service import CommunicationService
+from src.ai.communication.llm_communication_service import CommunicationService
 
 
 @pytest.fixture
 def service():
     """AiCommunicationService with a mocked LangChain chat model."""
-    with patch("src.ai.langchain.communication_service.init_chat_model") as mock_init:
+    with patch("src.ai.communication.communication_service.init_chat_model") as mock_init:
         mock_model = MagicMock()
         mock_model.ainvoke = AsyncMock()
         mock_init.return_value = mock_model
