@@ -6,6 +6,7 @@ from typing import Any
 from langchain.chat_models import init_chat_model
 from langchain_core.exceptions import LangChainException
 from langchain_core.messages import AIMessage, SystemMessage, HumanMessage
+from langchain_core.vectorstores import VectorStoreRetriever
 from langsmith import traceable
 
 logger = logging.getLogger("logger")
@@ -63,7 +64,7 @@ analyses_types: dict[str, str] = {
 class CommunicationService:  # pylint: disable=too-few-public-methods
     """Provides for AI communication"""
 
-    def __init__(self, provider: str, model: str, api_key: str):
+    def __init__(self, provider: str, model: str, api_key: str, chroma_retriever: VectorStoreRetriever | None) -> None:
         self.model = init_chat_model(model_provider=provider, model=model, api_key=api_key)
 
     async def health_check(self) -> bool:

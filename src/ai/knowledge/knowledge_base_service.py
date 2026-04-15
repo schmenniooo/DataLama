@@ -7,6 +7,7 @@ from jira import JIRA
 from langchain_chroma import Chroma
 from langchain_community.document_loaders import ConfluenceLoader
 from langchain_community.document_loaders import GithubFileLoader
+from langchain_core.vectorstores import VectorStoreRetriever
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -59,7 +60,7 @@ class KnowledgeBaseService:
         else:
             self.configFileValid = True
 
-    def get_chroma_retriever(self):
+    def get_chroma_retriever(self) -> VectorStoreRetriever:
         """Retrieves chroma instance as docs retriever"""
         return self.chroma.as_retriever()
 

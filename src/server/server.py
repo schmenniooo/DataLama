@@ -8,6 +8,7 @@ import uvicorn
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from fastapi import FastAPI
 
+from ai.knowledge.knowledge_base_service import KnowledgeBaseService
 from src.ai.communication.llm_communication_service import CommunicationService
 from src.ai.knowledge.knowledge_base_service import KnowledgeBaseService
 from src.api.analysis_router import AnalysisRouter
@@ -35,13 +36,17 @@ class Server:  # pylint: disable=too-few-public-methods
         # Create rate limiter
         self._configure_rate_limiter()
 
-        # Connecting to AI provider
-        ai_service = self._create_ai_service()
-
         # Preparing knowledge-base scheduler if enabled
         self.kb_scheduler = None
+        self.retriever = None
         if config.knowledge_base_enabled:
-            self._configure_knowledge_base_service()
+            service = self._configure_knowledge_base_service()
+            if service:
+                # Getting chroma vector store as retriever
+                self.retriever = service.get_chroma_retriever()
+
+        # Connecting to AI provider
+        ai_service = self._create_ai_service()
 
         # Registering api routes
         self._configure_analysis_router(ai_service=ai_service)
@@ -84,13 +89,14 @@ class Server:  # pylint: disable=too-few-public-methods
             provider=self.config.llm_provider,
             model=self.config.model,
             api_key=self.config.llm_provider_api_token,
+            chroma_retriever=self.retriever
         )
 
-    def _configure_knowledge_base_service(self) -> None:
+    def _configure_knowledge_base_service(self) -> KnowledgeBaseService | None:
         # Check for existence of config file
         if self.config.knowledge_base_config_path is None:
             logger.info("No knowledge base config path provided")
-            return
+            return None
 
         # Injecting config file path to new service
         service = KnowledgeBaseService(config_file_path=self.config.knowledge_base_config_path)
@@ -99,7 +105,7 @@ class Server:  # pylint: disable=too-few-public-methods
         self.kb_scheduler = AsyncIOScheduler()
         # TODO: Replace 1 minute interval
         self.kb_scheduler.add_job(service.knowledge_base_fetch_workflow, "interval", minutes=1)
-        return
+        return service
 
     def _configure_analysis_router(self, ai_service: CommunicationService) -> None:
         """Creates new AnalysisRouter class and injects it to FastAPI"""
