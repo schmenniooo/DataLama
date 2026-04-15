@@ -59,6 +59,10 @@ class KnowledgeBaseService:
         else:
             self.configFileValid = True
 
+    def get_chroma_retriever(self):
+        """Retrieves chroma instance as docs retriever"""
+        return self.chroma.as_retriever()
+
     @staticmethod
     def _read_provider_config_file(path: str) -> list:
         """Reads and parses the YAML config file, returning the list of provider definitions."""
