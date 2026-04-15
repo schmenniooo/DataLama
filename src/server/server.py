@@ -1,14 +1,12 @@
 """Server module for building and running the FastAPI application."""
 import logging
 import os
-
 from contextlib import asynccontextmanager
 
 import uvicorn
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from fastapi import FastAPI
 
-from ai.knowledge.knowledge_base_service import KnowledgeBaseService
 from src.ai.communication.llm_communication_service import CommunicationService
 from src.ai.knowledge.knowledge_base_service import KnowledgeBaseService
 from src.api.analysis_router import AnalysisRouter

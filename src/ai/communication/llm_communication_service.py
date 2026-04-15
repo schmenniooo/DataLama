@@ -86,17 +86,14 @@ class CommunicationService:  # pylint: disable=too-few-public-methods
         daterange: list[str]
     ) -> str | list[Any]:
         """Makes a request to AI with system and user messages"""
-        system_prompt = analyses_types.get(analysis_type)
-        if system_prompt is None:
-            raise ValueError(f"Unknown analysis type: '{analysis_type}'")
 
-        # Adding format and time range to prompt
-        system_prompt = system_prompt.format(
-            data_format, f"{daterange[0]} to {daterange[1]}"
+        # Building prompt for llm
+        messages = self._build_prompt_for_analyse_call(
+            analysis_type=analysis_type,
+            data=data,
+            data_format=data_format,
+            daterange=daterange
         )
-
-        # Wrapping system and user data
-        messages = [SystemMessage(content=system_prompt), HumanMessage(content=data)]
 
         logger.info(f"Sending {analysis_type} analysis request to LLM")
 
@@ -108,3 +105,18 @@ class CommunicationService:  # pylint: disable=too-few-public-methods
             raise LangChainException(e)
 
         return response.content
+
+    @staticmethod
+    def _build_prompt_for_analyse_call(analysis_type: str, data: str, data_format: str, daterange: list[str]) -> list[SystemMessage | HumanMessage]:
+        """Builds a prompt for the analysis call"""
+        system_prompt = analyses_types.get(analysis_type)
+        if system_prompt is None:
+            raise ValueError(f"Unknown analysis type: '{analysis_type}'")
+
+        # Adding format and time range to prompt
+        system_prompt = system_prompt.format(
+            data_format, f"{daterange[0]} to {daterange[1]}"
+        )
+
+        # Wrapping system and user data
+        return [SystemMessage(content=system_prompt), HumanMessage(content=data)]

@@ -142,3 +142,73 @@ async def test_langchain_exception_is_reraised(service):
             data_format="json",
             daterange=["2024-01-01", "2024-12-31"],
         )
+
+
+# --- Prompt building ---
+
+@pytest.mark.parametrize("analysis_type", [
+    "forecasting", "summary", "anomaly", "pattern", "comparison"
+])
+def test_build_prompt_returns_system_and_human_messages(analysis_type):
+    """Returns a list with a SystemMessage followed by a HumanMessage for every valid analysis type."""
+    messages = CommunicationService._build_prompt_for_analyse_call(
+        analysis_type=analysis_type,
+        data="col1,col2\n1,2",
+        data_format="csv",
+        daterange=["2024-01-01", "2024-12-31"],
+    )
+
+    assert len(messages) == 2
+    assert isinstance(messages[0], SystemMessage)
+    assert isinstance(messages[1], HumanMessage)
+
+
+def test_build_prompt_human_message_contains_data():
+    """HumanMessage content is the raw data passed in."""
+    messages = CommunicationService._build_prompt_for_analyse_call(
+        analysis_type="forecasting",
+        data="raw,data\nrow1,row2",
+        data_format="csv",
+        daterange=["2024-01-01", "2024-12-31"],
+    )
+
+    assert messages[1].content == "raw,data\nrow1,row2"
+
+
+def test_build_prompt_system_message_includes_format_and_daterange():
+    """SystemMessage content embeds the data format and the formatted date range."""
+    messages = CommunicationService._build_prompt_for_analyse_call(
+        analysis_type="summary",
+        data="data",
+        data_format="json",
+        daterange=["2024-06-01", "2024-12-31"],
+    )
+
+    system_content = messages[0].content
+    assert "json" in system_content
+    assert "2024-06-01 to 2024-12-31" in system_content
+
+
+def test_build_prompt_unknown_analysis_type_raises_value_error():
+    """An unregistered analysis type raises ValueError with a descriptive message."""
+    with pytest.raises(ValueError, match="Unknown analysis type"):
+        CommunicationService._build_prompt_for_analyse_call(
+            analysis_type="unknown",
+            data="data",
+            data_format="csv",
+            daterange=["2024-01-01", "2024-12-31"],
+        )
+
+
+def test_build_prompt_system_message_differs_by_analysis_type():
+    """Different analysis types produce different system prompts."""
+    summary_msgs = CommunicationService._build_prompt_for_analyse_call(
+        analysis_type="summary", data="d", data_format="csv",
+        daterange=["2024-01-01", "2024-12-31"],
+    )
+    forecasting_msgs = CommunicationService._build_prompt_for_analyse_call(
+        analysis_type="forecasting", data="d", data_format="csv",
+        daterange=["2024-01-01", "2024-12-31"],
+    )
+
+    assert summary_msgs[0].content != forecasting_msgs[0].content
