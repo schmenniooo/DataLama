@@ -19,9 +19,9 @@ class RateLimiter:  # pylint: disable=too-few-public-methods
     TIME_WINDOW = 60
     MAX_REQUESTS_PER_MINUTE = 10
 
-    def __init__(self, host: str = "localhost", port: int = 6379):
+    def __init__(self, redis: Redis):
         """Initializes the async Redis connection used for tracking request counts."""
-        self.redis = Redis(host=host, port=port, db=0, decode_responses=True)
+        self.redis = redis
 
     def register_rate_limiter(self) -> Type[BaseHTTPMiddleware]:
         """Returns a BaseHTTPMiddleware subclass that enforces per-IP rate limiting."""

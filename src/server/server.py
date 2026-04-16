@@ -1,4 +1,4 @@
-"""Server module for building and running the FastAPI application."""
+"""Server modufe for building and running the FastAPI application."""
 import logging
 import os
 from contextlib import asynccontextmanager
@@ -6,6 +6,7 @@ from contextlib import asynccontextmanager
 import uvicorn
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 from fastapi import FastAPI
+from redis.asyncio import Redis
 
 from src.ai.communication.llm_communication_service import CommunicationService
 from src.ai.knowledge.knowledge_base_service import KnowledgeBaseService
@@ -26,6 +27,10 @@ class Server:  # pylint: disable=too-few-public-methods
 
         # Creating FastAPI instance with lifespan
         self.app = FastAPI(lifespan=self._lifespan)
+
+        redis_host = os.environ.get("REDIS_HOST", "localhost")
+        redis_port = int(os.environ.get("REDIS_PORT", 6379))
+        self.redis = Redis(host=redis_host, port=redis_port, db=0, decode_responses=True)
 
         # Skipping authentication in debug mode
         if not config.debug:
@@ -72,10 +77,9 @@ class Server:  # pylint: disable=too-few-public-methods
 
     def _configure_rate_limiter(self) -> RateLimiter:
         logger.info("Registering rate limiter")
-        # Getting env variables here as they aren't configurable by the user
-        redis_host = os.environ.get("REDIS_HOST", "localhost")
-        redis_port = int(os.environ.get("REDIS_PORT", 6379))
-        rate_limiter = RateLimiter(host=redis_host, port=redis_port)
+
+        # Creating new limiter and injecting global redis instance
+        rate_limiter = RateLimiter(redis=self.redis)
 
         # Registering rate limiter middleware
         self.app.add_middleware(rate_limiter.register_rate_limiter())

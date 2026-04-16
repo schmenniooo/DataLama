@@ -11,6 +11,7 @@ from langchain_core.vectorstores import VectorStoreRetriever
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_core.documents import Document
 from langchain_text_splitters import RecursiveCharacterTextSplitter
+from redis.asyncio import Redis
 from slack_sdk import WebClient
 from typing_extensions import Any
 
@@ -32,8 +33,10 @@ class KnowledgeBaseService:
 
     CHUNK_OVERLAP = 60
 
-    def __init__(self, config_file_path: str):
+    def __init__(self, config_file_path: str, redis: Redis):
         logger.info(f"Initializing KnowledgeBaseService with config file path: {config_file_path}")
+
+        self.redis = redis
 
         # Creating chunk splitter for documents processing
         self.splitter = RecursiveCharacterTextSplitter(
