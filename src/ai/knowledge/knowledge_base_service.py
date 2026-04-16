@@ -1,4 +1,5 @@
 """Module for ingesting external knowledge base data into a ChromaDB vector store."""
+import hashlib
 import logging
 import os
 
@@ -108,7 +109,7 @@ class KnowledgeBaseService:
 
         return True
 
-    def knowledge_base_fetch_workflow(self):
+    async def knowledge_base_fetch_workflow(self):
         """Scheduled workflow that fetches documents from all configured providers
         and pushes them into the ChromaDB vector store."""
 
@@ -128,8 +129,8 @@ class KnowledgeBaseService:
                 return
 
             # Checking data for changes
-            data_changed = self._check_docs_for_changes(docs=docs)
-            if not data_changed:
+            data_changed = self._check_docs_for_changes(provider_name=provider.get("provider"), docs=docs)
+            if not await data_changed:
                 logger.info(f"Data has no changes from {provider.get('provider')} - skipping")
                 return
 
@@ -214,8 +215,21 @@ class KnowledgeBaseService:
             ))
         return docs
 
-    def _check_docs_for_changes(self, docs: list[Document]) -> bool:
-        pass
+    async def _check_docs_for_changes(self, provider_name: str, docs: list[Document]) -> bool:
+        """Compares the current documents against the redis ones"""
+
+        # Hashing current docs
+        current_docs_hash = hashlib.sha256(str(docs).encode()).hexdigest()
+
+        # Fetching last stored docs
+        redis_docs = await self.redis.hget(name=provider_name, key=current_docs_hash)  # type: ignore[union-attr]
+
+        # Comparing current docs with stored ones
+        if redis_docs == current_docs_hash:
+            return False
+
+        # Docs have changed
+        return True
 
     def _split_documents_to_chunks(self, docs: list[Document]) -> list[Document]:
         """Splits documents into chunks based on chunk size."""
