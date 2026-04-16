@@ -127,6 +127,12 @@ class KnowledgeBaseService:
                 logger.error(f"Failed to fetch data from {provider.get('provider')}")
                 return
 
+            # Checking data for changes
+            data_changed = self._check_docs_for_changes(docs=docs)
+            if not data_changed:
+                logger.info(f"Data has no changes from {provider.get('provider')} - skipping")
+                return
+
             # Splitting documents into chunks with default size
             split_documents = self._split_documents_to_chunks(docs=docs)
 
@@ -207,6 +213,9 @@ class KnowledgeBaseService:
                 metadata={"key": issue.key, "project": project, "status": str(issue.fields.status)},
             ))
         return docs
+
+    def _check_docs_for_changes(self, docs: list[Document]) -> bool:
+        pass
 
     def _split_documents_to_chunks(self, docs: list[Document]) -> list[Document]:
         """Splits documents into chunks based on chunk size."""
