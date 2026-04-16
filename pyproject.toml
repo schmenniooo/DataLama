@@ -25,6 +25,7 @@ dependencies = [
     "langchain-chroma>=1.1.0",
     "jira>=3.10.5",
     "langchain-huggingface>=1.2.1",
+    "sentence-transformers>=5.4.1",
 ]
 
 [tool.uv]                                                                  
