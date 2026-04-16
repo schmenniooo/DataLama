@@ -102,7 +102,10 @@ class Server:  # pylint: disable=too-few-public-methods
             return None
 
         # Injecting config file path to new service
-        service = KnowledgeBaseService(config_file_path=self.config.knowledge_base_config_path)
+        service = KnowledgeBaseService(
+            config_file_path=self.config.knowledge_base_config_path,
+            redis=self.redis,
+        )
 
         # Registering scheduler to auto update knowledge base (started in lifespan)
         self.kb_scheduler = AsyncIOScheduler()
