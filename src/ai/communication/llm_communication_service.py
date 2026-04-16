@@ -16,6 +16,8 @@ BASE_ROLE = "You are a professional data analyst for analysing csv, json and yml
 
 DATA_SEPERATOR = "Separate each dataset with exactly: ---NEW---DATASET---."
 
+CONTEXT_INFO = "Here is the relevant context from the knowledge base {}"
+
 BASE_PROMPT = (
         BASE_ROLE + " "
         "{}"
@@ -144,8 +146,11 @@ class CommunicationService:  # pylint: disable=too-few-public-methods
         messages.append(SystemMessage(content=system_prompt))
 
         # Extracting content from documents if context not empty
-        if context is not None:
-            docs_content = "\n---\n".join(doc.page_content for doc in context)
+        if context:
+            docs_content = CONTEXT_INFO
+
+            # Separating context as string
+            docs_content += "\n---\n".join(doc.page_content for doc in context)
             messages.append(SystemMessage(content=docs_content))
 
         messages.append(HumanMessage(content=data))

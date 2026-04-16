@@ -51,6 +51,7 @@ class Server:  # pylint: disable=too-few-public-methods
 
     @asynccontextmanager
     async def _lifespan(self, _app: FastAPI):
+        """Starts knowledge base service after server startup"""
         # Startup: start the knowledge base scheduler if configured
         if self.kb_scheduler:
             logger.info("Starting knowledge base scheduler")
