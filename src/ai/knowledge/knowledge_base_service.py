@@ -34,6 +34,8 @@ class KnowledgeBaseService:
 
     CHUNK_OVERLAP = 60
 
+    REDIS_HASH_GROUP = "knowledge_base"
+
     def __init__(self, config_file_path: str, redis: Redis):
         logger.info(f"Initializing KnowledgeBaseService with config file path: {config_file_path}")
 
@@ -229,7 +231,7 @@ class KnowledgeBaseService:
         current_docs_hash = hashlib.sha256(str(docs).encode()).hexdigest()
 
         # Fetching last stored docs
-        redis_docs_hash = await self.redis.hget(name="knowledge", key=provider_name)  # type: ignore[union-attr]
+        redis_docs_hash = await self.redis.hget(name=self.REDIS_HASH_GROUP, key=provider_name)  # type: ignore[union-attr]
 
         # Comparing current docs with stored ones as hash
         if redis_docs_hash == current_docs_hash:
@@ -255,5 +257,5 @@ class KnowledgeBaseService:
         """Inserts the given documents into the Redis collection."""
 
         # Inserting updated docs hash with provider as key
-        self.redis.hset(name="knowledge", key=provider_name, value=hashlib.sha256(str(docs).encode()).hexdigest())
+        self.redis.hset(name=self.REDIS_HASH_GROUP, key=provider_name, value=hashlib.sha256(str(docs).encode()).hexdigest())
         logger.info(f"Finished pushing {len(docs)} documents to redis collection")
