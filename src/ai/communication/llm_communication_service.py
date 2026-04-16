@@ -4,6 +4,7 @@ import logging
 from typing import Any
 
 from langchain.chat_models import init_chat_model
+from langchain_core.documents import Document
 from langchain_core.exceptions import LangChainException
 from langchain_core.messages import AIMessage, SystemMessage, HumanMessage
 from langchain_core.vectorstores import VectorStoreRetriever
@@ -64,8 +65,9 @@ analyses_types: dict[str, str] = {
 class CommunicationService:  # pylint: disable=too-few-public-methods
     """Provides for AI communication"""
 
-    def __init__(self, provider: str, model: str, api_key: str, chroma_retriever: VectorStoreRetriever | None) -> None:
+    def __init__(self, provider: str, model: str, api_key: str, chroma_retriever: VectorStoreRetriever) -> None:
         self.model = init_chat_model(model_provider=provider, model=model, api_key=api_key)
+        self.chroma_retriever = chroma_retriever
 
     async def health_check(self) -> bool:
         """Check the health of the service."""
@@ -87,6 +89,8 @@ class CommunicationService:  # pylint: disable=too-few-public-methods
     ) -> str | list[Any]:
         """Makes a request to AI with system and user messages"""
 
+        context = await self._retrieve_context_from_vector_store("query")
+
         # Building prompt for llm
         messages = self._build_prompt_for_analyse_call(
             analysis_type=analysis_type,
@@ -105,6 +109,10 @@ class CommunicationService:  # pylint: disable=too-few-public-methods
             raise LangChainException(e)
 
         return response.content
+
+    async def _retrieve_context_from_vector_store(self, query: str) -> list[Document]:
+        """Retrieves documents from the vector store with given query"""
+        return await self.chroma_retriever.ainvoke(input=query)
 
     @staticmethod
     def _build_prompt_for_analyse_call(analysis_type: str, data: str, data_format: str, daterange: list[str]) -> list[SystemMessage | HumanMessage]:
