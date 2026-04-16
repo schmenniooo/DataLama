@@ -89,10 +89,17 @@ class CommunicationService:  # pylint: disable=too-few-public-methods
     ) -> str | list[Any]:
         """Makes a request to AI with system and user messages"""
 
-        context = await self._retrieve_context_from_vector_store("query")
+        query = (
+            f"analysis-type: {analysis_type}"
+            f"date-range: {daterange[0]} to {daterange[1]}"
+        )
+
+        # Fetching documents from chroma vector store
+        context = await self._retrieve_context_from_vector_store(query=query)
 
         # Building prompt for llm
         messages = self._build_prompt_for_analyse_call(
+            context=context,
             analysis_type=analysis_type,
             data=data,
             data_format=data_format,
@@ -112,11 +119,18 @@ class CommunicationService:  # pylint: disable=too-few-public-methods
 
     async def _retrieve_context_from_vector_store(self, query: str) -> list[Document]:
         """Retrieves documents from the vector store with given query"""
+        if self.chroma_retriever is None:
+            logger.error("No chroma retriever found")
+            return []
+
+        # Fetching data from vector store
         return await self.chroma_retriever.ainvoke(input=query)
 
     @staticmethod
-    def _build_prompt_for_analyse_call(analysis_type: str, data: str, data_format: str, daterange: list[str]) -> list[SystemMessage | HumanMessage]:
+    def _build_prompt_for_analyse_call(context: list[Document], analysis_type: str, data: str, data_format: str, daterange: list[str]) -> list[SystemMessage | HumanMessage]:
         """Builds a prompt for the analysis call"""
+
+        # Getting prompt for give analysis type
         system_prompt = analyses_types.get(analysis_type)
         if system_prompt is None:
             raise ValueError(f"Unknown analysis type: '{analysis_type}'")
@@ -126,5 +140,8 @@ class CommunicationService:  # pylint: disable=too-few-public-methods
             data_format, f"{daterange[0]} to {daterange[1]}"
         )
 
+        # Extracting content from documents
+        docs_content = "\n---\n".join(doc.page_content for doc in context)
+
         # Wrapping system and user data
-        return [SystemMessage(content=system_prompt), HumanMessage(content=data)]
+        return [SystemMessage(content=system_prompt), SystemMessage(content=docs_content), HumanMessage(content=data)]
