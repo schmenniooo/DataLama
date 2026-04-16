@@ -65,7 +65,7 @@ analyses_types: dict[str, str] = {
 class CommunicationService:  # pylint: disable=too-few-public-methods
     """Provides for AI communication"""
 
-    def __init__(self, provider: str, model: str, api_key: str, chroma_retriever: VectorStoreRetriever) -> None:
+    def __init__(self, provider: str, model: str, api_key: str, chroma_retriever: VectorStoreRetriever | None) -> None:
         self.model = init_chat_model(model_provider=provider, model=model, api_key=api_key)
         self.chroma_retriever = chroma_retriever
 
@@ -120,7 +120,7 @@ class CommunicationService:  # pylint: disable=too-few-public-methods
     async def _retrieve_context_from_vector_store(self, query: str) -> list[Document]:
         """Retrieves documents from the vector store with given query"""
         if self.chroma_retriever is None:
-            logger.error("No chroma retriever found")
+            logger.info("No chroma retriever found")
             return []
 
         # Fetching data from vector store
@@ -129,6 +129,8 @@ class CommunicationService:  # pylint: disable=too-few-public-methods
     @staticmethod
     def _build_prompt_for_analyse_call(context: list[Document], analysis_type: str, data: str, data_format: str, daterange: list[str]) -> list[SystemMessage | HumanMessage]:
         """Builds a prompt for the analysis call"""
+
+        messages: list[SystemMessage | HumanMessage] = []
 
         # Getting prompt for give analysis type
         system_prompt = analyses_types.get(analysis_type)
@@ -139,9 +141,13 @@ class CommunicationService:  # pylint: disable=too-few-public-methods
         system_prompt = system_prompt.format(
             data_format, f"{daterange[0]} to {daterange[1]}"
         )
+        messages.append(SystemMessage(content=system_prompt))
 
-        # Extracting content from documents
-        docs_content = "\n---\n".join(doc.page_content for doc in context)
+        # Extracting content from documents if context not empty
+        if context is not None:
+            docs_content = "\n---\n".join(doc.page_content for doc in context)
+            messages.append(SystemMessage(content=docs_content))
 
-        # Wrapping system and user data
-        return [SystemMessage(content=system_prompt), SystemMessage(content=docs_content), HumanMessage(content=data)]
+        messages.append(HumanMessage(content=data))
+
+        return messages
