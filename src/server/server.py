@@ -44,10 +44,10 @@ class Server:  # pylint: disable=too-few-public-methods
                 self.retriever = service.get_chroma_retriever()
 
         # Connecting to AI provider
-        ai_service = self._create_ai_service()
+        self.ai_service = self._create_ai_service()
 
         # Registering api routes
-        self._configure_analysis_router(ai_service=ai_service)
+        self._configure_analysis_router()
 
     @asynccontextmanager
     async def _lifespan(self, _app: FastAPI):
@@ -106,10 +106,10 @@ class Server:  # pylint: disable=too-few-public-methods
         self.kb_scheduler.add_job(service.knowledge_base_fetch_workflow, "interval", minutes=1)
         return service
 
-    def _configure_analysis_router(self, ai_service: CommunicationService) -> None:
+    def _configure_analysis_router(self) -> None:
         """Creates new AnalysisRouter class and injects it to FastAPI"""
         logger.info("Registering analysis routes")
-        analysis_router = AnalysisRouter(ai_service=ai_service)
+        analysis_router = AnalysisRouter(ai_service=self.ai_service)
         self.app.include_router(analysis_router.router)
 
     def run(self) -> None:
