@@ -16,7 +16,7 @@ BASE_ROLE = "You are a professional data analyst for analysing csv, json and yml
 
 DATA_SEPERATOR = "Separate each dataset with exactly: ---NEW---DATASET---."
 
-CONTEXT_INFO = "Here is the relevant context from the knowledge base {}"
+CONTEXT_INFO = "Here is the relevant context from the knowledge base:"
 
 BASE_PROMPT = (
         BASE_ROLE + " "

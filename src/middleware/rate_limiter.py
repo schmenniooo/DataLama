@@ -13,7 +13,7 @@ from starlette.requests import Request
 from starlette.responses import Response
 
 
-class RateLimiter:
+class RateLimiter:  # pylint: disable=too-few-public-methods
     """Provides a configurable rate limiting middleware backed by async Redis."""
 
     TIME_WINDOW = 60
@@ -45,11 +45,17 @@ class RateLimiter:
                     request_counter = int(request_counter)
                     if request_counter >= RateLimiter.MAX_REQUESTS_PER_MINUTE:
                         # client overflowed the limit
-                        await redis.set(name=ip, value=request_counter + 1, ex=RateLimiter.TIME_WINDOW)
+                        await redis.set(
+                            name=ip, value=request_counter + 1,
+                            ex=RateLimiter.TIME_WINDOW,
+                        )
                         return Response(status_code=429)
 
                     # Increasing counter in every case
-                    await redis.set(name=ip, value=request_counter + 1, ex=RateLimiter.TIME_WINDOW)
+                    await redis.set(
+                        name=ip, value=request_counter + 1,
+                        ex=RateLimiter.TIME_WINDOW,
+                    )
                 except RedisError:
                     raise RedisError("Redis Error")
                 return await call_next(request)
