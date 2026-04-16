@@ -1,9 +1,10 @@
 """Tests for the KnowledgeBaseService class."""
 # pylint: disable=redefined-outer-name,protected-access,unused-argument
 
+import hashlib
 import os
 import tempfile
-from unittest.mock import MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
 import yaml
@@ -45,6 +46,15 @@ def _write_config(providers: list) -> str:
 
 
 @pytest.fixture
+def mock_redis():
+    """Provides a mocked async Redis instance."""
+    redis = MagicMock()
+    redis.hget = AsyncMock(return_value=None)
+    redis.hset = AsyncMock()
+    return redis
+
+
+@pytest.fixture
 def mock_chroma():
     """Patches Chroma and HuggingFaceEmbeddings."""
     with (
@@ -55,19 +65,19 @@ def mock_chroma():
 
 
 @pytest.fixture
-def service_with_slack(mock_chroma):
+def service_with_slack(mock_chroma, mock_redis):
     """KnowledgeBaseService with a single valid Slack provider."""
     path = _write_config([VALID_SLACK_PROVIDER])
-    service = KnowledgeBaseService(config_file_path=path)
+    service = KnowledgeBaseService(config_file_path=path, redis=mock_redis)
     os.unlink(path)
     return service
 
 
 @pytest.fixture
-def service_with_all_providers(mock_chroma):
+def service_with_all_providers(mock_chroma, mock_redis):
     """KnowledgeBaseService with all supported providers."""
     path = _write_config(ALL_PROVIDERS)
-    service = KnowledgeBaseService(config_file_path=path)
+    service = KnowledgeBaseService(config_file_path=path, redis=mock_redis)
     os.unlink(path)
     return service
 
@@ -144,29 +154,36 @@ def test_init_marks_config_valid_on_good_config(service_with_slack):
     assert service_with_slack.configFileValid is True
 
 
-def test_init_marks_config_invalid_on_bad_config(mock_chroma):
+def test_init_marks_config_invalid_on_bad_config(mock_chroma, mock_redis):
     """configFileValid is False when the config fails validation."""
     path = _write_config([{"provider": "slack"}])
-    service = KnowledgeBaseService(config_file_path=path)
+    service = KnowledgeBaseService(config_file_path=path, redis=mock_redis)
     os.unlink(path)
     assert service.configFileValid is False
 
 
+def test_init_stores_redis_reference(service_with_slack, mock_redis):
+    """The Redis instance passed to __init__ is stored on the service."""
+    assert service_with_slack.redis is mock_redis
+
+
 # --- Fetch workflow ---
 
-def test_workflow_skips_on_invalid_config(mock_chroma):
+@pytest.mark.asyncio
+async def test_workflow_skips_on_invalid_config(mock_chroma, mock_redis):
     """Workflow returns early without fetching when invalid."""
     path = _write_config([{"provider": "slack"}])
-    service = KnowledgeBaseService(config_file_path=path)
+    service = KnowledgeBaseService(config_file_path=path, redis=mock_redis)
     os.unlink(path)
 
     with patch.object(service, "_get_knowledge_base_data") as mock_get:
-        service.knowledge_base_fetch_workflow()
+        await service.knowledge_base_fetch_workflow()
         mock_get.assert_not_called()
 
 
-def test_workflow_calls_get_data_chunk_and_push(service_with_all_providers):
-    """Workflow fetches, chunks, and pushes for every provider."""
+@pytest.mark.asyncio
+async def test_workflow_calls_get_data_chunk_and_push(service_with_all_providers):
+    """Workflow fetches, checks, chunks, and pushes for every provider."""
     mock_docs = [Document(page_content="test")]
     with (
         patch.object(
@@ -175,20 +192,32 @@ def test_workflow_calls_get_data_chunk_and_push(service_with_all_providers):
         ) as mock_get,
         patch.object(
             service_with_all_providers,
+            "_check_docs_for_changes", new_callable=AsyncMock,
+            return_value=True,
+        ) as mock_check,
+        patch.object(
+            service_with_all_providers,
             "_split_documents_to_chunks", return_value=mock_docs,
         ) as mock_split,
         patch.object(
             service_with_all_providers,
             "_push_data_to_vector_store",
         ) as mock_push,
+        patch.object(
+            service_with_all_providers,
+            "_push_data_to_redis",
+        ) as mock_redis_push,
     ):
-        service_with_all_providers.knowledge_base_fetch_workflow()
+        await service_with_all_providers.knowledge_base_fetch_workflow()
         assert mock_get.call_count == 4
+        assert mock_check.call_count == 4
         assert mock_split.call_count == 4
         assert mock_push.call_count == 4
+        assert mock_redis_push.call_count == 4
 
 
-def test_workflow_stops_on_fetch_failure(service_with_all_providers):
+@pytest.mark.asyncio
+async def test_workflow_stops_on_fetch_failure(service_with_all_providers):
     """Workflow stops processing when one provider fails."""
     with (
         patch.object(
@@ -200,9 +229,103 @@ def test_workflow_stops_on_fetch_failure(service_with_all_providers):
             "_push_data_to_vector_store",
         ) as mock_push,
     ):
-        service_with_all_providers.knowledge_base_fetch_workflow()
+        await service_with_all_providers.knowledge_base_fetch_workflow()
         assert mock_get.call_count == 1
         mock_push.assert_not_called()
+
+
+@pytest.mark.asyncio
+async def test_workflow_skips_unchanged_provider(service_with_slack):
+    """Workflow skips chunking and pushing when data has not changed."""
+    mock_docs = [Document(page_content="test")]
+    with (
+        patch.object(
+            service_with_slack,
+            "_get_knowledge_base_data", return_value=mock_docs,
+        ),
+        patch.object(
+            service_with_slack,
+            "_check_docs_for_changes", new_callable=AsyncMock,
+            return_value=False,
+        ),
+        patch.object(
+            service_with_slack,
+            "_split_documents_to_chunks",
+        ) as mock_split,
+        patch.object(
+            service_with_slack,
+            "_push_data_to_vector_store",
+        ) as mock_push,
+        patch.object(
+            service_with_slack,
+            "_push_data_to_redis",
+        ) as mock_redis_push,
+    ):
+        await service_with_slack.knowledge_base_fetch_workflow()
+        mock_split.assert_not_called()
+        mock_push.assert_not_called()
+        mock_redis_push.assert_not_called()
+
+
+# --- Change detection ---
+
+@pytest.mark.asyncio
+async def test_check_docs_detects_changes_when_no_prior_hash(service_with_slack):
+    """Returns True when Redis has no stored hash for the provider."""
+    service_with_slack.redis.hget = AsyncMock(return_value=None)
+    docs = [Document(page_content="new data")]
+
+    result = await service_with_slack._check_docs_for_changes(
+        provider_name="slack", docs=docs,
+    )
+
+    assert result is True
+    service_with_slack.redis.hget.assert_called_once_with(
+        name=KnowledgeBaseService.REDIS_HASH_GROUP, key="slack",
+    )
+
+
+@pytest.mark.asyncio
+async def test_check_docs_detects_no_changes_when_hash_matches(service_with_slack):
+    """Returns False when the computed hash matches the stored hash."""
+    docs = [Document(page_content="same data")]
+    expected_hash = hashlib.sha256(str(docs).encode()).hexdigest()
+    service_with_slack.redis.hget = AsyncMock(return_value=expected_hash)
+
+    result = await service_with_slack._check_docs_for_changes(
+        provider_name="slack", docs=docs,
+    )
+
+    assert result is False
+
+
+@pytest.mark.asyncio
+async def test_check_docs_detects_changes_when_hash_differs(service_with_slack):
+    """Returns True when the computed hash differs from the stored hash."""
+    service_with_slack.redis.hget = AsyncMock(return_value="old_hash_value")
+    docs = [Document(page_content="updated data")]
+
+    result = await service_with_slack._check_docs_for_changes(
+        provider_name="slack", docs=docs,
+    )
+
+    assert result is True
+
+
+# --- Push to Redis ---
+
+def test_push_data_to_redis_calls_hset(service_with_slack):
+    """Stores the document hash in the correct Redis hash group."""
+    docs = [Document(page_content="test")]
+    expected_hash = hashlib.sha256(str(docs).encode()).hexdigest()
+
+    service_with_slack._push_data_to_redis(provider_name="slack", docs=docs)
+
+    service_with_slack.redis.hset.assert_called_once_with(
+        name=KnowledgeBaseService.REDIS_HASH_GROUP,
+        key="slack",
+        value=expected_hash,
+    )
 
 
 # --- Slack loader ---
