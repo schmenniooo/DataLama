@@ -129,16 +129,21 @@ class KnowledgeBaseService:
                 return
 
             # Checking data for changes
-            data_changed = self._check_docs_for_changes(provider_name=provider.get("provider"), docs=docs)
-            if not await data_changed:
-                logger.info(f"Data has no changes from {provider.get('provider')} - skipping")
+            data_changed = await self._check_docs_for_changes(provider_name=provider.get("provider"), docs=docs)
+            if not data_changed:
+                logger.info(f"Data from {provider.get('provider')} has no changes - skipping")
                 return
+
+            logger.info(f"Documents changed from {provider.get('provider')} to {len(docs)}")
 
             # Splitting documents into chunks with default size
             split_documents = self._split_documents_to_chunks(docs=docs)
 
             # Saving data in vector store
             self._push_data_to_vector_store(docs=split_documents)
+
+            # Saving changed data in redis
+            self._push_data_to_redis(provider_name=provider.get("provider"), docs=split_documents)
 
     def _get_knowledge_base_data(self, provider: Any) -> list | None:
         """Routes a provider config to the appropriate loader and returns the fetched documents."""
@@ -218,14 +223,16 @@ class KnowledgeBaseService:
     async def _check_docs_for_changes(self, provider_name: str, docs: list[Document]) -> bool:
         """Compares the current documents against the redis ones"""
 
+        logger.info("Comparing documents")
+
         # Hashing current docs
         current_docs_hash = hashlib.sha256(str(docs).encode()).hexdigest()
 
         # Fetching last stored docs
-        redis_docs = await self.redis.hget(name=provider_name, key=current_docs_hash)  # type: ignore[union-attr]
+        redis_docs_hash = await self.redis.hget(name="knowledge", key=provider_name)  # type: ignore[union-attr]
 
-        # Comparing current docs with stored ones
-        if redis_docs == current_docs_hash:
+        # Comparing current docs with stored ones as hash
+        if redis_docs_hash == current_docs_hash:
             return False
 
         # Docs have changed
@@ -243,3 +250,10 @@ class KnowledgeBaseService:
 
         logger.info(f"Finished pushing {len(docs)} documents to vector store")
         return
+
+    def _push_data_to_redis(self, provider_name: str, docs: list[Document]) -> None:
+        """Inserts the given documents into the Redis collection."""
+
+        # Inserting updated docs hash with provider as key
+        self.redis.hset(name="knowledge", key=provider_name, value=hashlib.sha256(str(docs).encode()).hexdigest())
+        logger.info(f"Finished pushing {len(docs)} documents to redis collection")
