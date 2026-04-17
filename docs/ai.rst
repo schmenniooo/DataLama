@@ -1,7 +1,7 @@
 AI Communication Service
 ========================
 
-.. automodule:: ai.langchain.communication_service
+.. automodule:: ai.communication.llm_communication_service
    :members:
    :undoc-members:
    :private-members:
