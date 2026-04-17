@@ -145,7 +145,7 @@ class KnowledgeBaseService:
             self._push_data_to_vector_store(docs=split_documents)
 
             # Saving changed data in redis
-            self._push_data_to_redis(provider_name=provider.get("provider"), docs=split_documents)
+            await self._push_data_to_redis(provider_name=provider.get("provider"), docs=split_documents)
 
     def _get_knowledge_base_data(self, provider: Any) -> list | None:
         """Routes a provider config to the appropriate loader and returns the fetched documents."""
@@ -253,9 +253,9 @@ class KnowledgeBaseService:
         logger.info(f"Finished pushing {len(docs)} documents to vector store")
         return
 
-    def _push_data_to_redis(self, provider_name: str, docs: list[Document]) -> None:
+    async def _push_data_to_redis(self, provider_name: str, docs: list[Document]) -> None:
         """Inserts the given documents into the Redis collection."""
 
         # Inserting updated docs hash with provider as key
-        self.redis.hset(name=self.REDIS_HASH_GROUP, key=provider_name, value=hashlib.sha256(str(docs).encode()).hexdigest())
+        await self.redis.hset(name=self.REDIS_HASH_GROUP, key=provider_name, value=hashlib.sha256(str(docs).encode()).hexdigest()) # type: ignore[union-attr]
         logger.info(f"Finished pushing {len(docs)} documents to redis collection")
