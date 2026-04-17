@@ -4,7 +4,7 @@ Models
 API Model
 ---------
 
-.. automodule:: model.api.api_model
+.. automodule:: model.api_model
    :members:
    :undoc-members:
    :private-members:
@@ -12,7 +12,7 @@ API Model
 Config
 ------
 
-.. automodule:: model.config.config
+.. automodule:: model.config
    :members:
    :undoc-members:
    :private-members:
