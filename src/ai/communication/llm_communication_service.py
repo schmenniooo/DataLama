@@ -125,6 +125,8 @@ class CommunicationService:  # pylint: disable=too-few-public-methods
             logger.info("No chroma retriever found")
             return []
 
+        logger.info(f"Retrieving context from vector store: {query}")
+
         # Fetching data from vector store
         return await self.chroma_retriever.ainvoke(input=query)
 

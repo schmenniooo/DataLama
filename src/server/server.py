@@ -1,4 +1,4 @@
-"""Server modufe for building and running the FastAPI application."""
+"""Server module for building and running the FastAPI application."""
 import logging
 import os
 from contextlib import asynccontextmanager
@@ -20,6 +20,8 @@ logger = logging.getLogger("logger")
 
 class Server:  # pylint: disable=too-few-public-methods
     """Builds and configures the FastAPI application."""
+
+    KB_SCHEDULER_DURATION = 10
 
     def __init__(self, config: Config):
         logger.info("Configuring datalens server")
@@ -109,8 +111,7 @@ class Server:  # pylint: disable=too-few-public-methods
 
         # Registering scheduler to auto update knowledge base (started in lifespan)
         self.kb_scheduler = AsyncIOScheduler()
-        # TODO: Replace 1 minute interval
-        self.kb_scheduler.add_job(service.knowledge_base_fetch_workflow, "interval", minutes=1)
+        self.kb_scheduler.add_job(service.knowledge_base_fetch_workflow, "interval", minutes=self.KB_SCHEDULER_DURATION)
         return service
 
     def _configure_analysis_router(self) -> None:
