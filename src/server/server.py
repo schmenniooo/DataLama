@@ -111,7 +111,11 @@ class Server:  # pylint: disable=too-few-public-methods
 
         # Registering scheduler to auto update knowledge base (started in lifespan)
         self.kb_scheduler = AsyncIOScheduler()
-        self.kb_scheduler.add_job(service.knowledge_base_fetch_workflow, "interval", minutes=self.KB_SCHEDULER_DURATION)
+        self.kb_scheduler.add_job(
+            service.knowledge_base_fetch_workflow,
+            "interval",
+            minutes=self.KB_SCHEDULER_DURATION,
+        )
         return service
 
     def _configure_analysis_router(self) -> None:
