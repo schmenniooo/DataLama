@@ -2,7 +2,7 @@
 
 import pytest
 
-from src.model.config.config import Config
+from src.model.config import Config
 
 DEFAULT_API_KEY = "test-secret"
 
@@ -15,6 +15,8 @@ def _create_test_config(api_key: str = DEFAULT_API_KEY) -> Config:
         llm_provider="anthropic",
         model="test-model",
         llm_provider_api_token="test-token",
+        knowledge_base_enabled=False,
+        knowledge_base_config_path="",
         langsmith_tracing_enabled=False,
         langsmith_api_key="",
         langsmith_project="",

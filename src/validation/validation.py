@@ -2,7 +2,7 @@
 
 from datetime import datetime
 
-from src.model.api.api_model import BaseRequest
+from src.model.api_model import BaseRequest
 
 SUPPORTED_FORMATS = {"csv", "json", "yaml", "yml"}
 DATE_FORMAT = "%Y-%m-%d"

@@ -12,6 +12,8 @@ class Config:  # pylint: disable=too-many-instance-attributes
     llm_provider: str
     llm_provider_api_token: str
     model: str
+    knowledge_base_enabled: bool
+    knowledge_base_config_path: str
     langsmith_tracing_enabled: bool
     langsmith_api_key: str
     langsmith_project: str

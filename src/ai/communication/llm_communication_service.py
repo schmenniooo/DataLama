@@ -1,10 +1,13 @@
 """LangChain communication module to chat with chosen model"""
 
 import logging
+from typing import Any
 
 from langchain.chat_models import init_chat_model
+from langchain_core.documents import Document
 from langchain_core.exceptions import LangChainException
 from langchain_core.messages import AIMessage, SystemMessage, HumanMessage
+from langchain_core.vectorstores import VectorStoreRetriever
 from langsmith import traceable
 
 logger = logging.getLogger("logger")
@@ -12,6 +15,8 @@ logger = logging.getLogger("logger")
 BASE_ROLE = "You are a professional data analyst for analysing csv, json and yml files."
 
 DATA_SEPERATOR = "Separate each dataset with exactly: ---NEW---DATASET---."
+
+CONTEXT_INFO = "Here is the relevant context from the knowledge base:"
 
 BASE_PROMPT = (
         BASE_ROLE + " "
@@ -59,11 +64,12 @@ analyses_types: dict[str, str] = {
 }
 
 
-class AiCommunicationService:  # pylint: disable=too-few-public-methods
-    """Provides for ai communication"""
+class CommunicationService:  # pylint: disable=too-few-public-methods
+    """Provides for AI communication"""
 
-    def __init__(self, provider: str, model: str, api_key: str):
+    def __init__(self, provider: str, model: str, api_key: str, chroma_retriever: VectorStoreRetriever | None) -> None:
         self.model = init_chat_model(model_provider=provider, model=model, api_key=api_key)
+        self.chroma_retriever = chroma_retriever
 
     async def health_check(self) -> bool:
         """Check the health of the service."""
@@ -82,8 +88,55 @@ class AiCommunicationService:  # pylint: disable=too-few-public-methods
         data: str,
         data_format: str,
         daterange: list[str]
-    ) -> str:
+    ) -> str | list[Any]:
         """Makes a request to AI with system and user messages"""
+
+        query = (
+            f"analysis-type: {analysis_type}"
+            f"date-range: {daterange[0]} to {daterange[1]}"
+        )
+
+        # Fetching documents from chroma vector store
+        context = await self._retrieve_context_from_vector_store(query=query)
+
+        # Building prompt for llm
+        messages = self._build_prompt_for_analyse_call(
+            context=context,
+            analysis_type=analysis_type,
+            data=data,
+            data_format=data_format,
+            daterange=daterange
+        )
+
+        logger.info(f"Sending {analysis_type} analysis request to LLM")
+
+        # Processing LLM call through selected provider
+        try:
+            response: AIMessage = await self.model.ainvoke(input=messages)
+        except LangChainException as e:
+            logger.error("LLM request failed: %s", e)
+            raise LangChainException(e)
+
+        return response.content
+
+    async def _retrieve_context_from_vector_store(self, query: str) -> list[Document]:
+        """Retrieves documents from the vector store with given query"""
+        if self.chroma_retriever is None:
+            logger.info("No chroma retriever found")
+            return []
+
+        logger.info(f"Retrieving context from vector store: {query}")
+
+        # Fetching data from vector store
+        return await self.chroma_retriever.ainvoke(input=query)
+
+    @staticmethod
+    def _build_prompt_for_analyse_call(context: list[Document], analysis_type: str, data: str, data_format: str, daterange: list[str]) -> list[SystemMessage | HumanMessage]:
+        """Builds a prompt for the analysis call"""
+
+        messages: list[SystemMessage | HumanMessage] = []
+
+        # Getting prompt for give analysis type
         system_prompt = analyses_types.get(analysis_type)
         if system_prompt is None:
             raise ValueError(f"Unknown analysis type: '{analysis_type}'")
@@ -92,17 +145,16 @@ class AiCommunicationService:  # pylint: disable=too-few-public-methods
         system_prompt = system_prompt.format(
             data_format, f"{daterange[0]} to {daterange[1]}"
         )
+        messages.append(SystemMessage(content=system_prompt))
 
-        # Wrapping system and human prompt
-        messages = [SystemMessage(content=system_prompt), HumanMessage(content=data)]
+        # Extracting content from documents if context not empty
+        if context:
+            docs_content = CONTEXT_INFO
 
-        logger.info(f"Sending {analysis_type} analysis request to LLM")
+            # Separating context as string
+            docs_content += "\n---\n".join(doc.page_content for doc in context)
+            messages.append(SystemMessage(content=docs_content))
 
-        # Processing LLM call through selected provider
-        try:
-            response: AIMessage = await self.model.ainvoke(input=messages)
-        except LangChainException as e:
-            logger.error("Ollama request failed: %s", e)
-            raise LangChainException(e)
+        messages.append(HumanMessage(content=data))
 
-        return response.content
+        return messages

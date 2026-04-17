@@ -1,9 +1,11 @@
 # DataLens
 
-A microservice that takes data in several formats and returns a forecast or a summary of the data.
-Runs Python with FastAPI and uses LangChain to analyse the given data through a chosen LLM provider.
+A FastAPI based microservice that analyzes data in several formats using LangChain. 
+All LLM calls are traceable in your own LangSmith.
+We also offer an integration for knowledge bases to improove data enrichment. 
+The Docker Image and Helm Chart can be installed via GitHub Container Registry.
 
-![logo.png](logo.png)
+<img src="logo.png" alt="logo" width="300">
 
 ## API Endpoints
 
@@ -47,6 +49,43 @@ DataLens supports [LangSmith](https://smith.langchain.com/) for tracing and obse
 
 When enabled, all LLM analysis requests are traced via the `@traceable` decorator and visible in your LangSmith dashboard.
 
+### Knowledge Base (Optional)
+
+DataLens can enrich analyses with data pulled from your own knowledge sources. The following providers are supported:
+
+- **GitHub**
+- **Slack**
+- **Jira**
+- **Confluence**
+
+To enable it, set the following environment variables:
+
+| Variable                     | Default                          | Description                                                |
+| ---------------------------- | -------------------------------- | ---------------------------------------------------------- |
+| `KNOWLEDGE_BASE_ENABLED`     | `false`                          | Set to `true` to enable knowledge base ingestion           |
+| `KNOWLEDGE_BASE_CONFIG_PATH` | `/app/config/knowledge_bases.yml`| Path to the knowledge base config file inside the container |
+
+When enabled, the service reads provider definitions and credentials from the YAML file at `KNOWLEDGE_BASE_CONFIG_PATH` and periodically fetches data from each configured provider.
+
+The config file follows this format:
+
+```yaml
+knowledge_bases:
+  - provider: slack
+    token: xoxb-...
+    channel_ids: ["C123", "C456"]
+  - provider: github
+    repo: org/repo
+    access_token: ghp_...
+  - provider: jira
+    api_token: ...
+    username: your@email.com
+    server: https://yourcompany.atlassian.net
+    project: ENG
+```
+
+Mount the file into the running environment (e.g. via a Docker volume or a Kubernetes Secret/ConfigMap) so the path matches `KNOWLEDGE_BASE_CONFIG_PATH`.
+
 ## Helm Chart
 
 The chart is published to GHCR and can be used to deploy DataLens to a Kubernetes cluster.
@@ -54,6 +93,7 @@ The chart is published to GHCR and can be used to deploy DataLens to a Kubernete
 The chart includes:
 - **Traefik** as a reverse proxy with an optional authenticated dashboard
 - **Redis** for rate limiting — `REDIS_HOST`, `REDIS_PORT`, and `REDIS_PASSWORD` are automatically injected into all pods
+- **ChromaDB** as a vector store for knowledge base ingestion — `CHROMA_HOST`, `CHROMA_PORT`, and `CHROMA_COLLECTION_NAME` are automatically injected into all pods
 - **HPA** for autoscaling based on CPU and memory utilization
 
 ### Installation
@@ -83,6 +123,11 @@ environmentVariables:
     value: "your-langsmith-api-key"
   - name: LANGSMITH_PROJECT
     value: "your-langsmith-project"
+  # Optional: Knowledge Base
+  - name: KNOWLEDGE_BASE_ENABLED
+    value: "false"
+  - name: KNOWLEDGE_BASE_CONFIG_PATH
+    value: "/app/config/knowledge_bases.yml"
 ```
 
 ### Values
@@ -109,3 +154,5 @@ environmentVariables:
 | `dashboard.tls.secretName`                 | `""`                           | Name of the k8s Secret containing `tls.crt` and `tls.key` |
 | `redis.auth.enabled`                       | `true`                         | Enable Redis authentication                              |
 | `redis.auth.password`                      | `changeme`                     | Redis password (also sets `REDIS_PASSWORD` in pods)      |
+| `chromadb.chromadb.serverHttpPort`         | `8000`                         | ChromaDB HTTP port                                       |
+| `chromadb.chromadb.collectionName`         | `datalens`                     | ChromaDB collection name for knowledge base documents    |

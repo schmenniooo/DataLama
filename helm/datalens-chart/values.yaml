@@ -24,6 +24,11 @@ environmentVariables:
     value: "0.0.0.0"
   - name: "PORT"
     value: "3000"
+  # Optional: Knowledge Base
+  - name: "KNOWLEDGE_BASE_ENABLED"
+    value: "false"
+  - name: "KNOWLEDGE_BASE_CONFIG_PATH"
+    value: "/app/config/knowledge_bases.yml"
 
 # Horizontal Pod Autoscaler configuration based on CPU and Memory usage
 
@@ -44,10 +49,10 @@ podLabels:
 resources:                                                                           
   requests:                                                                          
     cpu: "100m"                                                                      
-    memory: "64Mi"
+    memory: "256Mi"
   limits:
     cpu: "500m"
-    memory: "128Mi"
+    memory: "512Mi"
 
 # Security Configuration
 
@@ -88,6 +93,12 @@ redis:
   auth:
     enabled: true
     password: "changeme"              # Override before deploying
+
+# ChromaDB Configuration
+chromadb:
+  chromadb:
+    serverHttpPort: 8000
+    collectionName: "datalens"
 
 # Traefik Reverse Proxy Configuration
 

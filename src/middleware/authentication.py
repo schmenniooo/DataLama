@@ -18,7 +18,8 @@ class AuthInterceptor:  # pylint: disable=too-few-public-methods
         self.api_key = api_key
 
     def register_auth_interceptor(self) -> Type[BaseHTTPMiddleware]:
-        """Returns inner base middleware class for auth middleware. Compares api key from request header"""
+        """Returns inner base middleware class for auth middleware.
+        Compares api key from request header."""
         api_key_field_name = self.api_key_field_name
         api_key = self.api_key
 

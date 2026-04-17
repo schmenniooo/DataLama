@@ -38,8 +38,8 @@ def mock_redis():
 def client(test_config, mock_redis):
     """TestClient with mocked AiCommunicationService and Redis."""
     with (
-        patch("src.server.server.AiCommunicationService") as mock_service_class,
-        patch("src.middleware.rate_limiting.rate_limiter.Redis", return_value=mock_redis),
+        patch("src.server.server.CommunicationService") as mock_service_class,
+        patch("src.server.server.Redis", return_value=mock_redis),
     ):
         mock_service = mock_service_class.return_value
         mock_service.health_check = AsyncMock(return_value=True)

@@ -5,5 +5,8 @@ dependencies:
 - name: redis
   repository: https://charts.bitnami.com/bitnami
   version: 20.11.3
-digest: sha256:47f26dabb68f6cfb561d4874b822045cbd7d249962a2a6d801787e458695ee98
-generated: "2026-03-16T18:24:11.664615+01:00"
+- name: chromadb
+  repository: https://amikos-tech.github.io/chromadb-chart/
+  version: 0.1.22
+digest: sha256:673adedc77a247cfc88149bab10119f081697c7675e9c8df3a01f322d5032d6a
+generated: "2026-04-14T10:55:47.803303+02:00"

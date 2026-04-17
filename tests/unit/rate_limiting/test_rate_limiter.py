@@ -7,7 +7,7 @@ import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from src.middleware.rate_limiting.rate_limiter import RateLimiter
+from src.middleware.rate_limiter import RateLimiter
 
 
 @pytest.fixture
@@ -19,8 +19,8 @@ def mock_redis():
 @pytest.fixture
 def app(mock_redis):
     """FastAPI app with rate limiting middleware using a mocked Redis."""
-    with patch("src.middleware.rate_limiting.rate_limiter.Redis", return_value=mock_redis):
-        rate_limiter = RateLimiter()
+    with patch("src.middleware.rate_limiter.Redis", return_value=mock_redis):
+        rate_limiter = RateLimiter(redis=mock_redis)
         test_app = FastAPI()
         test_app.add_middleware(rate_limiter.register_rate_limiter())
 

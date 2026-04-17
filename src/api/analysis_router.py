@@ -5,8 +5,8 @@ import json
 import langchain_core.exceptions
 from fastapi import APIRouter, HTTPException
 
-from src.ai.langchain.communication_service import AiCommunicationService
-from src.model.api.api_model import BaseRequest, BaseResponse
+from src.ai.communication.llm_communication_service import CommunicationService
+from src.model.api_model import BaseRequest, BaseResponse
 from src.validation.validation import validate_request
 
 
@@ -15,7 +15,7 @@ class AnalysisRouter:  # pylint: disable=too-few-public-methods
 
     DATASET_SEPERATOR = "\n---NEW---DATASET---\n"
 
-    def __init__(self, ai_service: AiCommunicationService):
+    def __init__(self, ai_service: CommunicationService):
         self.router = APIRouter()
         self.ai_service = ai_service
         self._register_routes()

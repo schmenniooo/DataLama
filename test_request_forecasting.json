@@ -1,0 +1,10 @@
+{
+  "data_sets": [
+    "- month: January\n  revenue: 48000\n  expenses: 32000\n  customers: 120\n- month: February\n  revenue: 52000\n  expenses: 34000\n  customers: 135\n- month: March\n  revenue: 47000\n  expenses: 31000\n  customers: 110\n- month: April\n  revenue: 61000\n  expenses: 38000\n  customers: 155\n- month: May\n  revenue: 58000\n  expenses: 36000\n  customers: 148\n- month: June\n  revenue: 64000\n  expenses: 40000\n  customers: 162"
+  ],
+  "format": "yml",
+  "daterange": [
+    "2024-07-01",
+    "2024-12-31"
+  ]
+}
