@@ -314,12 +314,13 @@ async def test_check_docs_detects_changes_when_hash_differs(service_with_slack):
 
 # --- Push to Redis ---
 
-def test_push_data_to_redis_calls_hset(service_with_slack):
+@pytest.mark.asyncio
+async def test_push_data_to_redis_calls_hset(service_with_slack):
     """Stores the document hash in the correct Redis hash group."""
     docs = [Document(page_content="test")]
     expected_hash = hashlib.sha256(str(docs).encode()).hexdigest()
 
-    service_with_slack._push_data_to_redis(provider_name="slack", docs=docs)
+    await service_with_slack._push_data_to_redis(provider_name="slack", docs=docs)
 
     service_with_slack.redis.hset.assert_called_once_with(
         name=KnowledgeBaseService.REDIS_HASH_GROUP,
