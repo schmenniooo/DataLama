@@ -234,15 +234,19 @@
 <span></span><span class="sd">&quot;&quot;&quot;Server module for building and running the FastAPI application.&quot;&quot;&quot;</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">logging</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">contextlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">asynccontextmanager</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">uvicorn</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">apscheduler.schedulers.asyncio</span><span class="w"> </span><span class="kn">import</span> <span class="n">AsyncIOScheduler</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">FastAPI</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">redis.asyncio</span><span class="w"> </span><span class="kn">import</span> <span class="n">Redis</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">src.ai.langchain.communication_service</span><span class="w"> </span><span class="kn">import</span> <span class="n">AiCommunicationService</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.ai.communication.llm_communication_service</span><span class="w"> </span><span class="kn">import</span> <span class="n">CommunicationService</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.ai.knowledge.knowledge_base_service</span><span class="w"> </span><span class="kn">import</span> <span class="n">KnowledgeBaseService</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">src.api.analysis_router</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnalysisRouter</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">src.middleware.auth.authentication</span><span class="w"> </span><span class="kn">import</span> <span class="n">AuthInterceptor</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">src.middleware.rate_limiting.rate_limiter</span><span class="w"> </span><span class="kn">import</span> <span class="n">RateLimiter</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">src.model.config.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.middleware.authentication</span><span class="w"> </span><span class="kn">import</span> <span class="n">AuthInterceptor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.middleware.rate_limiter</span><span class="w"> </span><span class="kn">import</span> <span class="n">RateLimiter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.model.config</span><span class="w"> </span><span class="kn">import</span> <span class="n">Config</span>
 
 <span class="n">logger</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="s2">&quot;logger&quot;</span><span class="p">)</span>
 
@@ -252,12 +256,18 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">Server</span><span class="p">:</span>  <span class="c1"># pylint: disable=too-few-public-methods</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Builds and configures the FastAPI application.&quot;&quot;&quot;</span>
 
+    <span class="n">KB_SCHEDULER_DURATION</span> <span class="o">=</span> <span class="mi">10</span>
+
     <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Config</span><span class="p">):</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Configuring datalens server&quot;</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span> <span class="o">=</span> <span class="n">config</span>
 
-        <span class="c1"># Creating FastAPI instance</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">()</span>
+        <span class="c1"># Creating FastAPI instance with lifespan</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">app</span> <span class="o">=</span> <span class="n">FastAPI</span><span class="p">(</span><span class="n">lifespan</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_lifespan</span><span class="p">)</span>
+
+        <span class="n">redis_host</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;REDIS_HOST&quot;</span><span class="p">,</span> <span class="s2">&quot;localhost&quot;</span><span class="p">)</span>
+        <span class="n">redis_port</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;REDIS_PORT&quot;</span><span class="p">,</span> <span class="mi">6379</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">redis</span> <span class="o">=</span> <span class="n">Redis</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="n">redis_host</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">redis_port</span><span class="p">,</span> <span class="n">db</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">decode_responses</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 
         <span class="c1"># Skipping authentication in debug mode</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="n">config</span><span class="o">.</span><span class="n">debug</span><span class="p">:</span>
@@ -266,11 +276,35 @@
         <span class="c1"># Create rate limiter</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_configure_rate_limiter</span><span class="p">()</span>
 
+        <span class="c1"># Preparing knowledge-base scheduler if enabled</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kb_scheduler</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">retriever</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">config</span><span class="o">.</span><span class="n">knowledge_base_enabled</span><span class="p">:</span>
+            <span class="n">service</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_configure_knowledge_base_service</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">service</span><span class="p">:</span>
+                <span class="c1"># Getting chroma vector store as retriever</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">retriever</span> <span class="o">=</span> <span class="n">service</span><span class="o">.</span><span class="n">get_chroma_retriever</span><span class="p">()</span>
+
         <span class="c1"># Connecting to AI provider</span>
-        <span class="n">ai_service</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_ai_service</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ai_service</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_ai_service</span><span class="p">()</span>
 
         <span class="c1"># Registering api routes</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_configure_analysis_router</span><span class="p">(</span><span class="n">ai_service</span><span class="o">=</span><span class="n">ai_service</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_configure_analysis_router</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Server._lifespan">
+<a class="viewcode-back" href="../../server.html#server.server.Server._lifespan">[docs]</a>
+    <span class="nd">@asynccontextmanager</span>
+    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">_lifespan</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_app</span><span class="p">:</span> <span class="n">FastAPI</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Starts knowledge base service after server startup&quot;&quot;&quot;</span>
+        <span class="c1"># Startup: start the knowledge base scheduler if configured</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kb_scheduler</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Starting knowledge base scheduler&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kb_scheduler</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="k">yield</span>
+        <span class="c1"># Shutdown: stop the scheduler</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">kb_scheduler</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">kb_scheduler</span><span class="o">.</span><span class="n">shutdown</span><span class="p">()</span></div>
+
 
 <div class="viewcode-block" id="Server._configure_authentication">
 <a class="viewcode-back" href="../../server.html#server.server.Server._configure_authentication">[docs]</a>
@@ -288,10 +322,9 @@
 <a class="viewcode-back" href="../../server.html#server.server.Server._configure_rate_limiter">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">_configure_rate_limiter</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RateLimiter</span><span class="p">:</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Registering rate limiter&quot;</span><span class="p">)</span>
-        <span class="c1"># Getting env variables here as they aren&#39;t configurable by the user</span>
-        <span class="n">redis_host</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;REDIS_HOST&quot;</span><span class="p">,</span> <span class="s2">&quot;localhost&quot;</span><span class="p">)</span>
-        <span class="n">redis_port</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;REDIS_PORT&quot;</span><span class="p">,</span> <span class="mi">6379</span><span class="p">))</span>
-        <span class="n">rate_limiter</span> <span class="o">=</span> <span class="n">RateLimiter</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="n">redis_host</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">redis_port</span><span class="p">)</span>
+
+        <span class="c1"># Creating new limiter and injecting global redis instance</span>
+        <span class="n">rate_limiter</span> <span class="o">=</span> <span class="n">RateLimiter</span><span class="p">(</span><span class="n">redis</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">redis</span><span class="p">)</span>
 
         <span class="c1"># Registering rate limiter middleware</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">add_middleware</span><span class="p">(</span><span class="n">rate_limiter</span><span class="o">.</span><span class="n">register_rate_limiter</span><span class="p">())</span>
@@ -300,22 +333,47 @@
 
 <div class="viewcode-block" id="Server._create_ai_service">
 <a class="viewcode-back" href="../../server.html#server.server.Server._create_ai_service">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_create_ai_service</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AiCommunicationService</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_ai_service</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CommunicationService</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns new AI service class&quot;&quot;&quot;</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Creating AI communication service with </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">model</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">AiCommunicationService</span><span class="p">(</span>
+        <span class="k">return</span> <span class="n">CommunicationService</span><span class="p">(</span>
             <span class="n">provider</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">llm_provider</span><span class="p">,</span>
             <span class="n">model</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">model</span><span class="p">,</span>
             <span class="n">api_key</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">llm_provider_api_token</span><span class="p">,</span>
+            <span class="n">chroma_retriever</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">retriever</span>
         <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Server._configure_knowledge_base_service">
+<a class="viewcode-back" href="../../server.html#server.server.Server._configure_knowledge_base_service">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_configure_knowledge_base_service</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KnowledgeBaseService</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="c1"># Check for existence of config file</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">knowledge_base_config_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;No knowledge base config path provided&quot;</span><span class="p">)</span>
+            <span class="k">return</span> <span class="kc">None</span>
+
+        <span class="c1"># Injecting config file path to new service</span>
+        <span class="n">service</span> <span class="o">=</span> <span class="n">KnowledgeBaseService</span><span class="p">(</span>
+            <span class="n">config_file_path</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">knowledge_base_config_path</span><span class="p">,</span>
+            <span class="n">redis</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">redis</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Registering scheduler to auto update knowledge base (started in lifespan)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kb_scheduler</span> <span class="o">=</span> <span class="n">AsyncIOScheduler</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kb_scheduler</span><span class="o">.</span><span class="n">add_job</span><span class="p">(</span>
+            <span class="n">service</span><span class="o">.</span><span class="n">knowledge_base_fetch_workflow</span><span class="p">,</span>
+            <span class="s2">&quot;interval&quot;</span><span class="p">,</span>
+            <span class="n">minutes</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">KB_SCHEDULER_DURATION</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">service</span></div>
 
 
 <div class="viewcode-block" id="Server._configure_analysis_router">
 <a class="viewcode-back" href="../../server.html#server.server.Server._configure_analysis_router">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_configure_analysis_router</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ai_service</span><span class="p">:</span> <span class="n">AiCommunicationService</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_configure_analysis_router</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Creates new AnalysisRouter class and injects it to FastAPI&quot;&quot;&quot;</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Registering analysis routes&quot;</span><span class="p">)</span>
-        <span class="n">analysis_router</span> <span class="o">=</span> <span class="n">AnalysisRouter</span><span class="p">(</span><span class="n">ai_service</span><span class="o">=</span><span class="n">ai_service</span><span class="p">)</span>
+        <span class="n">analysis_router</span> <span class="o">=</span> <span class="n">AnalysisRouter</span><span class="p">(</span><span class="n">ai_service</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">ai_service</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">app</span><span class="o">.</span><span class="n">include_router</span><span class="p">(</span><span class="n">analysis_router</span><span class="o">.</span><span class="n">router</span><span class="p">)</span></div>
 
 

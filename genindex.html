@@ -232,18 +232,12 @@
           
 <section class="genindex-section">
   <h1 id="index">Index</h1>
-  <div class="genindex-jumpbox"><a href="#_"><strong>_</strong></a> | <a href="#A"><strong>A</strong></a> | <a href="#B"><strong>B</strong></a> | <a href="#C"><strong>C</strong></a> | <a href="#D"><strong>D</strong></a> | <a href="#F"><strong>F</strong></a> | <a href="#H"><strong>H</strong></a> | <a href="#L"><strong>L</strong></a> | <a href="#M"><strong>M</strong></a> | <a href="#P"><strong>P</strong></a> | <a href="#R"><strong>R</strong></a> | <a href="#S"><strong>S</strong></a> | <a href="#T"><strong>T</strong></a> | <a href="#V"><strong>V</strong></a></div>
+  <div class="genindex-jumpbox"><a href="#_"><strong>_</strong></a> | <a href="#A"><strong>A</strong></a> | <a href="#D"><strong>D</strong></a> | <a href="#K"><strong>K</strong></a> | <a href="#M"><strong>M</strong></a> | <a href="#R"><strong>R</strong></a> | <a href="#S"><strong>S</strong></a> | <a href="#V"><strong>V</strong></a></div>
 </section>
 <section id="_" class="genindex-section">
   <h2>_</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="models.html#model.api.api_model.BaseRequest._abc_impl">_abc_impl (model.api.api_model.BaseRequest attribute)</a>
-
-        <ul>
-          <li><a href="models.html#model.api.api_model.BaseResponse._abc_impl">(model.api.api_model.BaseResponse attribute)</a>
-</li>
-        </ul></li>
         <li><a href="api.html#api.analysis_router.AnalysisRouter._anomaly_detection">_anomaly_detection() (api.analysis_router.AnalysisRouter method)</a>
 </li>
         <li><a href="api.html#api.analysis_router.AnalysisRouter._comparison">_comparison() (api.analysis_router.AnalysisRouter method)</a>
@@ -252,17 +246,21 @@
 </li>
         <li><a href="server.html#server.server.Server._configure_authentication">_configure_authentication() (server.server.Server method)</a>
 </li>
+        <li><a href="server.html#server.server.Server._configure_knowledge_base_service">_configure_knowledge_base_service() (server.server.Server method)</a>
+</li>
         <li><a href="server.html#server.server.Server._configure_rate_limiter">_configure_rate_limiter() (server.server.Server method)</a>
 </li>
         <li><a href="server.html#server.server.Server._create_ai_service">_create_ai_service() (server.server.Server method)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api.html#api.analysis_router.AnalysisRouter._do_analyze_request">_do_analyze_request() (api.analysis_router.AnalysisRouter method)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api.html#api.analysis_router.AnalysisRouter._forecasting">_forecasting() (api.analysis_router.AnalysisRouter method)</a>
 </li>
         <li><a href="api.html#api.analysis_router.AnalysisRouter._health">_health() (api.analysis_router.AnalysisRouter method)</a>
+</li>
+        <li><a href="server.html#server.server.Server._lifespan">_lifespan() (server.server.Server method)</a>
 </li>
         <li><a href="api.html#api.analysis_router.AnalysisRouter._pattern_recognition">_pattern_recognition() (api.analysis_router.AnalysisRouter method)</a>
 </li>
@@ -284,15 +282,6 @@
   <h2>A</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li>
-    ai.langchain.communication_service
-
-        <ul>
-          <li><a href="ai.html#module-ai.langchain.communication_service">module</a>
-</li>
-        </ul></li>
-        <li><a href="ai.html#ai.langchain.communication_service.AiCommunicationService">AiCommunicationService (class in ai.langchain.communication_service)</a>
-</li>
         <li><a href="api.html#api.analysis_router.AnalysisRouter">AnalysisRouter (class in api.analysis_router)</a>
 </li>
     </ul></td>
@@ -304,36 +293,6 @@
           <li><a href="api.html#module-api.analysis_router">module</a>
 </li>
         </ul></li>
-        <li><a href="models.html#model.config.config.Config.api_key">api_key (model.config.config.Config attribute)</a>
-</li>
-        <li><a href="models.html#model.config.config.Config.api_key_field_name">api_key_field_name (model.config.config.Config attribute)</a>
-</li>
-        <li><a href="middleware.html#middleware.auth.authentication.AuthInterceptor">AuthInterceptor (class in middleware.auth.authentication)</a>
-</li>
-    </ul></td>
-  </tr></table>
-</section>
-
-<section id="B" class="genindex-section">
-  <h2>B</h2>
-  <table style="width: 100%" class="indextable genindextable"><tr>
-    <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="models.html#model.api.api_model.BaseRequest">BaseRequest (class in model.api.api_model)</a>
-</li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="models.html#model.api.api_model.BaseResponse">BaseResponse (class in model.api.api_model)</a>
-</li>
-    </ul></td>
-  </tr></table>
-</section>
-
-<section id="C" class="genindex-section">
-  <h2>C</h2>
-  <table style="width: 100%" class="indextable genindextable"><tr>
-    <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="models.html#model.config.config.Config">Config (class in model.config.config)</a>
-</li>
     </ul></td>
   </tr></table>
 </section>
@@ -342,61 +301,17 @@
   <h2>D</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="models.html#model.api.api_model.BaseRequest.data_sets">data_sets (model.api.api_model.BaseRequest attribute)</a>
-</li>
         <li><a href="api.html#api.analysis_router.AnalysisRouter.DATASET_SEPERATOR">DATASET_SEPERATOR (api.analysis_router.AnalysisRouter attribute)</a>
 </li>
     </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="models.html#model.api.api_model.BaseResponse.date">date (model.api.api_model.BaseResponse attribute)</a>
-</li>
-        <li><a href="models.html#model.api.api_model.BaseRequest.daterange">daterange (model.api.api_model.BaseRequest attribute)</a>
-</li>
-        <li><a href="models.html#model.config.config.Config.debug">debug (model.config.config.Config attribute)</a>
-</li>
-    </ul></td>
   </tr></table>
 </section>
 
-<section id="F" class="genindex-section">
-  <h2>F</h2>
+<section id="K" class="genindex-section">
+  <h2>K</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="models.html#model.api.api_model.BaseRequest.format">format (model.api.api_model.BaseRequest attribute)</a>
-</li>
-    </ul></td>
-  </tr></table>
-</section>
-
-<section id="H" class="genindex-section">
-  <h2>H</h2>
-  <table style="width: 100%" class="indextable genindextable"><tr>
-    <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="ai.html#ai.langchain.communication_service.AiCommunicationService.health_check">health_check() (ai.langchain.communication_service.AiCommunicationService method)</a>
-</li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="models.html#model.config.config.Config.host">host (model.config.config.Config attribute)</a>
-</li>
-    </ul></td>
-  </tr></table>
-</section>
-
-<section id="L" class="genindex-section">
-  <h2>L</h2>
-  <table style="width: 100%" class="indextable genindextable"><tr>
-    <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="models.html#model.config.config.Config.langsmith_api_key">langsmith_api_key (model.config.config.Config attribute)</a>
-</li>
-        <li><a href="models.html#model.config.config.Config.langsmith_project">langsmith_project (model.config.config.Config attribute)</a>
-</li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="models.html#model.config.config.Config.langsmith_tracing_enabled">langsmith_tracing_enabled (model.config.config.Config attribute)</a>
-</li>
-        <li><a href="models.html#model.config.config.Config.llm_provider">llm_provider (model.config.config.Config attribute)</a>
-</li>
-        <li><a href="models.html#model.config.config.Config.llm_provider_api_token">llm_provider_api_token (model.config.config.Config attribute)</a>
+        <li><a href="server.html#server.server.Server.KB_SCHEDULER_DURATION">KB_SCHEDULER_DURATION (server.server.Server attribute)</a>
 </li>
     </ul></td>
   </tr></table>
@@ -415,67 +330,13 @@
         </ul></li>
         <li><a href="main.html#main.main">main() (in module main)</a>
 </li>
-        <li><a href="ai.html#ai.langchain.communication_service.AiCommunicationService.make_analyse_request">make_analyse_request() (ai.langchain.communication_service.AiCommunicationService method)</a>
-</li>
-        <li><a href="middleware.html#middleware.rate_limiting.rate_limiter.RateLimiter.MAX_REQUESTS_PER_MINUTE">MAX_REQUESTS_PER_MINUTE (middleware.rate_limiting.rate_limiter.RateLimiter attribute)</a>
-</li>
-        <li><a href="models.html#model.api.api_model.BaseResponse.message">message (model.api.api_model.BaseResponse attribute)</a>
-</li>
-        <li>
-    middleware.auth.authentication
-
-        <ul>
-          <li><a href="middleware.html#module-middleware.auth.authentication">module</a>
-</li>
-        </ul></li>
-        <li>
-    middleware.rate_limiting.rate_limiter
-
-        <ul>
-          <li><a href="middleware.html#module-middleware.rate_limiting.rate_limiter">module</a>
-</li>
-        </ul></li>
-        <li><a href="models.html#model.config.config.Config.model">model (model.config.config.Config attribute)</a>
-</li>
-        <li>
-    model.api.api_model
-
-        <ul>
-          <li><a href="models.html#module-model.api.api_model">module</a>
-</li>
-        </ul></li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
-        <li>
-    model.config.config
-
-        <ul>
-          <li><a href="models.html#module-model.config.config">module</a>
-</li>
-        </ul></li>
-        <li><a href="models.html#model.api.api_model.BaseRequest.model_config">model_config (model.api.api_model.BaseRequest attribute)</a>
-
-        <ul>
-          <li><a href="models.html#model.api.api_model.BaseResponse.model_config">(model.api.api_model.BaseResponse attribute)</a>
-</li>
-        </ul></li>
         <li>
     module
 
         <ul>
-          <li><a href="ai.html#module-ai.langchain.communication_service">ai.langchain.communication_service</a>
-</li>
           <li><a href="api.html#module-api.analysis_router">api.analysis_router</a>
 </li>
           <li><a href="main.html#module-main">main</a>
-</li>
-          <li><a href="middleware.html#module-middleware.auth.authentication">middleware.auth.authentication</a>
-</li>
-          <li><a href="middleware.html#module-middleware.rate_limiting.rate_limiter">middleware.rate_limiting.rate_limiter</a>
-</li>
-          <li><a href="models.html#module-model.api.api_model">model.api.api_model</a>
-</li>
-          <li><a href="models.html#module-model.config.config">model.config.config</a>
 </li>
           <li><a href="server.html#module-server.server">server.server</a>
 </li>
@@ -486,28 +347,10 @@
   </tr></table>
 </section>
 
-<section id="P" class="genindex-section">
-  <h2>P</h2>
-  <table style="width: 100%" class="indextable genindextable"><tr>
-    <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="models.html#model.config.config.Config.port">port (model.config.config.Config attribute)</a>
-</li>
-    </ul></td>
-  </tr></table>
-</section>
-
 <section id="R" class="genindex-section">
   <h2>R</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="middleware.html#middleware.rate_limiting.rate_limiter.RateLimiter">RateLimiter (class in middleware.rate_limiting.rate_limiter)</a>
-</li>
-        <li><a href="middleware.html#middleware.auth.authentication.AuthInterceptor.register_auth_interceptor">register_auth_interceptor() (middleware.auth.authentication.AuthInterceptor method)</a>
-</li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="middleware.html#middleware.rate_limiting.rate_limiter.RateLimiter.register_rate_limiter">register_rate_limiter() (middleware.rate_limiting.rate_limiter.RateLimiter method)</a>
-</li>
         <li><a href="server.html#server.server.Server.run">run() (server.server.Server method)</a>
 </li>
     </ul></td>
@@ -529,16 +372,6 @@
           <li><a href="server.html#module-server.server">module</a>
 </li>
         </ul></li>
-    </ul></td>
-  </tr></table>
-</section>
-
-<section id="T" class="genindex-section">
-  <h2>T</h2>
-  <table style="width: 100%" class="indextable genindextable"><tr>
-    <td style="width: 33%; vertical-align: top;"><ul>
-        <li><a href="middleware.html#middleware.rate_limiting.rate_limiter.RateLimiter.TIME_WINDOW">TIME_WINDOW (middleware.rate_limiting.rate_limiter.RateLimiter attribute)</a>
-</li>
     </ul></td>
   </tr></table>
 </section>

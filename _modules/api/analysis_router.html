@@ -238,8 +238,8 @@
 <span class="kn">import</span><span class="w"> </span><span class="nn">langchain_core.exceptions</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">fastapi</span><span class="w"> </span><span class="kn">import</span> <span class="n">APIRouter</span><span class="p">,</span> <span class="n">HTTPException</span>
 
-<span class="kn">from</span><span class="w"> </span><span class="nn">src.ai.langchain.communication_service</span><span class="w"> </span><span class="kn">import</span> <span class="n">AiCommunicationService</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">src.model.api.api_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseRequest</span><span class="p">,</span> <span class="n">BaseResponse</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.ai.communication.llm_communication_service</span><span class="w"> </span><span class="kn">import</span> <span class="n">CommunicationService</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">src.model.api_model</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseRequest</span><span class="p">,</span> <span class="n">BaseResponse</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">src.validation.validation</span><span class="w"> </span><span class="kn">import</span> <span class="n">validate_request</span>
 
 
@@ -250,7 +250,7 @@
 
     <span class="n">DATASET_SEPERATOR</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">---NEW---DATASET---</span><span class="se">\n</span><span class="s2">&quot;</span>
 
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ai_service</span><span class="p">:</span> <span class="n">AiCommunicationService</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ai_service</span><span class="p">:</span> <span class="n">CommunicationService</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">router</span> <span class="o">=</span> <span class="n">APIRouter</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ai_service</span> <span class="o">=</span> <span class="n">ai_service</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_register_routes</span><span class="p">()</span>

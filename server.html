@@ -244,9 +244,14 @@
 <dt class="sig sig-object py" id="server.server.Server">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">server.server.</span></span><span class="sig-name descname"><span class="pre">Server</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/server/server.html#Server"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#server.server.Server" title="Link to this definition">¶</a></dt>
 <dd><p>Builds and configures the FastAPI application.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="server.server.Server.KB_SCHEDULER_DURATION">
+<span class="sig-name descname"><span class="pre">KB_SCHEDULER_DURATION</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10</span></span><a class="headerlink" href="#server.server.Server.KB_SCHEDULER_DURATION" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="server.server.Server._configure_analysis_router">
-<span class="sig-name descname"><span class="pre">_configure_analysis_router</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ai_service</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AiCommunicationService</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/server/server.html#Server._configure_analysis_router"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#server.server.Server._configure_analysis_router" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_configure_analysis_router</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/server/server.html#Server._configure_analysis_router"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#server.server.Server._configure_analysis_router" title="Link to this definition">¶</a></dt>
 <dd><p>Creates new AnalysisRouter class and injects it to FastAPI</p>
 </dd></dl>
 
@@ -257,14 +262,25 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="server.server.Server._configure_knowledge_base_service">
+<span class="sig-name descname"><span class="pre">_configure_knowledge_base_service</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">KnowledgeBaseService</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/server/server.html#Server._configure_knowledge_base_service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#server.server.Server._configure_knowledge_base_service" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="server.server.Server._configure_rate_limiter">
 <span class="sig-name descname"><span class="pre">_configure_rate_limiter</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">RateLimiter</span></span></span><a class="reference internal" href="_modules/server/server.html#Server._configure_rate_limiter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#server.server.Server._configure_rate_limiter" title="Link to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="server.server.Server._create_ai_service">
-<span class="sig-name descname"><span class="pre">_create_ai_service</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">AiCommunicationService</span></span></span><a class="reference internal" href="_modules/server/server.html#Server._create_ai_service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#server.server.Server._create_ai_service" title="Link to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">_create_ai_service</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">CommunicationService</span></span></span><a class="reference internal" href="_modules/server/server.html#Server._create_ai_service"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#server.server.Server._create_ai_service" title="Link to this definition">¶</a></dt>
 <dd><p>Returns new AI service class</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="server.server.Server._lifespan">
+<span class="sig-name descname"><span class="pre">_lifespan</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">_app</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">FastAPI</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/server/server.html#Server._lifespan"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#server.server.Server._lifespan" title="Link to this definition">¶</a></dt>
+<dd><p>Starts knowledge base service after server startup</p>
 </dd></dl>
 
 <dl class="py method">
@@ -334,10 +350,13 @@
             <ul>
 <li><a class="reference internal" href="#">Server</a><ul>
 <li><a class="reference internal" href="#server.server.Server"><code class="docutils literal notranslate"><span class="pre">Server</span></code></a><ul>
+<li><a class="reference internal" href="#server.server.Server.KB_SCHEDULER_DURATION"><code class="docutils literal notranslate"><span class="pre">Server.KB_SCHEDULER_DURATION</span></code></a></li>
 <li><a class="reference internal" href="#server.server.Server._configure_analysis_router"><code class="docutils literal notranslate"><span class="pre">Server._configure_analysis_router()</span></code></a></li>
 <li><a class="reference internal" href="#server.server.Server._configure_authentication"><code class="docutils literal notranslate"><span class="pre">Server._configure_authentication()</span></code></a></li>
+<li><a class="reference internal" href="#server.server.Server._configure_knowledge_base_service"><code class="docutils literal notranslate"><span class="pre">Server._configure_knowledge_base_service()</span></code></a></li>
 <li><a class="reference internal" href="#server.server.Server._configure_rate_limiter"><code class="docutils literal notranslate"><span class="pre">Server._configure_rate_limiter()</span></code></a></li>
 <li><a class="reference internal" href="#server.server.Server._create_ai_service"><code class="docutils literal notranslate"><span class="pre">Server._create_ai_service()</span></code></a></li>
+<li><a class="reference internal" href="#server.server.Server._lifespan"><code class="docutils literal notranslate"><span class="pre">Server._lifespan()</span></code></a></li>
 <li><a class="reference internal" href="#server.server.Server.run"><code class="docutils literal notranslate"><span class="pre">Server.run()</span></code></a></li>
 </ul>
 </li>
