@@ -145,7 +145,7 @@ class KnowledgeBaseService:
             self._push_data_to_vector_store(docs=split_documents)
 
             # Saving changed data in redis
-            await self._push_data_to_redis(provider_name=provider.get("provider"), docs=split_documents)
+            await self._push_data_to_redis(provider_name=provider.get("provider"), docs=docs)
 
     def _get_knowledge_base_data(self, provider: Any) -> list | None:
         """Routes a provider config to the appropriate loader and returns the fetched documents."""
@@ -246,11 +246,11 @@ class KnowledgeBaseService:
 
     def _push_data_to_vector_store(self, docs: list[Document]) -> None:
         """Inserts the given documents into the ChromaDB collection."""
-        logger.info(f"Pushing {len(docs)} documents to vector store")
+        logger.info(f"Pushing {len(docs)} chunked documents to vector store")
 
         self.chroma.add_documents(documents=docs)
 
-        logger.info(f"Finished pushing {len(docs)} documents to vector store")
+        logger.info(f"Finished pushing {len(docs)} chunked documents to vector store")
         return
 
     async def _push_data_to_redis(self, provider_name: str, docs: list[Document]) -> None:
