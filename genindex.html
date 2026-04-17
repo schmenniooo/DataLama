@@ -192,6 +192,7 @@
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="main.html">Main</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ai.html">AI Communication Service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="knowledge.html">Knowledge Base Service</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">Analysis Router</a></li>
 <li class="toctree-l1"><a class="reference internal" href="middleware.html">Middleware</a></li>
 <li class="toctree-l1"><a class="reference internal" href="models.html">Models</a></li>
@@ -232,13 +233,23 @@
           
 <section class="genindex-section">
   <h1 id="index">Index</h1>
-  <div class="genindex-jumpbox"><a href="#_"><strong>_</strong></a> | <a href="#A"><strong>A</strong></a> | <a href="#D"><strong>D</strong></a> | <a href="#K"><strong>K</strong></a> | <a href="#M"><strong>M</strong></a> | <a href="#R"><strong>R</strong></a> | <a href="#S"><strong>S</strong></a> | <a href="#V"><strong>V</strong></a></div>
+  <div class="genindex-jumpbox"><a href="#_"><strong>_</strong></a> | <a href="#A"><strong>A</strong></a> | <a href="#B"><strong>B</strong></a> | <a href="#C"><strong>C</strong></a> | <a href="#D"><strong>D</strong></a> | <a href="#F"><strong>F</strong></a> | <a href="#G"><strong>G</strong></a> | <a href="#H"><strong>H</strong></a> | <a href="#K"><strong>K</strong></a> | <a href="#L"><strong>L</strong></a> | <a href="#M"><strong>M</strong></a> | <a href="#P"><strong>P</strong></a> | <a href="#R"><strong>R</strong></a> | <a href="#S"><strong>S</strong></a> | <a href="#T"><strong>T</strong></a> | <a href="#V"><strong>V</strong></a></div>
 </section>
 <section id="_" class="genindex-section">
   <h2>_</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="models.html#model.api_model.BaseRequest._abc_impl">_abc_impl (model.api_model.BaseRequest attribute)</a>
+
+        <ul>
+          <li><a href="models.html#model.api_model.BaseResponse._abc_impl">(model.api_model.BaseResponse attribute)</a>
+</li>
+        </ul></li>
         <li><a href="api.html#api.analysis_router.AnalysisRouter._anomaly_detection">_anomaly_detection() (api.analysis_router.AnalysisRouter method)</a>
+</li>
+        <li><a href="ai.html#ai.communication.llm_communication_service.CommunicationService._build_prompt_for_analyse_call">_build_prompt_for_analyse_call() (ai.communication.llm_communication_service.CommunicationService static method)</a>
+</li>
+        <li><a href="knowledge.html#ai.knowledge.knowledge_base_service.KnowledgeBaseService._check_docs_for_changes">_check_docs_for_changes() (ai.knowledge.knowledge_base_service.KnowledgeBaseService method)</a>
 </li>
         <li><a href="api.html#api.analysis_router.AnalysisRouter._comparison">_comparison() (api.analysis_router.AnalysisRouter method)</a>
 </li>
@@ -254,19 +265,39 @@
 </li>
         <li><a href="api.html#api.analysis_router.AnalysisRouter._do_analyze_request">_do_analyze_request() (api.analysis_router.AnalysisRouter method)</a>
 </li>
-    </ul></td>
-    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="api.html#api.analysis_router.AnalysisRouter._forecasting">_forecasting() (api.analysis_router.AnalysisRouter method)</a>
+</li>
+        <li><a href="knowledge.html#ai.knowledge.knowledge_base_service.KnowledgeBaseService._get_knowledge_base_data">_get_knowledge_base_data() (ai.knowledge.knowledge_base_service.KnowledgeBaseService method)</a>
 </li>
         <li><a href="api.html#api.analysis_router.AnalysisRouter._health">_health() (api.analysis_router.AnalysisRouter method)</a>
 </li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="server.html#server.server.Server._lifespan">_lifespan() (server.server.Server method)</a>
+</li>
+        <li><a href="knowledge.html#ai.knowledge.knowledge_base_service.KnowledgeBaseService._load_jira_documents">_load_jira_documents() (ai.knowledge.knowledge_base_service.KnowledgeBaseService static method)</a>
+</li>
+        <li><a href="knowledge.html#ai.knowledge.knowledge_base_service.KnowledgeBaseService._load_slack_documents">_load_slack_documents() (ai.knowledge.knowledge_base_service.KnowledgeBaseService static method)</a>
 </li>
         <li><a href="api.html#api.analysis_router.AnalysisRouter._pattern_recognition">_pattern_recognition() (api.analysis_router.AnalysisRouter method)</a>
 </li>
+        <li><a href="knowledge.html#ai.knowledge.knowledge_base_service.KnowledgeBaseService._push_data_to_redis">_push_data_to_redis() (ai.knowledge.knowledge_base_service.KnowledgeBaseService method)</a>
+</li>
+        <li><a href="knowledge.html#ai.knowledge.knowledge_base_service.KnowledgeBaseService._push_data_to_vector_store">_push_data_to_vector_store() (ai.knowledge.knowledge_base_service.KnowledgeBaseService method)</a>
+</li>
+        <li><a href="knowledge.html#ai.knowledge.knowledge_base_service.KnowledgeBaseService._read_provider_config_file">_read_provider_config_file() (ai.knowledge.knowledge_base_service.KnowledgeBaseService static method)</a>
+</li>
         <li><a href="api.html#api.analysis_router.AnalysisRouter._register_routes">_register_routes() (api.analysis_router.AnalysisRouter method)</a>
 </li>
+        <li><a href="knowledge.html#ai.knowledge.knowledge_base_service.KnowledgeBaseService._REQUIRED_FIELDS">_REQUIRED_FIELDS (ai.knowledge.knowledge_base_service.KnowledgeBaseService attribute)</a>
+</li>
+        <li><a href="ai.html#ai.communication.llm_communication_service.CommunicationService._retrieve_context_from_vector_store">_retrieve_context_from_vector_store() (ai.communication.llm_communication_service.CommunicationService method)</a>
+</li>
+        <li><a href="knowledge.html#ai.knowledge.knowledge_base_service.KnowledgeBaseService._split_documents_to_chunks">_split_documents_to_chunks() (ai.knowledge.knowledge_base_service.KnowledgeBaseService method)</a>
+</li>
         <li><a href="api.html#api.analysis_router.AnalysisRouter._summary">_summary() (api.analysis_router.AnalysisRouter method)</a>
+</li>
+        <li><a href="knowledge.html#ai.knowledge.knowledge_base_service.KnowledgeBaseService._validate_config">_validate_config() (ai.knowledge.knowledge_base_service.KnowledgeBaseService class method)</a>
 </li>
         <li><a href="validation.html#validation.validation._validate_data_format">_validate_data_format() (in module validation.validation)</a>
 </li>
@@ -282,6 +313,20 @@
   <h2>A</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li>
+    ai.communication.llm_communication_service
+
+        <ul>
+          <li><a href="ai.html#module-ai.communication.llm_communication_service">module</a>
+</li>
+        </ul></li>
+        <li>
+    ai.knowledge.knowledge_base_service
+
+        <ul>
+          <li><a href="knowledge.html#module-ai.knowledge.knowledge_base_service">module</a>
+</li>
+        </ul></li>
         <li><a href="api.html#api.analysis_router.AnalysisRouter">AnalysisRouter (class in api.analysis_router)</a>
 </li>
     </ul></td>
@@ -293,6 +338,44 @@
           <li><a href="api.html#module-api.analysis_router">module</a>
 </li>
         </ul></li>
+        <li><a href="models.html#model.config.Config.api_key">api_key (model.config.Config attribute)</a>
+</li>
+        <li><a href="models.html#model.config.Config.api_key_field_name">api_key_field_name (model.config.Config attribute)</a>
+</li>
+        <li><a href="middleware.html#middleware.authentication.AuthInterceptor">AuthInterceptor (class in middleware.authentication)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="B" class="genindex-section">
+  <h2>B</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="models.html#model.api_model.BaseRequest">BaseRequest (class in model.api_model)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="models.html#model.api_model.BaseResponse">BaseResponse (class in model.api_model)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="C" class="genindex-section">
+  <h2>C</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="knowledge.html#ai.knowledge.knowledge_base_service.KnowledgeBaseService.CHUNK_OVERLAP">CHUNK_OVERLAP (ai.knowledge.knowledge_base_service.KnowledgeBaseService attribute)</a>
+</li>
+        <li><a href="knowledge.html#ai.knowledge.knowledge_base_service.KnowledgeBaseService.CHUNK_SIZE">CHUNK_SIZE (ai.knowledge.knowledge_base_service.KnowledgeBaseService attribute)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="ai.html#ai.communication.llm_communication_service.CommunicationService">CommunicationService (class in ai.communication.llm_communication_service)</a>
+</li>
+        <li><a href="models.html#model.config.Config">Config (class in model.config)</a>
+</li>
     </ul></td>
   </tr></table>
 </section>
@@ -301,7 +384,55 @@
   <h2>D</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="models.html#model.api_model.BaseRequest.data_sets">data_sets (model.api_model.BaseRequest attribute)</a>
+</li>
         <li><a href="api.html#api.analysis_router.AnalysisRouter.DATASET_SEPERATOR">DATASET_SEPERATOR (api.analysis_router.AnalysisRouter attribute)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="models.html#model.api_model.BaseResponse.date">date (model.api_model.BaseResponse attribute)</a>
+</li>
+        <li><a href="models.html#model.api_model.BaseRequest.daterange">daterange (model.api_model.BaseRequest attribute)</a>
+</li>
+        <li><a href="models.html#model.config.Config.debug">debug (model.config.Config attribute)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="F" class="genindex-section">
+  <h2>F</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="models.html#model.api_model.BaseRequest.format">format (model.api_model.BaseRequest attribute)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="G" class="genindex-section">
+  <h2>G</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="knowledge.html#ai.knowledge.knowledge_base_service.KnowledgeBaseService.get_chroma_retriever">get_chroma_retriever() (ai.knowledge.knowledge_base_service.KnowledgeBaseService method)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="knowledge.html#ai.knowledge.knowledge_base_service.KnowledgeBaseService.get_providers">get_providers() (ai.knowledge.knowledge_base_service.KnowledgeBaseService method)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="H" class="genindex-section">
+  <h2>H</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="ai.html#ai.communication.llm_communication_service.CommunicationService.health_check">health_check() (ai.communication.llm_communication_service.CommunicationService method)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="models.html#model.config.Config.host">host (model.config.Config attribute)</a>
 </li>
     </ul></td>
   </tr></table>
@@ -312,6 +443,36 @@
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
         <li><a href="server.html#server.server.Server.KB_SCHEDULER_DURATION">KB_SCHEDULER_DURATION (server.server.Server attribute)</a>
+</li>
+        <li><a href="models.html#model.config.Config.knowledge_base_config_path">knowledge_base_config_path (model.config.Config attribute)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="models.html#model.config.Config.knowledge_base_enabled">knowledge_base_enabled (model.config.Config attribute)</a>
+</li>
+        <li><a href="knowledge.html#ai.knowledge.knowledge_base_service.KnowledgeBaseService.knowledge_base_fetch_workflow">knowledge_base_fetch_workflow() (ai.knowledge.knowledge_base_service.KnowledgeBaseService method)</a>
+</li>
+        <li><a href="knowledge.html#ai.knowledge.knowledge_base_service.KnowledgeBaseService">KnowledgeBaseService (class in ai.knowledge.knowledge_base_service)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="L" class="genindex-section">
+  <h2>L</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="models.html#model.config.Config.langsmith_api_key">langsmith_api_key (model.config.Config attribute)</a>
+</li>
+        <li><a href="models.html#model.config.Config.langsmith_project">langsmith_project (model.config.Config attribute)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="models.html#model.config.Config.langsmith_tracing_enabled">langsmith_tracing_enabled (model.config.Config attribute)</a>
+</li>
+        <li><a href="models.html#model.config.Config.llm_provider">llm_provider (model.config.Config attribute)</a>
+</li>
+        <li><a href="models.html#model.config.Config.llm_provider_api_token">llm_provider_api_token (model.config.Config attribute)</a>
 </li>
     </ul></td>
   </tr></table>
@@ -330,13 +491,69 @@
         </ul></li>
         <li><a href="main.html#main.main">main() (in module main)</a>
 </li>
+        <li><a href="ai.html#ai.communication.llm_communication_service.CommunicationService.make_analyse_request">make_analyse_request() (ai.communication.llm_communication_service.CommunicationService method)</a>
+</li>
+        <li><a href="middleware.html#middleware.rate_limiter.RateLimiter.MAX_REQUESTS_PER_MINUTE">MAX_REQUESTS_PER_MINUTE (middleware.rate_limiter.RateLimiter attribute)</a>
+</li>
+        <li><a href="models.html#model.api_model.BaseResponse.message">message (model.api_model.BaseResponse attribute)</a>
+</li>
+        <li>
+    middleware.authentication
+
+        <ul>
+          <li><a href="middleware.html#module-middleware.authentication">module</a>
+</li>
+        </ul></li>
+        <li>
+    middleware.rate_limiter
+
+        <ul>
+          <li><a href="middleware.html#module-middleware.rate_limiter">module</a>
+</li>
+        </ul></li>
+        <li><a href="models.html#model.config.Config.model">model (model.config.Config attribute)</a>
+</li>
+        <li>
+    model.api_model
+
+        <ul>
+          <li><a href="models.html#module-model.api_model">module</a>
+</li>
+        </ul></li>
+        <li>
+    model.config
+
+        <ul>
+          <li><a href="models.html#module-model.config">module</a>
+</li>
+        </ul></li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="models.html#model.api_model.BaseRequest.model_config">model_config (model.api_model.BaseRequest attribute)</a>
+
+        <ul>
+          <li><a href="models.html#model.api_model.BaseResponse.model_config">(model.api_model.BaseResponse attribute)</a>
+</li>
+        </ul></li>
         <li>
     module
 
         <ul>
+          <li><a href="ai.html#module-ai.communication.llm_communication_service">ai.communication.llm_communication_service</a>
+</li>
+          <li><a href="knowledge.html#module-ai.knowledge.knowledge_base_service">ai.knowledge.knowledge_base_service</a>
+</li>
           <li><a href="api.html#module-api.analysis_router">api.analysis_router</a>
 </li>
           <li><a href="main.html#module-main">main</a>
+</li>
+          <li><a href="middleware.html#module-middleware.authentication">middleware.authentication</a>
+</li>
+          <li><a href="middleware.html#module-middleware.rate_limiter">middleware.rate_limiter</a>
+</li>
+          <li><a href="models.html#module-model.api_model">model.api_model</a>
+</li>
+          <li><a href="models.html#module-model.config">model.config</a>
 </li>
           <li><a href="server.html#module-server.server">server.server</a>
 </li>
@@ -347,10 +564,30 @@
   </tr></table>
 </section>
 
+<section id="P" class="genindex-section">
+  <h2>P</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="models.html#model.config.Config.port">port (model.config.Config attribute)</a>
+</li>
+    </ul></td>
+  </tr></table>
+</section>
+
 <section id="R" class="genindex-section">
   <h2>R</h2>
   <table style="width: 100%" class="indextable genindextable"><tr>
     <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="middleware.html#middleware.rate_limiter.RateLimiter">RateLimiter (class in middleware.rate_limiter)</a>
+</li>
+        <li><a href="knowledge.html#ai.knowledge.knowledge_base_service.KnowledgeBaseService.REDIS_HASH_GROUP">REDIS_HASH_GROUP (ai.knowledge.knowledge_base_service.KnowledgeBaseService attribute)</a>
+</li>
+    </ul></td>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="middleware.html#middleware.authentication.AuthInterceptor.register_auth_interceptor">register_auth_interceptor() (middleware.authentication.AuthInterceptor method)</a>
+</li>
+        <li><a href="middleware.html#middleware.rate_limiter.RateLimiter.register_rate_limiter">register_rate_limiter() (middleware.rate_limiter.RateLimiter method)</a>
+</li>
         <li><a href="server.html#server.server.Server.run">run() (server.server.Server method)</a>
 </li>
     </ul></td>
@@ -372,6 +609,16 @@
           <li><a href="server.html#module-server.server">module</a>
 </li>
         </ul></li>
+    </ul></td>
+  </tr></table>
+</section>
+
+<section id="T" class="genindex-section">
+  <h2>T</h2>
+  <table style="width: 100%" class="indextable genindextable"><tr>
+    <td style="width: 33%; vertical-align: top;"><ul>
+        <li><a href="middleware.html#middleware.rate_limiter.RateLimiter.TIME_WINDOW">TIME_WINDOW (middleware.rate_limiter.RateLimiter attribute)</a>
+</li>
     </ul></td>
   </tr></table>
 </section>

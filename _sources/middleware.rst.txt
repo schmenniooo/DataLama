@@ -1,10 +1,10 @@
 Middleware
-=========
+==========
 
 Authentication
 --------------
 
-.. automodule:: middleware.auth.authentication
+.. automodule:: middleware.authentication
    :members:
    :undoc-members:
    :private-members:
@@ -12,7 +12,7 @@ Authentication
 Rate Limiting
 -------------
 
-.. automodule:: middleware.rate_limiting.rate_limiter
+.. automodule:: middleware.rate_limiter
    :members:
    :undoc-members:
    :private-members:

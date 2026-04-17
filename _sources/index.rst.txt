@@ -7,6 +7,7 @@ DataLens Documentation
 
    main
    ai
+   knowledge
    api
    middleware
    models

@@ -194,6 +194,7 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="main.html">Main</a></li>
 <li class="toctree-l1"><a class="reference internal" href="ai.html">AI Communication Service</a></li>
+<li class="toctree-l1"><a class="reference internal" href="knowledge.html">Knowledge Base Service</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api.html">Analysis Router</a></li>
 <li class="toctree-l1"><a class="reference internal" href="middleware.html">Middleware</a></li>
 <li class="toctree-l1 current current-page"><a class="current reference internal" href="#">Models</a></li>
@@ -239,11 +240,143 @@
         <article role="main" id="furo-main-content">
           <section id="models">
 <h1>Models<a class="headerlink" href="#models" title="Link to this heading">¶</a></h1>
-<section id="api-model">
-<h2>API Model<a class="headerlink" href="#api-model" title="Link to this heading">¶</a></h2>
+<section id="module-model.api_model">
+<span id="api-model"></span><h2>API Model<a class="headerlink" href="#module-model.api_model" title="Link to this heading">¶</a></h2>
+<p>Model for network traffic</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="model.api_model.BaseRequest">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">model.api_model.</span></span><span class="sig-name descname"><span class="pre">BaseRequest</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_sets</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">format</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">daterange</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/api_model.html#BaseRequest"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#model.api_model.BaseRequest" title="Link to this definition">¶</a></dt>
+<dd><p>Request model for analysis endpoints.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="model.api_model.BaseRequest._abc_impl">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></span><a class="headerlink" href="#model.api_model.BaseRequest._abc_impl" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="model.api_model.BaseRequest.data_sets">
+<span class="sig-name descname"><span class="pre">data_sets</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#model.api_model.BaseRequest.data_sets" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="model.api_model.BaseRequest.daterange">
+<span class="sig-name descname"><span class="pre">daterange</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#model.api_model.BaseRequest.daterange" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="model.api_model.BaseRequest.format">
+<span class="sig-name descname"><span class="pre">format</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#model.api_model.BaseRequest.format" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="model.api_model.BaseRequest.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></span><a class="headerlink" href="#model.api_model.BaseRequest.model_config" title="Link to this definition">¶</a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="model.api_model.BaseResponse">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">model.api_model.</span></span><span class="sig-name descname"><span class="pre">BaseResponse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">date</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/api_model.html#BaseResponse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#model.api_model.BaseResponse" title="Link to this definition">¶</a></dt>
+<dd><p>Response model for analysis endpoints.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="model.api_model.BaseResponse._abc_impl">
+<span class="sig-name descname"><span class="pre">_abc_impl</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;_abc._abc_data</span> <span class="pre">object&gt;</span></span><a class="headerlink" href="#model.api_model.BaseResponse._abc_impl" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="model.api_model.BaseResponse.date">
+<span class="sig-name descname"><span class="pre">date</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#model.api_model.BaseResponse.date" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="model.api_model.BaseResponse.message">
+<span class="sig-name descname"><span class="pre">message</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#model.api_model.BaseResponse.message" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="model.api_model.BaseResponse.model_config">
+<span class="sig-name descname"><span class="pre">model_config</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></span><a class="headerlink" href="#model.api_model.BaseResponse.model_config" title="Link to this definition">¶</a></dt>
+<dd><p>Configuration for the model, should be a dictionary conforming to [<cite>ConfigDict</cite>][pydantic.config.ConfigDict].</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
-<section id="config">
-<h2>Config<a class="headerlink" href="#config" title="Link to this heading">¶</a></h2>
+<section id="module-model.config">
+<span id="config"></span><h2>Config<a class="headerlink" href="#module-model.config" title="Link to this heading">¶</a></h2>
+<p>Stores global microservice configuration.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="model.config.Config">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">model.config.</span></span><span class="sig-name descname"><span class="pre">Config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">api_key_field_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">api_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">llm_provider</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">llm_provider_api_token</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">knowledge_base_enabled</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">knowledge_base_config_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">langsmith_tracing_enabled</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">langsmith_api_key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">langsmith_project</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/model/config.html#Config"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#model.config.Config" title="Link to this definition">¶</a></dt>
+<dd><p>Holds all configuration values for the microservice.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="model.config.Config.api_key">
+<span class="sig-name descname"><span class="pre">api_key</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#model.config.Config.api_key" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="model.config.Config.api_key_field_name">
+<span class="sig-name descname"><span class="pre">api_key_field_name</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#model.config.Config.api_key_field_name" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="model.config.Config.debug">
+<span class="sig-name descname"><span class="pre">debug</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><a class="headerlink" href="#model.config.Config.debug" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="model.config.Config.host">
+<span class="sig-name descname"><span class="pre">host</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#model.config.Config.host" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="model.config.Config.knowledge_base_config_path">
+<span class="sig-name descname"><span class="pre">knowledge_base_config_path</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#model.config.Config.knowledge_base_config_path" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="model.config.Config.knowledge_base_enabled">
+<span class="sig-name descname"><span class="pre">knowledge_base_enabled</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><a class="headerlink" href="#model.config.Config.knowledge_base_enabled" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="model.config.Config.langsmith_api_key">
+<span class="sig-name descname"><span class="pre">langsmith_api_key</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#model.config.Config.langsmith_api_key" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="model.config.Config.langsmith_project">
+<span class="sig-name descname"><span class="pre">langsmith_project</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#model.config.Config.langsmith_project" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="model.config.Config.langsmith_tracing_enabled">
+<span class="sig-name descname"><span class="pre">langsmith_tracing_enabled</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><a class="headerlink" href="#model.config.Config.langsmith_tracing_enabled" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="model.config.Config.llm_provider">
+<span class="sig-name descname"><span class="pre">llm_provider</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#model.config.Config.llm_provider" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="model.config.Config.llm_provider_api_token">
+<span class="sig-name descname"><span class="pre">llm_provider_api_token</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#model.config.Config.llm_provider_api_token" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="model.config.Config.model">
+<span class="sig-name descname"><span class="pre">model</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#model.config.Config.model" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="model.config.Config.port">
+<span class="sig-name descname"><span class="pre">port</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><a class="headerlink" href="#model.config.Config.port" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
 </section>
 
@@ -303,8 +436,43 @@
           <div class="toc-tree">
             <ul>
 <li><a class="reference internal" href="#">Models</a><ul>
-<li><a class="reference internal" href="#api-model">API Model</a></li>
-<li><a class="reference internal" href="#config">Config</a></li>
+<li><a class="reference internal" href="#module-model.api_model">API Model</a><ul>
+<li><a class="reference internal" href="#model.api_model.BaseRequest"><code class="docutils literal notranslate"><span class="pre">BaseRequest</span></code></a><ul>
+<li><a class="reference internal" href="#model.api_model.BaseRequest._abc_impl"><code class="docutils literal notranslate"><span class="pre">BaseRequest._abc_impl</span></code></a></li>
+<li><a class="reference internal" href="#model.api_model.BaseRequest.data_sets"><code class="docutils literal notranslate"><span class="pre">BaseRequest.data_sets</span></code></a></li>
+<li><a class="reference internal" href="#model.api_model.BaseRequest.daterange"><code class="docutils literal notranslate"><span class="pre">BaseRequest.daterange</span></code></a></li>
+<li><a class="reference internal" href="#model.api_model.BaseRequest.format"><code class="docutils literal notranslate"><span class="pre">BaseRequest.format</span></code></a></li>
+<li><a class="reference internal" href="#model.api_model.BaseRequest.model_config"><code class="docutils literal notranslate"><span class="pre">BaseRequest.model_config</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#model.api_model.BaseResponse"><code class="docutils literal notranslate"><span class="pre">BaseResponse</span></code></a><ul>
+<li><a class="reference internal" href="#model.api_model.BaseResponse._abc_impl"><code class="docutils literal notranslate"><span class="pre">BaseResponse._abc_impl</span></code></a></li>
+<li><a class="reference internal" href="#model.api_model.BaseResponse.date"><code class="docutils literal notranslate"><span class="pre">BaseResponse.date</span></code></a></li>
+<li><a class="reference internal" href="#model.api_model.BaseResponse.message"><code class="docutils literal notranslate"><span class="pre">BaseResponse.message</span></code></a></li>
+<li><a class="reference internal" href="#model.api_model.BaseResponse.model_config"><code class="docutils literal notranslate"><span class="pre">BaseResponse.model_config</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-model.config">Config</a><ul>
+<li><a class="reference internal" href="#model.config.Config"><code class="docutils literal notranslate"><span class="pre">Config</span></code></a><ul>
+<li><a class="reference internal" href="#model.config.Config.api_key"><code class="docutils literal notranslate"><span class="pre">Config.api_key</span></code></a></li>
+<li><a class="reference internal" href="#model.config.Config.api_key_field_name"><code class="docutils literal notranslate"><span class="pre">Config.api_key_field_name</span></code></a></li>
+<li><a class="reference internal" href="#model.config.Config.debug"><code class="docutils literal notranslate"><span class="pre">Config.debug</span></code></a></li>
+<li><a class="reference internal" href="#model.config.Config.host"><code class="docutils literal notranslate"><span class="pre">Config.host</span></code></a></li>
+<li><a class="reference internal" href="#model.config.Config.knowledge_base_config_path"><code class="docutils literal notranslate"><span class="pre">Config.knowledge_base_config_path</span></code></a></li>
+<li><a class="reference internal" href="#model.config.Config.knowledge_base_enabled"><code class="docutils literal notranslate"><span class="pre">Config.knowledge_base_enabled</span></code></a></li>
+<li><a class="reference internal" href="#model.config.Config.langsmith_api_key"><code class="docutils literal notranslate"><span class="pre">Config.langsmith_api_key</span></code></a></li>
+<li><a class="reference internal" href="#model.config.Config.langsmith_project"><code class="docutils literal notranslate"><span class="pre">Config.langsmith_project</span></code></a></li>
+<li><a class="reference internal" href="#model.config.Config.langsmith_tracing_enabled"><code class="docutils literal notranslate"><span class="pre">Config.langsmith_tracing_enabled</span></code></a></li>
+<li><a class="reference internal" href="#model.config.Config.llm_provider"><code class="docutils literal notranslate"><span class="pre">Config.llm_provider</span></code></a></li>
+<li><a class="reference internal" href="#model.config.Config.llm_provider_api_token"><code class="docutils literal notranslate"><span class="pre">Config.llm_provider_api_token</span></code></a></li>
+<li><a class="reference internal" href="#model.config.Config.model"><code class="docutils literal notranslate"><span class="pre">Config.model</span></code></a></li>
+<li><a class="reference internal" href="#model.config.Config.port"><code class="docutils literal notranslate"><span class="pre">Config.port</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>
